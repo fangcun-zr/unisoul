@@ -1,0 +1,21 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: UniSoul
+  datasource:
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/UniSoul?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+      username: root
+      password: 040809
+mybatis-plus:
+  configuration:
+    # 在映射实体或者属性时，将数据库中表名和字段名中的下划线去掉，按照驼峰命名法映射
+    map-underscore-to-camel-case: true
+    # 设置MyBatis的日志实现为StdOutImpl，这样MyBatis的日志会输出到控制台
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      # 设置主键类型为ASSIGN_ID，表示主键由MyBatis-Plus自动生成，并使用雪花算法生成ID
+      id-type: ASSIGN_ID
