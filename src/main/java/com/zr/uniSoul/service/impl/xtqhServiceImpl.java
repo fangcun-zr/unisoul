@@ -50,4 +50,9 @@ public class xtqhServiceImpl implements xtqhService {
     public User findByUsername(String username) {
         return xtqhmapper.findByUsername(username);
     }
+
+    @Override
+    public int editUserInfo(User user) {
+        return xtqhmapper.update(user);
+    }
 }

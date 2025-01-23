@@ -69,9 +69,26 @@ public class xtqhController {
         int ret = xtqhService.register(user);
         if (ret != 0){
             log.info("用户注册成功");
+            //将用户的用户名存入session
+            request.getSession().setAttribute("username",user.getUsername());
             return R.success("注册成功");
         }
         return R.error("用户注册失败");
+    }
+    /**
+     * 编辑个人信息
+     */
+    @PostMapping("/information")
+    @ApiOperation("编辑个人信息")
+    public R<String> editUserInfo(HttpServletRequest request, @RequestBody User user){
+        log.info("编辑个人信息接口");
+        //保存个人信息
+        int ret = xtqhService.editUserInfo(user);
+        if (ret != 0){
+            log.info("编辑个人信息成功");
+            return R.success("编辑个人信息成功");
+        }
+        return R.error("编辑个人信息失败");
     }
 
 }

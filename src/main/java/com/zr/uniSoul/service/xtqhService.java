@@ -10,4 +10,6 @@ public interface xtqhService {
     int register(User user);
 
     User findByUsername(String username);
+
+    int editUserInfo(User user);
 }

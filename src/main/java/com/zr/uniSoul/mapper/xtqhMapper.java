@@ -15,4 +15,6 @@ public interface xtqhMapper {
     int insert(String username, String password, String email, LocalDateTime createTime);
 
     User findByUsername(String username);
+
+    int update(User user);
 }
