@@ -1,0 +1,102 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Arial", sans-serif;
+    background-color: #B4D5E5;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    color: #666;
+}
+
+
+.fan-list-container {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.fan-list {
+    list-style: none;
+    padding: 0;
+}
+
+.fan-list li {
+    display: flex;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.fan-list li:last-child {
+    border-bottom: none;
+}
+
+.fan-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-right: 20px;
+    object-fit: cover;
+}
+
+.fan-info {
+    flex: 1;
+}
+
+.fan-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.fan-follow-time {
+    font-size: 0.9rem;
+    color: #888;
+    margin-top: 5px;
+}
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    .title {
+        font-size: 2rem;
+    }
+
+    .subtitle {
+        font-size: 1rem;
+    }
+
+    .fan-avatar {
+        width: 50px;
+        height: 50px;
+    }
+}
