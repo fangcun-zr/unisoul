@@ -1,77 +1,168 @@
-body, html {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
-}
-
-.background {
-    background-image: url('../images/img.png');
-    background-size: cover;
-    background-position: center;
-    height: 100%;
-    width: 100%;
-    position: relative;
-}
-
-.content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    color: white;
-    width: 80%;
-    height: 40%;
-    max-width: 800px;
-    padding: 20px;
-    background-color: rgba(0, 0, 0, 0.5); /* 半透明背景 */
-    border-radius: 10px;
-}
-
-h1 {
-    font-size: 3em;
-    margin-bottom: 10px;
-}
-
-p {
-    font-size: 1.2em;
-    margin-bottom: 20px;
-}
-
-.buttons {
+/* 全局样式 */
+body {
+    padding-top: 56px;
+    background-color: #f8f9fa;
+    min-height: 100vh;
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
 }
 
-button {
-    padding: 10px 20px;
-    font-size: 1em;
+/* 导航栏样式 */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.nav-logo {
+    height: 30px;
+    margin-right: 10px;
+}
+
+.avatar-sm {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.avatar-lg {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* 搜索框样式 */
+.search-box {
+    position: relative;
+    width: 300px;
+}
+
+.search-box input {
+    padding-right: 40px;
+    border-radius: 20px;
+}
+
+.search-box button {
+    position: absolute;
+    right: 0;
+    top: 0;
     border: none;
-    border-radius: 5px;
+    background: none;
+    padding: 8px 12px;
+}
+
+/* 主要内容区 */
+.main-content {
+    flex: 1;
+    padding: 2rem 0;
+}
+
+/* 轮播图样式 */
+.carousel {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.carousel-item img {
+    height: 400px;
+    object-fit: cover;
+}
+
+/* 快捷功能区 */
+.quick-link {
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 1rem;
     cursor: pointer;
-    color: white;
-    background-color: rgba(255, 255, 255, 0.2);
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-button:hover {
-    background-color: rgba(255, 255, 255, 0.4);
+.quick-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
-.register {
-    background-color: rgba(0, 128, 255, 0.2); /* 蓝色 */
+.quick-link i {
+    font-size: 24px;
+    color: #0d6efd;
+    margin-bottom: 10px;
+    display: block;
 }
 
-.register:hover {
-    background-color: rgba(0, 128, 255, 0.4);
+/* 文章列表样式 */
+.article-list .article-item {
+    border-bottom: 1px solid #eee;
+    padding: 1rem 0;
 }
 
-.login {
-    background-color: rgba(255, 0, 0, 0.2); /* 红色 */
+.article-item:last-child {
+    border-bottom: none;
 }
 
-.login:hover {
-    background-color: rgba(255, 0, 0, 0.4);
+.article-item .title {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.article-item .meta {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+/* 用户统计样式 */
+.user-stats {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-item .number {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #0d6efd;
+}
+
+.stat-item .label {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+/* 热门话题样式 */
+.topic-list .topic-item {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0;
+}
+
+.topic-item .topic-rank {
+    width: 24px;
+    height: 24px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    text-align: center;
+    line-height: 24px;
+    margin-right: 10px;
+    font-weight: 500;
+}
+
+.topic-item:nth-child(-n+3) .topic-rank {
+    background: #0d6efd;
+    color: #fff;
+}
+
+/* 底部样式 */
+.footer {
+    background-color: #f8f9fa;
+    padding: 1rem 0;
+    margin-top: auto;
 }
