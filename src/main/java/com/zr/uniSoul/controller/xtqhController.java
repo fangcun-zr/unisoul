@@ -1,4 +1,4 @@
-package com.zr.uniSoul.controller.xtqh;
+package com.zr.uniSoul.controller;
 
 import com.zr.uniSoul.common.R;
 import com.zr.uniSoul.pojo.entity.User;
@@ -36,6 +36,8 @@ public class xtqhController {
         User loginUser = xtqhService.login(user);
         if (loginUser != null){
             log.info("用户登录成功");
+            //将用户的用户名存入session
+            request.getSession().setAttribute("username",user.getUsername());
             return R.success(loginUser);
         }
         return R.error("用户名或密码错误");
@@ -90,5 +92,11 @@ public class xtqhController {
         }
         return R.error("编辑个人信息失败");
     }
+//    @PostMapping("likes")
+//    @ApiOperation("点赞")
+//    public R<String> likes(HttpServletRequest request, @RequestParam String username){
+//        log.info("点赞接口");
+//        int ret = xtqhService.likes(username);
+//    }
 
 }
