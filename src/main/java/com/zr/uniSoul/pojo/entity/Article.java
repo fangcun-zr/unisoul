@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -65,6 +66,7 @@ public class Article {
     /** 更新时间，默认为当前时间，数据更新时自动更新 */
     private LocalDateTime updateTime;
 
+    private MultipartFile file;
 
     public void setCreateTime() {
         this.createTime = LocalDateTime.now();

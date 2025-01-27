@@ -1,5 +1,7 @@
 package com.zr.uniSoul.mapper;
 
+import com.github.pagehelper.Page;
+import com.zr.uniSoul.pojo.dto.PageQueryDTO;
 import com.zr.uniSoul.pojo.entity.Article;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -11,4 +13,6 @@ public interface zhxtMapper {
     int findIdByUsername(String username);
 
     Integer insert(Article article);
+
+    Page<Article> pageQuery(PageQueryDTO pageQueryDTO);
 }

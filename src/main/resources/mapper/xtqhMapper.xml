@@ -6,4 +6,14 @@
     <insert id="insert">
         insert into article(title,author_id,content,create_time,cover_image,tags,category_id,update_time) values(#{title},#{authorId},#{content},#{createTime},#{coverImage},#{tags},#{categoryId},#{updateTime})
     </insert>
+    <select id="pageQuery" resultType="com.zr.uniSoul.pojo.entity.Article">
+        select * from article
+        <where>
+            <if test="category_id != null">
+                and category_id = #{category_id}
+            </if>
+        </where>
+        order by like_count asc , create_time desc
+
+    </select>
 </mapper>
