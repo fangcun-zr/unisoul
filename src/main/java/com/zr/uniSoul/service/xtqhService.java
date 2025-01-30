@@ -1,5 +1,6 @@
 package com.zr.uniSoul.service;
 
+import com.zr.uniSoul.pojo.entity.Article;
 import com.zr.uniSoul.pojo.entity.User;
 
 public interface xtqhService {
@@ -12,4 +13,6 @@ public interface xtqhService {
     User findByUsername(String username);
 
     int editUserInfo(User user);
+
+
 }

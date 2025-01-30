@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/xtqh")
@@ -20,6 +21,8 @@ public class xtqhController {
 
     @Autowired
     private xtqhService xtqhService;
+
+
 
     /**
      * 用户登录
@@ -84,6 +87,8 @@ public class xtqhController {
     @ApiOperation("编辑个人信息")
     public R<String> editUserInfo(HttpServletRequest request, @RequestBody User user){
         log.info("编辑个人信息接口");
+        HttpSession session =  request.getSession();
+        user.setUsername(session.getAttribute("username").toString());
         //保存个人信息
         int ret = xtqhService.editUserInfo(user);
         if (ret != 0){
