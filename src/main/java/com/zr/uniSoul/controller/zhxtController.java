@@ -2,6 +2,7 @@ package com.zr.uniSoul.controller;
 
 import com.zr.uniSoul.common.PageResult;
 import com.zr.uniSoul.common.R;
+import com.zr.uniSoul.pojo.dto.CommentsPageDTO;
 import com.zr.uniSoul.pojo.dto.PageQueryDTO;
 import com.zr.uniSoul.pojo.entity.Article;
 import com.zr.uniSoul.utils.AliOssUtil;
@@ -89,6 +90,19 @@ public class zhxtController {
         log.info("分页查询：{}", pageQueryDTO);
         PageResult pageResult = zhxtService.pageQuery(pageQueryDTO);
         return R.success(pageResult);
+
+    }
+
+    /**
+     * 获取文章评论
+     */
+    @GetMapping("comments")
+    @ApiOperation("获取文章评论")
+    public R<PageResult> getComments(@RequestBody CommentsPageDTO commentsPageDTO) {
+        log.info("文章评论分页展示：{}", commentsPageDTO);
+        PageResult pageResult = zhxtService.getComments(commentsPageDTO);
+        return R.success(pageResult);
+
 
     }
 }

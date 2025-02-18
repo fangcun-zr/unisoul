@@ -14,7 +14,7 @@ public class SensitiveWordFilter {
         sensitiveWords = new HashSet<>();
         sensitiveWords.add("傻逼");
         sensitiveWords.add("贱人");
-        // 添加更多敏感词...
+        //TODO: 添加更多敏感词...
     }
 
     public String filter(String content) {

@@ -1,7 +1,6 @@
 package com.zr.uniSoul.controller;
 
 import com.zr.uniSoul.filter.SensitiveWordFilter;
-import com.zr.uniSoul.pojo.dto.FilterRequest;
 import com.zr.uniSoul.pojo.vo.FilterResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,10 +30,6 @@ public class SensitiveWordController {
     @GetMapping("/filter")
     @ApiOperation("敏感词过滤接口")
     public FilterResponse filterSensitiveWords(@RequestParam String psychology_content ) {
-
-//        byte[] bytes = psychology_content.getBytes(); // 原始字节数组
-//        System.out.println(bytes.toString());
-//        String decodedString = new String(bytes, StandardCharsets.UTF_8);
         System.out.println(psychology_content);
         // 调用敏感词过滤器的 filter 方法进行过滤
         log.info("敏感词过滤请求: {}",psychology_content);

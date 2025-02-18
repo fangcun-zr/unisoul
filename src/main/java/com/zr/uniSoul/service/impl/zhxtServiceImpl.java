@@ -2,8 +2,10 @@ package com.zr.uniSoul.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.zr.uniSoul.common.PageResult;
+import com.zr.uniSoul.pojo.dto.CommentsPageDTO;
 import com.zr.uniSoul.pojo.dto.PageQueryDTO;
 import com.zr.uniSoul.pojo.entity.Article;
+import com.zr.uniSoul.pojo.entity.Comments;
 import com.zr.uniSoul.service.zhxtService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import com.zr.uniSoul.mapper.zhxtMapper;
 import com.github.pagehelper.Page;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 
 @Service
@@ -37,6 +40,11 @@ public class zhxtServiceImpl implements zhxtService {
         return zhxtMapper.insert(article);
     }
 
+    /**
+     * 文章分页展示
+     * @param pageQueryDTO
+     * @return
+     */
     @Override
     public PageResult pageQuery(PageQueryDTO pageQueryDTO) {
         PageHelper.startPage(pageQueryDTO.getPage(),pageQueryDTO.getPageSize());
@@ -44,4 +52,24 @@ public class zhxtServiceImpl implements zhxtService {
         Page<Article> page = zhxtMapper.pageQuery(pageQueryDTO);
         return new PageResult(page.getTotal(), page.getResult());
     }
+
+    /**
+     * 评论分页展示
+     * @param commentsPageDTO
+     * @return
+     */
+    public PageResult getComments(CommentsPageDTO commentsPageDTO) {
+        PageHelper.startPage(commentsPageDTO.getPage(), commentsPageDTO.getPageSize());
+        Page<Comments> page = zhxtMapper.getComments(commentsPageDTO);
+
+        if (page == null) {
+            // 返回一个空的PageResult或者抛出自定义异常
+            return new PageResult(0, new ArrayList<>()); // 假设PageResult的构造函数接受total和result列表作为参数
+            // 或者
+            // throw new CustomException("No comments found");
+        }
+
+        return new PageResult(page.getTotal(), page.getResult());
+    }
+
 }

@@ -16,4 +16,7 @@
         order by like_count asc , create_time desc
 
     </select>
+    <select id="getComments" resultType="com.zr.uniSoul.pojo.entity.Comments">
+        select * from article_comment where article_id = #{articleId} order by create_time desc
+    </select>
 </mapper>
