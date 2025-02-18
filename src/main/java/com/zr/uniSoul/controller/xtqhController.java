@@ -41,6 +41,8 @@ public class xtqhController {
             log.info("用户登录成功");
             //将用户的用户名存入session
             request.getSession().setAttribute("username",user.getUsername());
+            //将用户的用户id存入session
+            request.getSession().setAttribute("userId",loginUser.getId());
             return R.success(loginUser);
         }
         return R.error("用户名或密码错误");

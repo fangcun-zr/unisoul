@@ -3,6 +3,7 @@ package com.zr.uniSoul.service;
 import com.zr.uniSoul.common.PageResult;
 import com.zr.uniSoul.pojo.dto.CommentsPageDTO;
 import com.zr.uniSoul.pojo.dto.PageQueryDTO;
+import com.zr.uniSoul.pojo.dto.addCommentsDTO;
 import com.zr.uniSoul.pojo.entity.Article;
 
 public interface zhxtService {
@@ -13,4 +14,8 @@ public interface zhxtService {
     PageResult pageQuery(PageQueryDTO pageQueryDTO);
 
     PageResult getComments(CommentsPageDTO articleId);
+
+    int addComments(addCommentsDTO addcommentsDTO, int userId);
+
+    int likeComments(String articleCommentId, int userId);
 }

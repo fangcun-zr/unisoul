@@ -4,7 +4,9 @@ import com.github.pagehelper.PageHelper;
 import com.zr.uniSoul.common.PageResult;
 import com.zr.uniSoul.pojo.dto.CommentsPageDTO;
 import com.zr.uniSoul.pojo.dto.PageQueryDTO;
+import com.zr.uniSoul.pojo.dto.addCommentsDTO;
 import com.zr.uniSoul.pojo.entity.Article;
+import com.zr.uniSoul.pojo.entity.CommentLike;
 import com.zr.uniSoul.pojo.entity.Comments;
 import com.zr.uniSoul.service.zhxtService;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +17,6 @@ import com.github.pagehelper.Page;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 
 @Service
 @Slf4j
@@ -70,6 +71,38 @@ public class zhxtServiceImpl implements zhxtService {
         }
 
         return new PageResult(page.getTotal(), page.getResult());
+    }
+
+    /**
+     * 添加评论
+     *
+     * @param addcommentsDTO
+     * @param userId
+     * @return
+     */
+    @Override
+    public int addComments(addCommentsDTO addcommentsDTO, int userId) {
+
+        Comments comments = Comments.builder()
+                .articleId(addcommentsDTO.getArticle_id())
+                .content(addcommentsDTO.getContent())
+                .userId(userId)
+                .createTime(LocalDateTime.now())
+                .updateTime(LocalDateTime.now())
+                .build();
+        return zhxtMapper.addComments(comments);
+    }
+
+    @Override
+    public int likeComments(String articleCommentId, int userId) {
+        CommentLike commentLike = CommentLike.builder()
+                        .userId(userId)
+                        .articleCommentId(Integer.valueOf(articleCommentId))
+                        .createTime(LocalDateTime.now())
+                        .updateTime(LocalDateTime.now())
+                        .build();
+
+        return zhxtMapper.likeComments(commentLike);
     }
 
 }
