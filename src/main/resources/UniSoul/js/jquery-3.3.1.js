@@ -1250,7 +1250,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 				"<option selected=''></option></select>";
 
 			// Support: IE8, Opera 11-12.16
-			// Nothing should be selected when empty strings follow ^= or $= or *=
+			// Nothing should be selected when empty strings xtqh_follow ^= or $= or *=
 			// The test attribute must be unknown in Opera but "safe" for WinRT
 			// https://msdn.microsoft.com/en-us/library/ie/hh465388.aspx#attribute_section
 			if ( el.querySelectorAll("[msallowcapture^='']").length ) {
@@ -2697,7 +2697,7 @@ support.detectDuplicates = !!hasDuplicate;
 setDocument();
 
 // Support: Webkit<537.32 - Safari 6.0.3/Chrome 25 (fixed in Chrome 27)
-// Detached nodes confoundingly follow *each other*
+// Detached nodes confoundingly xtqh_follow *each other*
 support.sortDetached = assert(function( el ) {
 	// Should return 1, but returns 4 (following)
 	return el.compareDocumentPosition( document.createElement("fieldset") ) & 1;

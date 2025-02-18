@@ -1,0 +1,60 @@
+/* 粉丝列表样式 */
+.fans-list {
+    margin: 0 -1rem;
+}
+
+.fan-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.fan-item:last-child {
+    border-bottom: none;
+}
+
+.fan-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 1rem;
+}
+
+.fan-info {
+    flex: 1;
+}
+
+.fan-name {
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+}
+
+.fan-nickname {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+.btn-edit-nickname {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+/* 模态框样式 */
+.modal-content {
+    border-radius: 15px;
+}
+
+.modal-header {
+    border-bottom: none;
+    padding: 1.5rem 1.5rem 1rem;
+}
+
+.modal-body {
+    padding: 1rem 1.5rem;
+}
+
+.modal-footer {
+    border-top: none;
+    padding: 1rem 1.5rem 1.5rem;
+}

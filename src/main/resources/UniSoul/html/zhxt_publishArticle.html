@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发布文章 - 心理坊</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../style/publishArticle.css">
+</head>
+<body>
+<div class="publishArticle-container">
+    <div class="publishArticle-bg"></div>
+    <div class="container">
+        <div class="row justify-content-center align-items-center min-vh-100">
+            <div class="col-md-8">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <div class="text-center mb-4">
+                            <h3>发布文章</h3>
+                            <p class="form-text">请填写以下信息以发布您的文章</p>
+                        </div>
+                        <form id="publishArticleForm">
+                            <div class="mb-3">
+                                <label class="form-label">文章标题</label>
+                                <input type="text" class="form-control" id="employ_title" required placeholder="请输入文章标题">
+                                <div class="invalid-feedback"></div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">文章内容</label>
+                                <textarea class="form-control" id="employ_content" rows="5" required placeholder="请输入文章内容"></textarea>
+                                <div class="invalid-feedback"></div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">文章标签</label>
+                                <input type="text" class="form-control" id="employ_tags" placeholder="请输入文章标签（逗号分隔）">
+                                <div class="form-text">可选，多个标签用逗号分隔</div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100">发布文章</button>
+                        </form>
+                        <div class="text-center mt-3">
+                            <a href="home.html" class="text-decoration-none">返回首页</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script src="../api/publishArticle.js"></script>
+<script src="../js/publishArticle.js"></script>
+</body>
+</html>

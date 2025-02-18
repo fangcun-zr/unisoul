@@ -1,4 +1,4 @@
-package com.zr.uniSoul.controller.xtqh;
+package com.zr.uniSoul.controller;
 
 import com.zr.uniSoul.common.R;
 import com.zr.uniSoul.pojo.entity.User;
@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/xtqh")
@@ -20,6 +21,8 @@ public class xtqhController {
 
     @Autowired
     private xtqhService xtqhService;
+
+
 
     /**
      * 用户登录
@@ -36,6 +39,8 @@ public class xtqhController {
         User loginUser = xtqhService.login(user);
         if (loginUser != null){
             log.info("用户登录成功");
+            //将用户的用户名存入session
+            request.getSession().setAttribute("username",user.getUsername());
             return R.success(loginUser);
         }
         return R.error("用户名或密码错误");
@@ -69,9 +74,34 @@ public class xtqhController {
         int ret = xtqhService.register(user);
         if (ret != 0){
             log.info("用户注册成功");
+            //将用户的用户名存入session
+            request.getSession().setAttribute("username",user.getUsername());
             return R.success("注册成功");
         }
         return R.error("用户注册失败");
     }
+    /**
+     * 编辑个人信息
+     */
+    @PostMapping("/information")
+    @ApiOperation("编辑个人信息")
+    public R<String> editUserInfo(HttpServletRequest request, @RequestBody User user){
+        log.info("编辑个人信息接口");
+        HttpSession session =  request.getSession();
+        user.setUsername(session.getAttribute("username").toString());
+        //保存个人信息
+        int ret = xtqhService.editUserInfo(user);
+        if (ret != 0){
+            log.info("编辑个人信息成功");
+            return R.success("编辑个人信息成功");
+        }
+        return R.error("编辑个人信息失败");
+    }
+//    @PostMapping("likes")
+//    @ApiOperation("点赞")
+//    public R<String> likes(HttpServletRequest request, @RequestParam String username){
+//        log.info("点赞接口");
+//        int ret = xtqhService.likes(username);
+//    }
 
 }
