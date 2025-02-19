@@ -6,6 +6,12 @@
     <insert id="insert">
         insert into article(title,author_id,content,create_time,cover_image,tags,category_id,update_time) values(#{title},#{authorId},#{content},#{createTime},#{coverImage},#{tags},#{categoryId},#{updateTime})
     </insert>
+    <insert id="addComments">
+        insert into article_comment(article_id,user_id,create_time,content,update_time) values(#{articleId},#{userId},#{createTime},#{content},#{updateTime})
+    </insert>
+    <insert id="likeComments">
+        insert into likes(article_comment_id,user_id,create_time,update_time) values(#{articleCommentId},#{userId},#{createTime},#{updateTime})
+    </insert>
     <select id="pageQuery" resultType="com.zr.uniSoul.pojo.entity.Article">
         select * from article
         <where>
@@ -15,5 +21,8 @@
         </where>
         order by like_count asc , create_time desc
 
+    </select>
+    <select id="getComments" resultType="com.zr.uniSoul.pojo.entity.Comments">
+        select * from article_comment where article_id = #{articleId} order by create_time desc
     </select>
 </mapper>

@@ -2,7 +2,9 @@ package com.zr.uniSoul.controller;
 
 import com.zr.uniSoul.common.PageResult;
 import com.zr.uniSoul.common.R;
+import com.zr.uniSoul.pojo.dto.CommentsPageDTO;
 import com.zr.uniSoul.pojo.dto.PageQueryDTO;
+import com.zr.uniSoul.pojo.dto.addCommentsDTO;
 import com.zr.uniSoul.pojo.entity.Article;
 import com.zr.uniSoul.utils.AliOssUtil;
 import io.swagger.annotations.Api;
@@ -90,5 +92,78 @@ public class zhxtController {
         PageResult pageResult = zhxtService.pageQuery(pageQueryDTO);
         return R.success(pageResult);
 
+    }
+
+    /**
+     * 获取文章评论
+     */
+    @GetMapping("comments")
+    @ApiOperation("获取文章评论")
+    public R<PageResult> getComments(@RequestBody CommentsPageDTO commentsPageDTO) {
+        log.info("文章评论分页展示：{}", commentsPageDTO);
+        PageResult pageResult = zhxtService.getComments(commentsPageDTO);
+        return R.success(pageResult);
+    }
+    @PostMapping("add")
+    @ApiOperation("添加评论")
+    public R addComments(@RequestBody addCommentsDTO addcommentsDTO, HttpServletRequest request) {
+        log.info("添加评论：{}", addcommentsDTO);
+        HttpSession session = request.getSession();
+        int userId = 0;
+        Object userIdObj = session.getAttribute("userId");
+        if (userIdObj instanceof Integer) {
+            userId = (Integer) userIdObj;
+        } else if (userIdObj instanceof Long) {
+            userId = ((Long) userIdObj).intValue();
+        } else {
+            // 处理其他情况或抛出异常
+        }
+
+        int ret = zhxtService.addComments(addcommentsDTO, userId);
+        if (ret == 1) {
+            return R.success("评论成功");
+        }
+        return R.error("评论失败");
+    }
+
+    /**
+     * 点赞评论
+     */
+    @GetMapping("/like")
+    @ApiOperation("点赞评论")
+    public R likeComments(@RequestParam String articleCommentId, HttpServletRequest request) {
+        log.info("点赞评论：articleCommentId = {}, userId = {}", articleCommentId, getUserIdFromSession(request));
+        HttpSession session = request.getSession();
+
+        int userId = 0;
+        Object userIdObj = session.getAttribute("userId");
+        if (userIdObj instanceof Integer) {
+            userId = (Integer) userIdObj;
+        } else if (userIdObj instanceof Long) {
+            userId = ((Long) userIdObj).intValue();
+        } else {
+            // 处理其他情况或抛出异常
+        }
+
+        try {
+            int ret = zhxtService.likeComments(articleCommentId, userId);
+            if (ret == 1) {
+                return R.success("点赞成功");
+            } else {
+                return R.error("点赞失败");
+            }
+        } catch (Exception e) {
+            log.error("点赞评论时发生错误", e);
+            return R.error("服务器内部错误");
+        }
+    }
+
+    private int getUserIdFromSession(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        Object userIdObj = session.getAttribute("userId");
+        if (userIdObj instanceof Integer) {
+            return (Integer) userIdObj;
+        }
+        return 0;
     }
 }
