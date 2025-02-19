@@ -1,113 +1,363 @@
 /* 全局样式 */
+:root {
+  --primary-color: #4299e1;
+  --secondary-color: #667eea;
+  --text-color: #2d3748;
+  --light-text: #718096;
+  --background: #f7fafc;
+  --card-bg: #ffffff;
+  --border-radius: 20px;
+  --transition: all 0.3s ease;
+}
+
 body {
-  background-color: #f8f9fa;
+  background-color: var(--background);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-}
-
-/* 登录背景 */
-.login-container {
-  position: relative;
+  color: var(--text-color);
   min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
 }
 
-.login-bg {
+/* 背景装饰 */
+.background-decoration {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: url('../image/login-bg.jpg') center/cover no-repeat;
-  opacity: 0.1;
   z-index: -1;
+  overflow: hidden;
 }
 
-/* Logo样式 */
-.logo {
+.circle {
+  position: absolute;
+  border-radius: 50%;
+  animation: float 6s ease-in-out infinite;
+}
+
+.c1 {
+  width: 300px;
+  height: 300px;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  top: -150px;
+  left: -150px;
+  opacity: 0.1;
+}
+
+.c2 {
+  width: 200px;
+  height: 200px;
+  background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%);
+  bottom: -100px;
+  right: -100px;
+  opacity: 0.1;
+  animation-delay: 2s;
+}
+
+.c3 {
+  width: 150px;
+  height: 150px;
+  background: linear-gradient(135deg, #4fd1c5 0%, #38b2ac 100%);
+  top: 50%;
+  right: 15%;
+  opacity: 0.1;
+  animation-delay: 4s;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(10deg); }
+}
+
+/* 欢迎区域样式 */
+.welcome-section {
+  background: linear-gradient(135deg, rgba(66, 153, 225, 0.1) 0%, rgba(102, 126, 234, 0.1) 100%);
+  border-radius: var(--border-radius);
+  padding: 3rem;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.welcome-content {
+  position: relative;
+  z-index: 1;
+}
+
+.welcome-section h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.welcome-text {
+  font-size: 1.1rem;
+  color: var(--light-text);
+  margin-bottom: 2rem;
+}
+
+.feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  transition: var(--transition);
+}
+
+.feature-item:hover {
+  transform: translateX(10px);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.feature-item i {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  border-radius: 10px;
+  color: white;
+  font-size: 1.2rem;
+}
+
+.decoration-image {
+  position: absolute;
+  bottom: -20px;
+  right: -20px;
+  width: 300px;
+  opacity: 0.8;
+}
+
+/* 登录卡片样式 */
+.login-card {
+  background: var(--card-bg);
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.logo-wrapper {
+  position: relative;
   width: 80px;
   height: 80px;
+  margin: 0 auto 1.5rem;
+}
+
+.logo {
+  width: 100%;
+  height: 100%;
   object-fit: contain;
+  position: relative;
+  z-index: 1;
 }
 
-/* 卡片样式 */
-.card {
-  border-radius: 15px;
-  border: none;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  background-color: rgba(255, 255, 255, 0.98);
+.logo-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(66, 153, 225, 0.2) 0%, rgba(66, 153, 225, 0) 70%);
+  animation: glow 2s ease-in-out infinite;
 }
 
-.card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
+@keyframes glow {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.2); }
 }
 
-.card-body {
-  padding: 2.5rem;
+.card-header h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: var(--light-text);
 }
 
 /* 表单样式 */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+.form-label i {
+  margin-right: 0.5rem;
+  color: var(--primary-color);
+}
+
+.input-group {
+  position: relative;
+}
+
 .form-control {
-  border-radius: 8px;
-  padding: 12px 15px;
-  border: 1px solid #ced4da;
-  transition: all 0.2s ease;
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  transition: var(--transition);
+  background: transparent;
+  position: relative;
+  z-index: 1;
+}
+
+.input-focus-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(66, 153, 225, 0.1), rgba(102, 126, 234, 0.1));
+  border-radius: 12px;
+  opacity: 0;
+  transition: var(--transition);
 }
 
 .form-control:focus {
-  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
-  border-color: #86b7fe;
+  border-color: var(--primary-color);
+  outline: none;
 }
 
-.form-control.is-invalid {
-  border-color: #dc3545;
-  background-image: none;
+.form-control:focus + .input-focus-bg {
+  opacity: 1;
 }
 
-.form-control.is-invalid:focus {
-  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
-}
-
-/* 按钮样式 */
-.btn-primary {
-  border-radius: 8px;
-  padding: 12px;
-  font-weight: 500;
-  background-color: #0d6efd;
+.password-toggle {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
   border: none;
-  transition: all 0.3s ease;
+  color: var(--light-text);
+  z-index: 2;
+  cursor: pointer;
+  transition: var(--transition);
 }
 
-.btn-primary:hover {
-  background-color: #0b5ed7;
-  transform: translateY(-1px);
+.password-toggle:hover {
+  color: var(--primary-color);
 }
 
-.btn-primary:disabled {
-  background-color: #0d6efd;
-  opacity: 0.65;
+/* 表单选项 */
+.form-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
 }
 
-/* 标签样式 */
-.form-label {
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.forgot-password {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.forgot-password:hover {
+  color: var(--secondary-color);
+  text-decoration: underline;
+}
+
+/* 提交按钮 */
+.submit-btn {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  color: white;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: var(--transition);
+  margin-bottom: 2rem;
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(66, 153, 225, 0.4);
+}
+
+/* 卡片底部 */
+.card-footer {
+  text-align: center;
+}
+
+.card-footer p {
+  color: var(--light-text);
+  margin-bottom: 0.5rem;
+}
+
+.register-link {
+  color: var(--primary-color);
+  text-decoration: none;
   font-weight: 500;
-  color: #495057;
-  margin-bottom: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: var(--transition);
 }
 
-/* 链接样式 */
-a {
-  color: #0d6efd;
-  transition: color 0.2s ease;
+.register-link:hover {
+  color: var(--secondary-color);
 }
 
-a:hover {
-  color: #0b5ed7;
+.register-link i {
+  transition: var(--transition);
 }
 
-/* 错误提示样式 */
-.invalid-feedback {
-  font-size: 0.875rem;
-  color: #dc3545;
-  display: none;
+.register-link:hover i {
+  transform: translateX(4px);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .login-card {
+    padding: 2rem;
+  }
+
+  .welcome-section {
+    display: none;
+  }
+}
+
+/* 动画类 */
+.animate__animated {
+  animation-duration: 1s;
 }

@@ -1,29 +1,250 @@
+/* 全局样式 */
+:root {
+    --primary-color: #4299e1;
+    --secondary-color: #667eea;
+    --text-color: #2d3748;
+    --light-text: #718096;
+    --background: #f7fafc;
+    --card-bg: #ffffff;
+    --border-radius: 20px;
+    --transition: all 0.3s ease;
+}
+
+body {
+    background-color: var(--background);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--text-color);
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* 背景装饰 */
+.background-decoration {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.circle {
+    position: absolute;
+    border-radius: 50%;
+    animation: float 6s ease-in-out infinite;
+}
+
+.c1 {
+    width: 300px;
+    height: 300px;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    top: -150px;
+    left: -150px;
+    opacity: 0.1;
+}
+
+.c2 {
+    width: 200px;
+    height: 200px;
+    background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%);
+    bottom: -100px;
+    right: -100px;
+    opacity: 0.1;
+    animation-delay: 2s;
+}
+
+.c3 {
+    width: 150px;
+    height: 150px;
+    background: linear-gradient(135deg, #4fd1c5 0%, #38b2ac 100%);
+    top: 50%;
+    right: 15%;
+    opacity: 0.1;
+    animation-delay: 4s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(10deg); }
+}
+
+/* 导航栏样式 */
+.navbar {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    padding: 1rem 0;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+}
+
+.nav-logo {
+    width: 40px;
+    height: 40px;
+    margin-right: 0.5rem;
+}
+
+.nav-link {
+    color: var(--light-text);
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    transition: var(--transition);
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: var(--primary-color);
+}
+
+.nav-link i {
+    margin-right: 0.5rem;
+}
+
+/* 主要内容区域 */
+.main-content {
+    padding: 3rem 0;
+}
+
+/* 统计卡片 */
+.stats-card {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-item {
+    flex: 1;
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: var(--transition);
+}
+
+.stat-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+}
+
+.stat-icon i {
+    font-size: 1.5rem;
+    color: white;
+}
+
+.stat-info {
+    flex: 1;
+}
+
+.stat-value {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.stat-label {
+    color: var(--light-text);
+    font-size: 0.875rem;
+}
+
+/* 点赞列表卡片 */
+.like-card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 1.5rem;
+    background: white;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.card-header h5 {
+    margin: 0;
+    font-weight: 600;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+}
+
+.card-header h5 i {
+    margin-right: 0.5rem;
+    color: var(--primary-color);
+}
+
+.header-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.filter-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 8px;
+    background: #edf2f7;
+    color: var(--text-color);
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    background: var(--primary-color);
+    color: white;
+}
+
 /* 点赞列表样式 */
 .like-list {
-    margin: 0 -1rem;
+    padding: 1.5rem;
 }
 
 .like-item {
     display: flex;
     align-items: center;
     padding: 1rem;
-    border-bottom: 1px solid #eee;
-    transition: background-color 0.2s ease;
+    border-radius: 12px;
+    transition: var(--transition);
+    margin-bottom: 1rem;
+    background: #f8fafc;
 }
 
 .like-item:hover {
-    background-color: #f8f9fa;
-}
-
-.like-item:last-child {
-    border-bottom: none;
+    transform: translateX(5px);
+    background: #edf2f7;
 }
 
 .like-avatar {
     width: 48px;
     height: 48px;
-    border-radius: 50%;
+    border-radius: 12px;
     margin-right: 1rem;
+    object-fit: cover;
 }
 
 .like-content {
@@ -32,51 +253,79 @@
 
 .like-text {
     margin-bottom: 0.25rem;
-    color: #212529;
+    color: var(--text-color);
+    font-weight: 500;
 }
 
 .like-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--light-text);
     font-size: 0.875rem;
-    color: #6c757d;
 }
 
-.like-time {
-    margin-left: 1rem;
+.like-time i {
+    margin-right: 0.25rem;
 }
 
-/* 点赞按钮样式 */
-.btn-like {
-    background: none;
+/* 加载更多按钮 */
+.load-more-wrapper {
+    text-align: center;
+    padding: 1.5rem;
+}
+
+.load-more-btn {
+    padding: 0.75rem 2rem;
     border: none;
-    color: #6c757d;
-    padding: 4px 8px;
-    transition: all 0.2s ease;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+    font-weight: 500;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 auto;
 }
 
-.btn-like:hover {
-    color: #dc3545;
+.load-more-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(66, 153, 225, 0.4);
 }
 
-.btn-like.active {
-    color: #dc3545;
-}
-
-.btn-like i {
-    margin-right: 4px;
-}
-
-/* 加载更多按钮样式 */
-#loadMore {
-    padding: 0.5rem 2rem;
-}
-
-/* 点赞动画 */
-@keyframes likeAnimation {
+/* 动画效果 */
+@keyframes pulse {
     0% { transform: scale(1); }
-    50% { transform: scale(1.2); }
+    50% { transform: scale(1.05); }
     100% { transform: scale(1); }
 }
 
-.btn-like.animating i {
-    animation: likeAnimation 0.3s ease;
+.like-item .btn-like:hover {
+    animation: pulse 0.3s ease-in-out;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .stats-card {
+        flex-direction: column;
+    }
+
+    .header-actions {
+        display: none;
+    }
+
+    .like-item {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .like-avatar {
+        margin: 0 auto 1rem;
+    }
+}
+
+/* 动画类 */
+.animate__animated {
+    animation-duration: 1s;
 }

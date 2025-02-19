@@ -1,113 +1,370 @@
-/* 全局样式 */
+/* 基础样式重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
-    background-color: #f8f9fa;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background: linear-gradient(135deg, #f6f9fc 0%, #edf2f7 100%);
+    color: #1a365d;
+    line-height: 1.5;
+    overflow-x: hidden;
 }
 
-/* 发送验证码背景 */
-.sendCode-container {
-    position: relative;
+/* 页面容器 */
+.page-container {
     min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    position: relative;
 }
 
-.sendCode-bg {
-    position: fixed;
+/* 装饰元素 */
+.decoration {
+    position: absolute;
+    z-index: 0;
+}
+
+.decoration.left {
+    left: 5%;
+    top: 20%;
+}
+
+.decoration.right {
+    right: 5%;
+    bottom: 20%;
+}
+
+.circle-group {
+    position: relative;
+}
+
+.circle {
+    position: absolute;
+    border-radius: 50%;
+    animation: float 6s ease-in-out infinite;
+}
+
+.c1 {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    opacity: 0.1;
+    animation-delay: 0s;
+}
+
+.c2 {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #63b3ed 0%, #4299e1 100%);
+    opacity: 0.15;
+    left: 100px;
+    top: 50px;
+    animation-delay: 1s;
+}
+
+.c3 {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #4fd1c5 0%, #38b2ac 100%);
+    opacity: 0.1;
+    left: 50px;
+    top: 100px;
+    animation-delay: 2s;
+}
+
+.c4 {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%);
+    opacity: 0.1;
+    animation-delay: 1.5s;
+}
+
+.c5 {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #fc8181 0%, #f56565 100%);
+    opacity: 0.15;
+    left: 70px;
+    top: -30px;
+    animation-delay: 0.5s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(10deg); }
+}
+
+/* 内容包装器 */
+.content-wrapper {
+    width: 100%;
+    max-width: 480px;
+    position: relative;
+    z-index: 1;
+}
+
+/* 返回按钮 */
+.back-button {
+    position: absolute;
+    top: -3rem;
+    left: 0;
+    color: #4a5568;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.back-button svg {
+    fill: currentColor;
+    margin-right: 0.5rem;
+    width: 20px;
+    height: 20px;
+}
+
+.back-button:hover {
+    color: #2d3748;
+    transform: translateX(-5px);
+}
+
+/* 表单容器 */
+.form-container {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 24px;
+    padding: 3rem;
+    box-shadow:
+            0 10px 25px rgba(0, 0, 0, 0.05),
+            0 20px 48px rgba(0, 0, 0, 0.05),
+            0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 头部样式 */
+.header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.logo-wrapper {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+}
+
+.logo-bg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #63b3ed 0%, #4299e1 100%);
+    border-radius: 20px;
+    opacity: 0.1;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.logo {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 16px;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.1); }
+}
+
+.header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.02em;
+}
+
+.subtitle {
+    color: #718096;
+    font-size: 1.1rem;
+    line-height: 1.5;
+}
+
+/* 插图样式 */
+.illustration {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.illustration img {
+    max-width: 240px;
+    height: auto;
+    animation: float 6s ease-in-out infinite;
+}
+
+/* 输入框组 */
+.input-group {
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.input-icon {
+    position: absolute;
+    left: 1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #a0aec0;
+    z-index: 1;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 1.25rem 1.25rem 1.25rem 3.25rem;
+    font-size: 1.1rem;
+    color: #2d3748;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.input-group input:focus {
+    border-color: #4299e1;
+    box-shadow: 0 0 0 4px rgba(66, 153, 225, 0.15);
+}
+
+.error-message {
+    color: #e53e3e;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    display: none;
+}
+
+/* 按钮样式 */
+.primary-button {
+    position: relative;
+    width: 100%;
+    padding: 1.25rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ffffff;
+    background: linear-gradient(135deg, #4299e1 0%, #667eea 100%);
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.button-glow {
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: url('../image/sendCode-bg.jpg') center/cover no-repeat;
-    opacity: 0.1;
-    z-index: -1;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transform: translateX(-100%);
 }
 
-/* Logo样式 */
-.logo {
-    width: 80px;
-    height: 80px;
-    object-fit: contain;
-}
-
-/* 卡片样式 */
-.card {
-    border-radius: 15px;
-    border: none;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    background-color: rgba(255, 255, 255, 0.98);
-}
-
-.card:hover {
+.primary-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(66, 153, 225, 0.4);
 }
 
-.card-body {
-    padding: 2.5rem;
+.primary-button:hover .button-glow {
+    animation: glow 1.5s infinite;
 }
 
-/* 表单样式 */
-.form-control {
-    border-radius: 8px;
-    padding: 12px 15px;
-    border: 1px solid #ced4da;
-    transition: all 0.2s ease;
+@keyframes glow {
+    100% { transform: translateX(100%); }
 }
 
-.form-control:focus {
-    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
-    border-color: #86b7fe;
+/* 分隔线 */
+.divider {
+    display: flex;
+    align-items: center;
+    margin: 2rem 0;
 }
 
-/* 按钮样式 */
-.btn-primary {
-    border-radius: 8px;
-    padding: 12px;
-    font-weight: 500;
-    background-color: #0d6efd;
+.divider-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg,
+    transparent 0%,
+    #e2e8f0 50%,
+    transparent 100%
+    );
+}
+
+.divider span {
+    padding: 0 1rem;
+    color: #718096;
+    font-size: 0.875rem;
+}
+
+/* 帮助文本 */
+.help-text {
+    text-align: center;
+    color: #718096;
+}
+
+.text-button {
+    background: none;
     border: none;
+    color: #4299e1;
+    font-weight: 500;
+    padding: 0;
+    margin-left: 0.25rem;
+    cursor: pointer;
     transition: all 0.3s ease;
 }
 
-.btn-primary:hover {
-    background-color: #0b5ed7;
-    transform: translateY(-1px);
+.text-button:hover {
+    color: #2b6cb0;
+    text-decoration: underline;
 }
 
-/* 文本样式 */
-.form-label {
-    font-weight: 500;
-    color: #495057;
-    margin-bottom: 8px;
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .decoration {
+        display: none;
+    }
+
+    .page-container {
+        padding: 1.5rem;
+    }
+
+    .form-container {
+        padding: 2rem;
+    }
+
+    .header h1 {
+        font-size: 1.75rem;
+    }
+
+    .illustration img {
+        max-width: 200px;
+    }
 }
 
-.form-text {
-    font-size: 0.875rem;
-    color: #6c757d;
-    margin-top: 0.25rem;
+/* 动画类 */
+.animate__fadeIn {
+    animation-duration: 1s;
 }
 
-/* 链接样式 */
-a {
-    color: #0d6efd;
-    transition: color 0.2s ease;
-}
-
-a:hover {
-    color: #0b5ed7;
-}
-
-/* 错误提示样式 */
-.invalid-feedback {
-    font-size: 0.875rem;
-    color: #dc3545;
-    display: none;
-}
-
-.is-invalid {
-    border-color: #dc3545;
-}
-
-.is-invalid:focus {
-    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+.animate__fadeInUp {
+    animation-duration: 1.2s;
+    animation-delay: 0.2s;
 }

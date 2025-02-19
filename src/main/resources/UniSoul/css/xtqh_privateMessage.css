@@ -1,113 +1,333 @@
 /* 全局样式 */
+:root {
+    --primary-color: #4299e1;
+    --secondary-color: #f7fafc;
+    --text-color: #2d3748;
+    --light-text: #718096;
+    --border-color: #e2e8f0;
+    --online-color: #48bb78;
+    --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
-    background-color: #f8f9fa;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--text-color);
+    background: var(--secondary-color);
+    height: 100vh;
 }
 
-/* 私信背景 */
-.privateMessage-container {
+/* 容器布局 */
+.message-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 顶部导航 */
+.top-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    background: white;
+    box-shadow: var(--shadow);
+}
+
+.back-btn {
+    color: var(--text-color);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.nav-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+/* 主要内容区域 */
+.main-content {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+}
+
+/* 联系人面板 */
+.contacts-panel {
+    width: 320px;
+    background: white;
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+}
+
+.search-box {
+    padding: 1rem;
     position: relative;
-    min-height: 100vh;
 }
 
-.privateMessage-bg {
-    position: fixed;
-    top: 0;
-    left: 0;
+.search-box input {
     width: 100%;
-    height: 100%;
-    background: url('../image/privateMessage-bg.jpg') center/cover no-repeat;
-    opacity: 0.1;
-    z-index: -1;
-}
-
-/* Logo样式 */
-.logo {
-    width: 80px;
-    height: 80px;
-    object-fit: contain;
-}
-
-/* 卡片样式 */
-.card {
-    border-radius: 15px;
-    border: none;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    background-color: rgba(255, 255, 255, 0.98);
-}
-
-.card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
-}
-
-.card-body {
-    padding: 2.5rem;
-}
-
-/* 表单样式 */
-.form-control {
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    border: 1px solid var(--border-color);
     border-radius: 8px;
-    padding: 12px 15px;
-    border: 1px solid #ced4da;
-    transition: all 0.2s ease;
+    background: var(--secondary-color);
 }
 
-.form-control:focus {
-    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
-    border-color: #86b7fe;
+.search-box i {
+    position: absolute;
+    left: 1.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--light-text);
 }
 
-/* 按钮样式 */
-.btn-primary {
-    border-radius: 8px;
-    padding: 12px;
+.contacts-list {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.contact-item:hover,
+.contact-item.active {
+    background-color: var(--secondary-color);
+}
+
+.contact-avatar {
+    position: relative;
+    margin-right: 1rem;
+}
+
+.contact-avatar img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.status-dot {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+.status-dot.online {
+    background-color: var(--online-color);
+}
+
+.contact-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.contact-name {
     font-weight: 500;
-    background-color: #0d6efd;
-    border: none;
-    transition: all 0.3s ease;
+    margin-bottom: 0.25rem;
 }
 
-.btn-primary:hover {
-    background-color: #0b5ed7;
-    transform: translateY(-1px);
-}
-
-/* 文本样式 */
-.form-label {
-    font-weight: 500;
-    color: #495057;
-    margin-bottom: 8px;
-}
-
-.form-text {
+.contact-preview {
     font-size: 0.875rem;
-    color: #6c757d;
+    color: var(--light-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.contact-meta {
+    text-align: right;
+    margin-left: 1rem;
+}
+
+.message-time {
+    font-size: 0.75rem;
+    color: var(--light-text);
+    margin-bottom: 0.5rem;
+}
+
+.unread-count {
+    background: var(--primary-color);
+    color: white;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 1rem;
+    display: inline-block;
+}
+
+/* 聊天面板 */
+.chat-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: white;
+}
+
+.chat-header {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-user {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-name {
+    font-weight: 500;
+}
+
+.user-status {
+    font-size: 0.875rem;
+    color: var(--online-color);
+}
+
+.chat-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    color: var(--light-text);
+    padding: 0.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.action-btn:hover {
+    background: var(--secondary-color);
+    color: var(--primary-color);
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 1rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.message-item {
+    max-width: 70%;
+    display: flex;
+    flex-direction: column;
+}
+
+.message-item.sent {
+    align-self: flex-end;
+}
+
+.message-item.received {
+    align-self: flex-start;
+}
+
+.message-content {
+    padding: 0.75rem 1rem;
+    border-radius: 1rem;
+    background: var(--secondary-color);
+}
+
+.message-item.sent .message-content {
+    background: var(--primary-color);
+    color: white;
+    border-bottom-right-radius: 0.25rem;
+}
+
+.message-item.received .message-content {
+    border-bottom-left-radius: 0.25rem;
+}
+
+.message-time {
+    font-size: 0.75rem;
+    color: var(--light-text);
     margin-top: 0.25rem;
+    align-self: flex-end;
 }
 
-/* 链接样式 */
-a {
-    color: #0d6efd;
-    transition: color 0.2s ease;
+.chat-input {
+    padding: 1rem;
+    border-top: 1px solid var(--border-color);
 }
 
-a:hover {
-    color: #0b5ed7;
+.input-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
 }
 
-/* 错误提示样式 */
-.invalid-feedback {
-    font-size: 0.875rem;
-    color: #dc3545;
-    display: none;
+.input-box {
+    display: flex;
+    gap: 1rem;
 }
 
-.is-invalid {
-    border-color: #dc3545;
+textarea {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    resize: none;
+    height: 2.5rem;
+    max-height: 120px;
 }
 
-.is-invalid:focus {
-    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+.send-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.send-btn:hover {
+    background: #3182ce;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .contacts-panel {
+        display: none;
+    }
+
+    .contacts-panel.active {
+        display: flex;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 10;
+    }
 }

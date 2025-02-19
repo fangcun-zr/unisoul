@@ -5,91 +5,153 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>个人信息 - 心旅坊</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../style/profile.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/xtqh_information.css">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+<!-- 背景装饰 -->
+<div class="background-decoration">
+    <div class="circle c1"></div>
+    <div class="circle c2"></div>
+    <div class="circle c3"></div>
+    <div class="wave-container">
+        <svg viewBox="0 0 1440 320" class="wave">
+            <path fill="#4299e1" fill-opacity="0.2" d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+        </svg>
+    </div>
+</div>
+
+<!-- 导航栏 -->
+<nav class="navbar navbar-expand-lg">
     <div class="container">
-        <a class="navbar-brand" href="#">心理坊</a>
+        <a class="navbar-brand" href="#">
+            <img src="../image/logo.png" alt="Logo" class="nav-logo">
+            心旅坊
+        </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
+            <i class="fas fa-bars"></i>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="dashboard.html">首页</a>
+                    <a class="nav-link" href="home.html">
+                        <i class="fas fa-home"></i> 首页
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="profile.html">个人信息</a>
+                    <a class="nav-link active" href="profile.html">
+                        <i class="fas fa-user"></i> 个人信息
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" id="logoutBtn">退出</a>
+                    <a class="nav-link" href="#" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i> 退出
+                    </a>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
 
-<div class="container mt-4">
+<div class="container main-content">
     <div class="row">
         <!-- 左侧个人信息卡片 -->
         <div class="col-md-4">
-            <div class="card">
-                <div class="card-body text-center">
-                    <div class="avatar-wrapper">
-                        <img src="../image/default-avatar.png" class="avatar" id="avatarPreview">
-                        <div class="avatar-edit">
-                            <input type="file" id="avatarUpload" accept="image/*">
-                            <label for="avatarUpload">
-                                <i class="fas fa-camera"></i>
-                            </label>
+            <div class="profile-card animate__animated animate__fadeInLeft">
+                <div class="profile-header">
+                    <div class="avatar-container">
+                        <div class="avatar-wrapper">
+                            <img src="../image/default-avatar.png" class="avatar" id="avatarPreview">
+                            <div class="avatar-edit">
+                                <input type="file" id="avatarUpload" accept="image/*">
+                                <label for="avatarUpload">
+                                    <i class="fas fa-camera"></i>
+                                </label>
+                            </div>
                         </div>
+                        <div class="avatar-glow"></div>
                     </div>
-                    <h4 class="mt-3" id="displayUsername"></h4>
-                    <p class="text-muted" id="displaySchool"></p>
+                    <h4 class="profile-name" id="displayUsername"></h4>
+                    <p class="profile-school" id="displaySchool"></p>
+                </div>
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <span class="stat-value">0</span>
+                        <span class="stat-label">文章</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">0</span>
+                        <span class="stat-label">关注</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">0</span>
+                        <span class="stat-label">粉丝</span>
+                    </div>
+                </div>
+                <div class="profile-actions">
+                    <button class="action-btn">
+                        <i class="fas fa-envelope"></i> 发送消息
+                    </button>
+                    <button class="action-btn">
+                        <i class="fas fa-user-plus"></i> 关注
+                    </button>
                 </div>
             </div>
         </div>
 
         <!-- 右侧编辑表单 -->
         <div class="col-md-8">
-            <div class="card">
+            <div class="edit-card animate__animated animate__fadeInRight">
+                <div class="card-header">
+                    <h5><i class="fas fa-edit"></i> 编辑个人信息</h5>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">编辑个人信息</h5>
                     <form id="profileForm">
-                        <div class="mb-3">
-                            <label class="form-label">用户名</label>
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-user"></i> 用户名
+                            </label>
                             <input type="text" class="form-control" id="username" readonly>
                             <div class="form-text">用户名不可修改</div>
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">性别</label>
-                            <select class="form-select" id="gender">
-                                <option value="male">男</option>
-                                <option value="female">女</option>
-                            </select>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label class="form-label">
+                                    <i class="fas fa-venus-mars"></i> 性别
+                                </label>
+                                <select class="form-select" id="gender">
+                                    <option value="male">男</option>
+                                    <option value="female">女</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="form-label">
+                                    <i class="fas fa-birthday-cake"></i> 年龄
+                                </label>
+                                <input type="number" class="form-control" id="age" min="1" max="120">
+                            </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">年龄</label>
-                            <input type="number" class="form-control" id="age" min="1" max="120">
-                            <div class="invalid-feedback"></div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">学校</label>
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-school"></i> 学校
+                            </label>
                             <input type="text" class="form-control" id="school">
-                            <div class="invalid-feedback"></div>
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">个人简介</label>
-                            <textarea class="form-control" id="biography" rows="3"></textarea>
-                            <div class="invalid-feedback"></div>
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-book-open"></i> 个人简介
+                            </label>
+                            <textarea class="form-control" id="biography" rows="4"></textarea>
                         </div>
 
-                        <button type="submit" class="btn btn-primary">保存修改</button>
+                        <button type="submit" class="submit-btn">
+                            <span>保存修改</span>
+                            <i class="fas fa-check"></i>
+                        </button>
                     </form>
                 </div>
             </div>
@@ -99,7 +161,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://kit.fontawesome.com/your-code.js"></script>
 <script src="../api/user.js"></script>
 <script src="../js/profile.js"></script>
 </body>
