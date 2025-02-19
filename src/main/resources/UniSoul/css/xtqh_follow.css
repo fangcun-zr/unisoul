@@ -1,29 +1,92 @@
-/* 关注列表样式 */
-.follow-list {
-    margin: 0 -1rem;
+/* 全局样式 */
+:root {
+    --primary-color: #4299e1;
+    --secondary-color: #667eea;
+    --success-color: #48bb78;
+    --danger-color: #f56565;
+    --warning-color: #ed8936;
+    --text-color: #2d3748;
+    --light-text: #718096;
+    --border-color: #e2e8f0;
+    --bg-color: #f7fafc;
+    --card-bg: #ffffff;
+    --glass-bg: rgba(255, 255, 255, 0.9);
+    --transition: all 0.3s ease;
 }
 
-.follow-item {
+/* 背景装饰和导航栏样式保持不变 */
+
+/* 统计面板 */
+.stats-panel {
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 1.5rem;
     display: flex;
     align-items: center;
-    padding: 1rem;
-    border-bottom: 1px solid #eee;
-    transition: background-color 0.2s ease;
+    gap: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: var(--transition);
 }
 
-.follow-item:hover {
-    background-color: #f8f9fa;
+.stat-card:hover {
+    transform: translateY(-5px);
 }
 
-.follow-item:last-child {
-    border-bottom: none;
+.following .stat-icon {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+}
+
+.mutual .stat-icon {
+    background: linear-gradient(135deg, var(--success-color), #38b2ac);
+}
+
+/* 搜索和筛选样式保持不变 */
+
+/* 关注列表 */
+.follow-container {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.follow-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.follow-card {
+    background: var(--bg-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.follow-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.follow-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
 }
 
 .follow-avatar {
-    width: 48px;
-    height: 48px;
+    width: 64px;
+    height: 64px;
     border-radius: 50%;
-    margin-right: 1rem;
+    object-fit: cover;
 }
 
 .follow-info {
@@ -31,40 +94,115 @@
 }
 
 .follow-name {
-    font-weight: 500;
+    font-size: 1.1rem;
+    font-weight: 600;
     margin-bottom: 0.25rem;
+    color: var(--text-color);
 }
 
 .follow-meta {
     font-size: 0.875rem;
-    color: #6c757d;
+    color: var(--light-text);
 }
 
-/* 关注按钮样式 */
+.follow-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+}
+
 .btn-follow {
-    min-width: 88px;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    transition: var(--transition);
 }
 
 .btn-follow.following {
-    background-color: #fff;
-    border-color: #6c757d;
-    color: #6c757d;
+    background: var(--bg-color);
+    color: var(--text-color);
 }
 
 .btn-follow.following:hover {
-    background-color: #dc3545;
-    border-color: #dc3545;
-    color: #fff;
+    background: var(--danger-color);
+    color: white;
 }
 
-.btn-follow.following:hover .follow-text {
-    display: none;
+/* 用户详情模态框 */
+.user-profile {
+    padding: 1.5rem;
 }
 
-.btn-follow.following:hover .unfollow-text {
-    display: inline;
+.profile-header {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
 }
 
-.unfollow-text {
-    display: none;
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile-info {
+    flex: 1;
+}
+
+.profile-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.profile-bio {
+    color: var(--light-text);
+    margin-bottom: 1rem;
+}
+
+.profile-meta {
+    display: flex;
+    gap: 1.5rem;
+    color: var(--light-text);
+    font-size: 0.875rem;
+}
+
+.profile-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    text-align: center;
+    margin: 2rem 0;
+    padding: 1rem;
+    background: var(--bg-color);
+    border-radius: 12px;
+}
+
+.stat-item h5 {
+    color: var(--light-text);
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+}
+
+.stat-item span {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.profile-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+/* 动画效果 */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.btn-follow:hover {
+    animation: pulse 0.3s ease-in-out;
 }

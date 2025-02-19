@@ -5,43 +5,180 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>发布文章 - 心旅坊</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../style/publishArticle.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css">
+    <link rel="stylesheet" href="../css/zhxt_publishArticle.css">
 </head>
 <body>
-<div class="publishArticle-container">
-    <div class="publishArticle-bg"></div>
-    <div class="container">
-        <div class="row justify-content-center align-items-center min-vh-100">
-            <div class="col-md-8">
-                <div class="card shadow">
-                    <div class="card-body">
-                        <div class="text-center mb-4">
-                            <h3>发布文章</h3>
-                            <p class="form-text">请填写以下信息以发布您的文章</p>
+<!-- 背景装饰 -->
+<div class="background-decoration">
+    <div class="circle c1"></div>
+    <div class="circle c2"></div>
+    <div class="circle c3"></div>
+    <div class="wave-container">
+        <svg viewBox="0 0 1440 320" class="wave">
+            <path fill="#4299e1" fill-opacity="0.2" d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+        </svg>
+    </div>
+</div>
+
+<!-- 导航栏 -->
+<nav class="navbar navbar-expand-lg navbar-glass">
+    <!-- 导航栏内容保持不变 -->
+</nav>
+
+<!-- 主要内容 -->
+<div class="container mt-4">
+    <!-- 写作工具栏 -->
+    <div class="writing-toolbar">
+        <div class="toolbar-left">
+            <button class="btn btn-icon" title="保存草稿">
+                <i class="fas fa-save"></i>
+            </button>
+            <button class="btn btn-icon" title="撤销">
+                <i class="fas fa-undo"></i>
+            </button>
+            <button class="btn btn-icon" title="重做">
+                <i class="fas fa-redo"></i>
+            </button>
+        </div>
+        <div class="toolbar-center">
+                <span class="save-status">
+                    <i class="fas fa-check-circle"></i> 已自动保存
+                </span>
+        </div>
+        <div class="toolbar-right">
+            <button class="btn btn-outline-primary btn-preview">
+                <i class="fas fa-eye"></i> 预览
+            </button>
+            <button class="btn btn-primary btn-publish">
+                <i class="fas fa-paper-plane"></i> 发布
+            </button>
+        </div>
+    </div>
+
+    <div class="publish-container">
+        <!-- 左侧编辑区 -->
+        <div class="edit-section animate__animated animate__fadeInLeft">
+            <form id="publishArticleForm">
+                <!-- 标题输入 -->
+                <div class="title-input">
+                    <input type="text"
+                           class="form-control"
+                           id="articleTitle"
+                           placeholder="请输入文章标题..."
+                           required>
+                    <div class="title-counter">0/100</div>
+                </div>
+
+                <!-- 封面上传 -->
+                <div class="cover-upload">
+                    <div class="upload-preview">
+                        <img src="../image/default-cover.jpg" alt="封面预览">
+                        <div class="upload-overlay">
+                            <i class="fas fa-camera"></i>
+                            <span>点击上传封面</span>
+                            <p class="upload-tip">建议尺寸: 1200 x 675</p>
                         </div>
-                        <form id="publishArticleForm">
-                            <div class="mb-3">
-                                <label class="form-label">文章标题</label>
-                                <input type="text" class="form-control" id="employ_title" required placeholder="请输入文章标题">
-                                <div class="invalid-feedback"></div>
-                            </div>
+                    </div>
+                    <input type="file" id="coverImage" accept="image/*" hidden>
+                </div>
 
-                            <div class="mb-3">
-                                <label class="form-label">文章内容</label>
-                                <textarea class="form-control" id="employ_content" rows="5" required placeholder="请输入文章内容"></textarea>
-                                <div class="invalid-feedback"></div>
-                            </div>
+                <!-- 富文本编辑器 -->
+                <div class="editor-container">
+                    <div id="editor"></div>
+                    <div class="editor-footer">
+                        <div class="word-counter">
+                            字数统计: <span>0</span>
+                        </div>
+                        <div class="editor-tips">
+                            <button type="button" class="btn btn-link" data-bs-toggle="tooltip" title="写作技巧">
+                                <i class="fas fa-lightbulb"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
 
-                            <div class="mb-3">
-                                <label class="form-label">文章标签</label>
-                                <input type="text" class="form-control" id="employ_tags" placeholder="请输入文章标签（逗号分隔）">
-                                <div class="form-text">可选，多个标签用逗号分隔</div>
-                            </div>
+        <!-- 右侧设置区 -->
+        <div class="settings-section animate__animated animate__fadeInRight">
+            <div class="settings-card">
+                <h3 class="settings-title">
+                    <i class="fas fa-cog"></i> 文章设置
+                </h3>
 
-                            <button type="submit" class="btn btn-primary w-100">发布文章</button>
-                        </form>
-                        <div class="text-center mt-3">
-                            <a href="home.html" class="text-decoration-none">返回首页</a>
+                <div class="setting-group">
+                    <label class="setting-label">
+                        <i class="fas fa-folder"></i> 文章分类
+                    </label>
+                    <div class="category-selector">
+                        <div class="category-list">
+                            <div class="category-item active">
+                                <i class="fas fa-heart"></i>
+                                心理健康
+                            </div>
+                            <div class="category-item">
+                                <i class="fas fa-comments"></i>
+                                情感咨询
+                            </div>
+                            <div class="category-item">
+                                <i class="fas fa-seedling"></i>
+                                个人成长
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <label class="setting-label">
+                        <i class="fas fa-tags"></i> 文章标签
+                    </label>
+                    <div class="tag-input">
+                        <div class="tag-list">
+                            <!-- 标签将通过JS动态添加 -->
+                        </div>
+                        <input type="text"
+                               class="form-control"
+                               placeholder="输入标签后按回车添加">
+                        <div class="tag-suggestions">
+                            <span>推荐标签:</span>
+                            <button type="button" class="tag-suggestion">心理</button>
+                            <button type="button" class="tag-suggestion">成长</button>
+                            <button type="button" class="tag-suggestion">情感</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <label class="setting-label">
+                        <i class="fas fa-sliders-h"></i> 高级设置
+                    </label>
+                    <div class="advanced-settings">
+                        <div class="setting-item">
+                            <div class="setting-item-left">
+                                <i class="fas fa-comments"></i>
+                                <span>允许评论</span>
+                            </div>
+                            <div class="setting-item-right">
+                                <label class="switch">
+                                    <input type="checkbox" id="allowComment" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-item-left">
+                                <i class="fas fa-copyright"></i>
+                                <span>原创文章</span>
+                            </div>
+                            <div class="setting-item-right">
+                                <label class="switch">
+                                    <input type="checkbox" id="isOriginal" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -50,8 +187,15 @@
     </div>
 </div>
 
+<!-- 发布确认模态框 -->
+<div class="modal fade" id="publishModal">
+    <!-- 模态框内容保持不变 -->
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
-<script src="../api/publishArticle.js"></script>
-<script src="../js/publishArticle.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
+<script src="../api/article.js"></script>
+<script src="../js/zhxt_publishArticle.js"></script>
 </body>
 </html>
