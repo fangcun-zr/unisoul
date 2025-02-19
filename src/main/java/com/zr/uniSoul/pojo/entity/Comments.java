@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 /**
  * 文章评论对应的Javabean
  */
@@ -17,15 +19,18 @@ public class Comments {
     private Integer id;
 
     //文章id
-    private Integer article_id;
+    private Integer articleId;
 
     //用户id
-    private Integer user_id;
+    private Integer userId;
 
     //评论内容
     private String content;
 
     //发布时间
-    private String create_time;
+    private LocalDateTime createTime;
+
+    //更新时间
+    private LocalDateTime updateTime;
 
 }

@@ -4,7 +4,9 @@ import com.github.pagehelper.Page;
 import com.zr.uniSoul.pojo.dto.CommentsPageDTO;
 import com.zr.uniSoul.pojo.dto.PageQueryDTO;
 import com.zr.uniSoul.pojo.entity.Article;
+import com.zr.uniSoul.pojo.entity.CommentLike;
 import com.zr.uniSoul.pojo.entity.Comments;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -19,4 +21,7 @@ public interface zhxtMapper {
     Page<Article> pageQuery(PageQueryDTO pageQueryDTO);
 
     Page<Comments> getComments(CommentsPageDTO commentsPageDTO);
+
+    int addComments(Comments comments);
+    int likeComments(CommentLike commentLike);
 }

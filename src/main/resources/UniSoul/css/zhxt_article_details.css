@@ -1,0 +1,256 @@
+/* 文章容器样式 */
+.article-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    padding: 2rem;
+}
+
+/* 文章标题样式 */
+.article-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 1rem;
+}
+
+/* 文章元信息样式 */
+.article-meta {
+    display: flex;
+    align-items: center;
+    color: #6c757d;
+    margin-bottom: 2rem;
+    font-size: 0.875rem;
+}
+
+.article-meta > * {
+    margin-right: 1rem;
+}
+
+.article-author {
+    display: flex;
+    align-items: center;
+}
+
+.article-author img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+}
+
+/* 文章内容样式 */
+.article-content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #343a40;
+    margin-bottom: 2rem;
+}
+
+/* 文章交互按钮样式 */
+.article-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+.btn-action {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border: none;
+    background: none;
+    color: #6c757d;
+    transition: all 0.2s ease;
+}
+
+.btn-action i {
+    margin-right: 0.5rem;
+}
+
+.btn-action:hover {
+    color: #0d6efd;
+}
+
+.btn-action.active {
+    color: #0d6efd;
+}
+
+/* 评论区样式 */
+.comment-section {
+    margin-top: 2rem;
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.comment-title {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #212529;
+}
+
+/* 评论表单样式 */
+.comment-form {
+    margin-bottom: 2rem;
+}
+
+.comment-form textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* 评论列表样式 */
+.comment-list {
+    margin-bottom: 2rem;
+}
+
+.comment-item {
+    padding: 1rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+.comment-item:last-child {
+    border-bottom: none;
+}
+
+.comment-item .user-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.comment-item .avatar-sm {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+}
+
+.comment-item .user-name {
+    font-weight: 500;
+    color: #212529;
+}
+
+.comment-item .comment-time {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+.comment-item .comment-content {
+    margin: 0.5rem 0;
+    color: #343a40;
+}
+
+.comment-item .comment-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+/* 点赞按钮样式 */
+.btn-like {
+    color: #6c757d;
+    transition: all 0.2s ease;
+    background: none;
+    border: none;
+    padding: 0.25rem 0.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.btn-like:hover {
+    color: #dc3545;
+}
+
+.btn-like.active {
+    color: #dc3545;
+}
+
+.btn-like i {
+    margin-right: 0.25rem;
+}
+
+/* 点赞动画 */
+@keyframes likeAnimation {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.btn-like.animating i {
+    animation: likeAnimation 0.3s ease;
+}
+
+/* 回复按钮样式 */
+.btn-reply {
+    color: #6c757d;
+    background: none;
+    border: none;
+    padding: 0.25rem 0.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.btn-reply:hover {
+    color: #0d6efd;
+}
+
+.btn-reply i {
+    margin-right: 0.25rem;
+}
+
+/* 回复模态框样式 */
+.original-comment {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+
+.original-comment .text-muted {
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+}
+
+/* 分页样式 */
+.comment-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.comment-pagination .btn {
+    min-width: 100px;
+}
+
+/* 响应式样式 */
+@media (max-width: 768px) {
+    .article-container {
+        margin: 1rem;
+        padding: 1rem;
+    }
+
+    .article-title {
+        font-size: 1.5rem;
+    }
+
+    .article-content {
+        font-size: 1rem;
+    }
+
+    .comment-pagination {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
