@@ -105,4 +105,10 @@ public class zhxtServiceImpl implements zhxtService {
         return zhxtMapper.likeComments(commentLike);
     }
 
+    @Override
+    public int checkArticle(Article article) {
+        //:TODO: 审核文章业务逻辑
+        return 0;
+    }
+
 }

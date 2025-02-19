@@ -1,7 +1,7 @@
 $(document).ready(function () {
     // 如果已经登录，直接跳转到首页
     if (localStorage.getItem('token')) {
-        window.location.href = 'dashboard.html';
+        window.location.href = 'home.html';
         return;
     }
 
@@ -61,19 +61,28 @@ $(document).ready(function () {
 
         // 发送登录请求
         auth.login(username, password)
-            .then(response => {
-                if (response.msg === "success") {
-                    localStorage.setItem('token', response.token);
-                    window.location.href = 'dashboard.html';
+            .done(function (response) {
+                if (response.code === 1) { // 根据后端返回的结构判断成功
+                    // 登录成功后跳转到首页
+                    window.location.href = 'home.html';
                 } else {
-                    showError('username', response.msg);
+                    showError('username', response.msg || '登录失败');
                 }
             })
-            .catch(error => {
-                showError('username', error.message || '登录失败，请稍后重试');
+            .fail(function (jqXHR) {
+                const errorMessage = jqXHR.responseJSON ? jqXHR.responseJSON.msg : '登录失败，请稍后重试';
+                showError('username', errorMessage);
             })
-            .finally(() => {
-                $submitBtn.prop('disabled', false).text(originalText);
+            .always(function () {
+                $submitBtn.prop('disabled', false).text(originalText); // 恢复按钮状态
             });
+    });
+
+    // 密码可见性切换
+    $('.password-toggle').on('click', function () {
+        const passwordField = $('#password');
+        const type = passwordField.attr('type') === 'password' ? 'text' : 'password';
+        passwordField.attr('type', type);
+        $(this).find('i').toggleClass('fa-eye fa-eye-slash');
     });
 });

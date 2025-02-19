@@ -166,4 +166,17 @@ public class zhxtController {
         }
         return 0;
     }
+    /**
+     * 审核文章
+     */
+    @PostMapping("check")
+    @ApiOperation("审核文章")
+    public R checkArticle(@RequestBody Article article, HttpServletRequest request) {
+        log.info("审核文章：{}", article);
+        int ret = zhxtService.checkArticle(article);
+        if (ret == 1) {
+            return R.success("审核成功");
+        }
+        return R.error("审核失败");
+    }
 }

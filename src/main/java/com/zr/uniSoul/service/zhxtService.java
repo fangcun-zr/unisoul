@@ -18,4 +18,6 @@ public interface zhxtService {
     int addComments(addCommentsDTO addcommentsDTO, int userId);
 
     int likeComments(String articleCommentId, int userId);
+
+    int checkArticle(Article article);
 }

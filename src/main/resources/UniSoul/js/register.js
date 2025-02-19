@@ -78,7 +78,7 @@ $(document).ready(function() {
     }
 
     // 发送验证码
-    $sendCodeBtn.click(function() {
+    $sendCodeBtn.off('click').on('click', function() {
         const email = $('#email').val().trim();
 
         if (!isValidEmail(email)) {
@@ -87,14 +87,14 @@ $(document).ready(function() {
         }
 
         auth.sendVerifyCode(email)
-            .then(response => {
+            .done(function(response) {
                 if (response.code === 200) {
                     startCountdown();
                 } else {
                     showError('email', response.message);
                 }
             })
-            .catch(error => {
+            .fail(function(jqXHR) {
                 showError('email', '发送验证码失败，请稍后重试');
             });
     });
@@ -115,7 +115,7 @@ $(document).ready(function() {
     });
 
     // 处理注册表单提交
-    $('#registerForm').on('submit', function(e) {
+    $('#registerForm').off('submit').on('submit', function(e) {
         e.preventDefault();
 
         if (!validateForm()) {
@@ -135,7 +135,7 @@ $(document).ready(function() {
         $submitBtn.prop('disabled', true).text('注册中...');
 
         auth.register(userData)
-            .then(response => {
+            .done(function(response) {
                 if (response.code === 200) {
                     alert('注册成功！');
                     window.location.href = 'login.html';
@@ -143,10 +143,10 @@ $(document).ready(function() {
                     showError('username', response.message);
                 }
             })
-            .catch(error => {
+            .fail(function(jqXHR) {
                 showError('username', '注册失败，请稍后重试');
             })
-            .finally(() => {
+            .always(function() {
                 $submitBtn.prop('disabled', false).text(originalText);
             });
     });
