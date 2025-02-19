@@ -1,0 +1,75 @@
+/* 分类列表样式 */
+.category-list .list-group-item {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.category-list .list-group-item:hover {
+    background-color: #f8f9fa;
+}
+
+.category-list .list-group-item.active {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+/* 文章列表样式 */
+.article-list {
+    margin-top: 1rem;
+}
+
+.article-item {
+    background: #fff;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease;
+}
+
+.article-item:hover {
+    transform: translateY(-2px);
+}
+
+.article-title {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #212529;
+    margin-bottom: 1rem;
+}
+
+.article-meta {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin-bottom: 1rem;
+}
+
+.article-preview {
+    color: #495057;
+    margin-bottom: 1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* 分页样式 */
+.pagination .page-link {
+    color: #0d6efd;
+    padding: 0.5rem 1rem;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: #fff;
+}
+
+.pagination .page-link:hover {
+    background-color: #e9ecef;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #6c757d;
+    pointer-events: none;
+}
