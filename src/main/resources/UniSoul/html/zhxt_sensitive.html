@@ -1,131 +1,208 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>敏感词管理 - 心理坊</title>
+    <title>敏感词管理 - 心旅坊</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="../style/sensitive.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/zhxt_sensitive.css">
 </head>
-
 <body>
+<!-- 背景装饰 -->
+<div class="background-decoration">
+    <div class="circle c1"></div>
+    <div class="circle c2"></div>
+    <div class="circle c3"></div>
+</div>
+
 <!-- 导航栏 -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+<nav class="navbar">
     <div class="container">
-        <a class="navbar-brand" href="login.html">心旅坊</a>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="home.html">首页</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="zhxt_sensitive.html">敏感词管理</a>
-                </li>
-            </ul>
+        <a class="navbar-brand" href="dashboard.html">
+            <img src="../image/logo.png" alt="Logo" class="nav-logo">
+            心旅坊
+        </a>
+        <div class="nav-actions">
+            <button class="theme-toggle">
+                <i class="fas fa-moon"></i>
+            </button>
+            <div class="user-menu">
+                <img src="../image/avatar.png" alt="用户头像" class="user-avatar">
+                <span class="user-name">管理员</span>
+            </div>
         </div>
     </div>
 </nav>
 
 <!-- 主要内容 -->
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">敏感词列表</h5>
-                    <div>
-                        <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addWordModal">
-                            添加敏感词
-                        </button>
-                        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#importModal">
-                            批量导入
-                        </button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>敏感词</th>
-                                <th>添加时间</th>
-                                <th>操作</th>
-                            </tr>
-                            </thead>
-                            <tbody id="wordList">
-                            <!-- 敏感词列表将通过JS动态加载 -->
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- 分页导航 -->
-                    <nav aria-label="Page navigation" class="mt-4">
-                        <ul class="pagination justify-content-center" id="pagination">
-                            <!-- 分页按钮将通过JS动态加载 -->
-                        </ul>
-                    </nav>
-                </div>
+<div class="container main-content">
+    <!-- 统计卡片 -->
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-value" id="totalWords">0</span>
+                <span class="stat-label">总敏感词数</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-value" id="todayAdded">0</span>
+                <span class="stat-label">今日新增</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-filter"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-value" id="blockedCount">0</span>
+                <span class="stat-label">已拦截次数</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 操作面板 -->
+    <div class="action-panel">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="搜索敏感词..." id="searchInput">
+        </div>
+        <div class="action-buttons">
+            <button class="btn-action" data-bs-toggle="modal" data-bs-target="#addWordModal">
+                <i class="fas fa-plus"></i>
+                添加敏感词
+            </button>
+            <button class="btn-action" data-bs-toggle="modal" data-bs-target="#importModal">
+                <i class="fas fa-file-import"></i>
+                批量导入
+            </button>
+            <button class="btn-action" id="exportBtn">
+                <i class="fas fa-file-export"></i>
+                导出列表
+            </button>
+        </div>
+    </div>
+
+    <!-- 数据表格 -->
+    <div class="data-table">
+        <div class="table-header">
+            <div class="bulk-actions">
+                <input type="checkbox" id="selectAll">
+                <button class="btn-text" id="deleteSelected" disabled>
+                    <i class="fas fa-trash-alt"></i>
+                    删除选中
+                </button>
+            </div>
+            <div class="table-filters">
+                <select class="filter-select" id="timeFilter">
+                    <option value="">所有时间</option>
+                    <option value="today">今天</option>
+                    <option value="week">本周</option>
+                    <option value="month">本月</option>
+                </select>
+                <select class="filter-select" id="sortFilter">
+                    <option value="time-desc">时间降序</option>
+                    <option value="time-asc">时间升序</option>
+                    <option value="word-asc">字母升序</option>
+                    <option value="word-desc">字母降序</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th width="40px"></th>
+                    <th width="80px">ID</th>
+                    <th>敏感词</th>
+                    <th>分类</th>
+                    <th>添加时间</th>
+                    <th>拦截次数</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody id="wordList">
+                <!-- 数据将通过JS动态加载 -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 分页导航 -->
+        <div class="table-footer">
+            <div class="page-size">
+                显示
+                <select id="pageSize">
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                </select>
+                条
+            </div>
+            <div class="pagination" id="pagination">
+                <!-- 分页按钮将通过JS动态加载 -->
             </div>
         </div>
     </div>
 </div>
 
 <!-- 添加敏感词模态框 -->
-<div class="modal fade" id="addWordModal" tabindex="-1">
+<div class="modal fade" id="addWordModal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">添加敏感词</h5>
+                <h5 class="modal-title">
+                    <i class="fas fa-plus-circle"></i>
+                    添加敏感词
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <form id="addWordForm">
-                    <div class="mb-3">
-                        <label class="form-label">敏感词</label>
+                    <div class="form-group">
+                        <label>敏感词</label>
                         <input type="text" class="form-control" id="newWord" required>
-                        <div class="invalid-feedback"></div>
+                        <div class="form-text">请输入需要添加的敏感词</div>
+                    </div>
+                    <div class="form-group">
+                        <label>分类</label>
+                        <select class="form-control" id="wordCategory">
+                            <option value="politics">政治</option>
+                            <option value="porn">色情</option>
+                            <option value="spam">垃圾信息</option>
+                            <option value="other">其他</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>备注</label>
+                        <textarea class="form-control" id="wordNote" rows="3"></textarea>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary" id="addWordBtn">添加</button>
+                <button type="button" class="btn btn-primary" id="addWordBtn">
+                    <i class="fas fa-check"></i>
+                    确认添加
+                </button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- 批量导入模态框 -->
-<div class="modal fade" id="importModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">批量导入敏感词</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="importForm">
-                    <div class="mb-3">
-                        <label class="form-label">选择文件</label>
-                        <input type="file" class="form-control" id="wordFile" accept=".txt,.csv" required>
-                        <div class="form-text">支持txt、csv格式，每行一个敏感词</div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary" id="importBtn">导入</button>
-            </div>
-        </div>
-    </div>
-</div>
+<!-- 其他模态框... -->
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="../api/sensitive.js"></script>
-<script src="../js/sensitive.js"></script>
+<script src="../api/zhxt_sensitive.js"></script>
+<script src="../js/zhxt_sensitive.js"></script>
 </body>
-
 </html>

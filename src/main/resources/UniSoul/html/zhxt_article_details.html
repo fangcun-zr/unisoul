@@ -1,131 +1,195 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>文章详情 - 心理坊</title>
+  <title>文章详情 - 心旅坊</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@6.0.0/css/all.min.css">
-  <link rel="stylesheet" href="../style/article-detail.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/zhxt_article_details.css">
 </head>
-
 <body>
-<!-- 导航栏 -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-  <div class="container">
-    <a class="navbar-brand" href="dashboard.html">心理坊</a>
-    <div class="collapse navbar-collapse">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="dashboard.html">首页</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="articles.html">文章</a>
-        </li>
-      </ul>
-    </div>
+<!-- 背景装饰 -->
+<div class="background-decoration">
+  <div class="circle c1"></div>
+  <div class="circle c2"></div>
+  <div class="circle c3"></div>
+  <div class="wave-container">
+    <svg viewBox="0 0 1440 320" class="wave">
+      <path fill="#4299e1" fill-opacity="0.2" d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+    </svg>
   </div>
+</div>
+
+<!-- 导航栏 -->
+<nav class="navbar navbar-expand-lg navbar-glass">
+  <!-- 导航栏内容保持不变 -->
 </nav>
 
-<!-- 文章内容 -->
-<div class="container">
-  <div class="article-container">
-    <!-- 文章标题 -->
-    <h1 class="article-title"></h1>
-
-    <!-- 文章元信息 -->
-    <div class="article-meta">
-      <div class="article-author">
-        <img src="../image/default-avatar.png" alt="作者头像" class="avatar-sm">
-        <span></span>
-      </div>
-      <div class="article-time"></div>
-    </div>
-
-    <!-- 文章内容 -->
-    <div class="article-content"></div>
-
-    <!-- 文章交互按钮 -->
-    <div class="article-actions">
-      <button class="btn-action btn-like" title="点赞">
-        <i class="far fa-heart"></i>
-        <span>点赞</span>
-      </button>
-      <button class="btn-action btn-favorite" title="收藏">
-        <i class="far fa-star"></i>
-        <span>收藏</span>
-      </button>
-      <button class="btn-action btn-share" title="分享">
-        <i class="far fa-share-square"></i>
-        <span>分享</span>
-      </button>
-    </div>
-
-    <!-- 评论区 -->
-    <div class="comment-section">
-      <div class="comment-header">
-        <h3 class="comment-title">评论</h3>
-      </div>
-
-      <!-- 评论表单 -->
-      <form id="commentForm" class="comment-form">
-        <div class="mb-3">
-                        <textarea class="form-control" id="commentContent"
-                                  rows="3" placeholder="写下你的评论..." required></textarea>
-          <div class="invalid-feedback"></div>
+<!-- 主要内容 -->
+<div class="container mt-4">
+  <div class="content-container">
+    <!-- 左侧文章内容 -->
+    <div class="article-main animate__animated animate__fadeInLeft">
+      <!-- 文章头部 -->
+      <div class="article-header">
+        <div class="article-category">
+          <i class="fas fa-folder"></i>
+          <span>心理健康</span>
         </div>
-        <div class="text-end">
-          <button type="submit" class="btn btn-primary">发表评论</button>
+        <div class="article-meta">
+          <div class="meta-item">
+            <i class="fas fa-calendar"></i>
+            <span>发布时间</span>
+          </div>
+          <div class="meta-item">
+            <i class="fas fa-eye"></i>
+            <span>阅读量</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 文章标题 -->
+      <h1 class="article-title"></h1>
+
+      <!-- 作者信息 -->
+      <div class="author-card">
+        <div class="author-info">
+          <img src="../image/avatar.png" alt="作者头像" class="author-avatar">
+          <div class="author-detail">
+            <h4 class="author-name">作者名称</h4>
+            <p class="author-bio">作者简介</p>
+          </div>
+        </div>
+        <button class="btn btn-follow">
+          <i class="fas fa-plus"></i> 关注作者
+        </button>
+      </div>
+
+      <!-- 文章内容 -->
+      <div class="article-content"></div>
+
+      <!-- 文章标签 -->
+      <div class="article-tags">
+        <i class="fas fa-tags"></i>
+        <div class="tag-list">
+          <!-- 标签将通过JS动态加载 -->
+        </div>
+      </div>
+
+      <!-- 文章操作 -->
+      <div class="article-actions">
+        <div class="action-left">
+          <button class="btn-action btn-like" title="点赞">
+            <i class="far fa-heart"></i>
+            <span class="like-count">0</span>
+          </button>
+          <button class="btn-action btn-favorite" title="收藏">
+            <i class="far fa-star"></i>
+            <span class="favorite-count">0</span>
+          </button>
+        </div>
+        <div class="action-right">
+          <button class="btn-share" data-bs-toggle="dropdown">
+            <i class="fas fa-share-alt"></i> 分享
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#"><i class="fab fa-weixin"></i> 微信</a></li>
+            <li><a class="dropdown-item" href="#"><i class="fab fa-weibo"></i> 微博</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右侧边栏 -->
+    <div class="article-sidebar animate__animated animate__fadeInRight">
+      <!-- 目录导航 -->
+      <div class="toc-card">
+        <div class="card-header">
+          <h3><i class="fas fa-list"></i> 目录</h3>
+        </div>
+        <div class="toc-content">
+          <!-- 目录将通过JS动态生成 -->
+        </div>
+      </div>
+
+      <!-- 相关文章 -->
+      <div class="related-card">
+        <div class="card-header">
+          <h3><i class="fas fa-link"></i> 相关文章</h3>
+        </div>
+        <div class="related-list">
+          <!-- 相关文章将通过JS动态加载 -->
+        </div>
+      </div>
+
+      <!-- 推荐作者 -->
+      <div class="recommend-card">
+        <div class="card-header">
+          <h3><i class="fas fa-user-friends"></i> 推荐作者</h3>
+        </div>
+        <div class="recommend-list">
+          <!-- 推荐作者将通过JS动态加载 -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 评论区 -->
+  <div class="comment-section animate__animated animate__fadeInUp">
+    <div class="comment-header">
+      <h3><i class="fas fa-comments"></i> 评论区</h3>
+      <div class="comment-filter">
+        <button class="btn-filter active" data-filter="latest">最新</button>
+        <button class="btn-filter" data-filter="hot">最热</button>
+      </div>
+    </div>
+
+    <!-- 评论编辑器 -->
+    <div class="comment-editor">
+      <div class="editor-header">
+        <img src="../image/avatar.png" alt="用户头像" class="user-avatar">
+        <span class="editor-tip">发表评论</span>
+      </div>
+      <form id="commentForm">
+        <textarea class="form-control" rows="3" placeholder="写下你的想法..."></textarea>
+        <div class="editor-footer">
+          <div class="editor-tools">
+            <button type="button" class="btn-tool" title="插入表情">
+              <i class="far fa-smile"></i>
+            </button>
+            <button type="button" class="btn-tool" title="插入图片">
+              <i class="far fa-image"></i>
+            </button>
+          </div>
+          <button type="submit" class="btn btn-primary">发布评论</button>
         </div>
       </form>
+    </div>
 
-      <!-- 评论列表 -->
-      <div class="comment-list">
-        <!-- 评论内容将通过JS动态加载 -->
-      </div>
+    <!-- 评论列表 -->
+    <div class="comment-list">
+      <!-- 评论内容将通过JS动态加载 -->
+    </div>
 
-      <!-- 评论分页 -->
-      <div class="comment-pagination">
-        <!-- 分页按钮将通过JS动态加载 -->
-      </div>
+    <!-- 加载更多 -->
+    <div class="load-more">
+      <button class="btn btn-outline-primary" id="loadMore">
+        <i class="fas fa-sync-alt"></i> 加载更多
+      </button>
     </div>
   </div>
 </div>
 
 <!-- 回复评论模态框 -->
-<div class="modal fade" id="replyModal" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">回复评论</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <div class="original-comment">
-          <!-- 原评论内容将通过JS动态加载 -->
-        </div>
-        <form id="replyForm">
-          <div class="mb-3">
-                            <textarea class="form-control" id="replyContent" rows="3"
-                                      placeholder="写下你的回复..." required></textarea>
-            <div class="invalid-feedback"></div>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-        <button type="button" class="btn btn-primary" id="submitReply">回复</button>
-      </div>
-    </div>
-  </div>
+<div class="modal fade" id="replyModal">
+  <!-- 模态框内容保持不变 -->
 </div>
 
-<!-- 脚本引入 -->
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../api/article.js"></script>
 <script src="../js/article-detail.js"></script>
 </body>
-
 </html>

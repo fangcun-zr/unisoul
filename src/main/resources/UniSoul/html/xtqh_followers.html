@@ -3,22 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>粉丝昵称 - 心旅坊</title>
+    <title>粉丝管理 - 心旅坊</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../css/xtqh_followers.css">
 </head>
 <body>
+<!-- 背景装饰 -->
+<div class="background-decoration">
+    <div class="circle c1"></div>
+    <div class="circle c2"></div>
+    <div class="circle c3"></div>
+    <div class="wave-container">
+        <svg viewBox="0 0 1440 320" class="wave">
+            <path fill="#4299e1" fill-opacity="0.2" d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+        </svg>
+    </div>
+</div>
+
 <!-- 导航栏 -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+<nav class="navbar navbar-expand-lg navbar-glass">
     <div class="container">
-        <a class="navbar-brand" href="home.html">心旅坊</a>
+        <a class="navbar-brand" href="dashboard.html">
+            <img src="../image/logo.png" alt="Logo" class="nav-logo">
+            心旅坊
+        </a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="home.html">首页</a>
+                    <a class="nav-link" href="dashboard.html">
+                        <i class="fas fa-home"></i> 首页
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="xtqh_followers.html.html">粉丝昵称</a>
+                    <a class="nav-link active" href="followers.html">
+                        <i class="fas fa-users"></i> 粉丝管理
+                    </a>
                 </li>
             </ul>
         </div>
@@ -27,43 +48,113 @@
 
 <!-- 主要内容 -->
 <div class="container mt-4">
-    <div class="row">
-        <div class="col-md-8 mx-auto">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">粉丝昵称管理</h5>
-                </div>
-                <div class="card-body">
-                    <div class="fans-list">
-                        <!-- 粉丝列表将通过JS动态加载 -->
+    <!-- 统计面板 -->
+    <div class="stats-panel">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="stat-card followers">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 class="stat-value" id="totalFollowers">0</h3>
+                        <p class="stat-label">总粉丝数</p>
                     </div>
                 </div>
             </div>
+            <div class="col-md-3">
+                <div class="stat-card active">
+                    <div class="stat-icon">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 class="stat-value" id="activeFollowers">0</h3>
+                        <p class="stat-label">活跃粉丝</p>
+                    </div>
+                </div>
+            </div>
+            <!-- 更多统计卡片... -->
+        </div>
+    </div>
+
+    <!-- 搜索和筛选 -->
+    <div class="filter-panel">
+        <div class="search-box">
+            <input type="text" class="form-control" placeholder="搜索粉丝...">
+            <i class="fas fa-search"></i>
+        </div>
+        <div class="filter-actions">
+            <button class="btn btn-filter" data-filter="all">
+                <i class="fas fa-users"></i> 全部
+            </button>
+            <button class="btn btn-filter" data-filter="active">
+                <i class="fas fa-user-check"></i> 活跃
+            </button>
+            <button class="btn btn-filter" data-filter="inactive">
+                <i class="fas fa-user-clock"></i> 不活跃
+            </button>
+            <div class="dropdown">
+                <button class="btn btn-filter dropdown-toggle" data-bs-toggle="dropdown">
+                    <i class="fas fa-sort"></i> 排序
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">关注时间</a></li>
+                    <li><a class="dropdown-item" href="#">活跃度</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 粉丝列表 -->
+    <div class="followers-container">
+        <div class="followers-list">
+            <!-- 粉丝列表将通过JS动态加载 -->
+        </div>
+
+        <!-- 加载更多 -->
+        <div class="load-more">
+            <button class="btn btn-outline-primary" id="loadMore">
+                <i class="fas fa-sync-alt"></i> 加载更多
+            </button>
         </div>
     </div>
 </div>
 
 <!-- 修改昵称模态框 -->
-<div class="modal fade" id="nicknameModal" tabindex="-1">
+<div class="modal fade" id="nicknameModal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">设置粉丝昵称</h5>
+                <h5 class="modal-title">
+                    <i class="fas fa-user-edit"></i> 设置粉丝昵称
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
+                <div class="fan-preview">
+                    <img src="../image/avatar.png" alt="粉丝头像" class="fan-avatar">
+                    <div class="fan-info">
+                        <h6 class="fan-name">粉丝名称</h6>
+                        <p class="fan-meta">关注时间: 2024-01-01</p>
+                    </div>
+                </div>
                 <form id="nicknameForm">
-                    <div class="mb-3">
+                    <div class="form-group">
                         <label class="form-label">昵称</label>
                         <input type="text" class="form-control" id="nickname" required>
-                        <div class="invalid-feedback"></div>
+                        <div class="form-text">设置一个好记的昵称，方便后续互动</div>
                     </div>
-                    <input type="hidden" id="fanId">
+                    <div class="form-group">
+                        <label class="form-label">备注</label>
+                        <textarea class="form-control" id="note" rows="2"></textarea>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary" id="saveNickname">保存</button>
+                <button type="button" class="btn btn-primary" id="saveNickname">
+                    <i class="fas fa-save"></i> 保存
+                </button>
             </div>
         </div>
     </div>
@@ -72,6 +163,6 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../api/user.js"></script>
-<script src="../js/fans.js"></script>
+<script src="../js/xtqh_followers.js"></script>
 </body>
 </html>

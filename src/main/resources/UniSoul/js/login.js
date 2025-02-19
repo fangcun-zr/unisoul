@@ -1,7 +1,9 @@
 $(document).ready(function () {
-    // 如果已经登录，直接跳转到首页
+    // 检查登录状态
     if (localStorage.getItem('token')) {
-        window.location.href = 'dashboard.html';
+        // 获取返回地址,如果没有则跳转到首页
+        const returnUrl = sessionStorage.getItem('returnUrl') || 'dashboard.html';
+        window.location.href = returnUrl;
         return;
     }
 
@@ -53,18 +55,29 @@ $(document).ready(function () {
 
         const username = $('#username').val().trim();
         const password = $('#password').val().trim();
+        const remember = $('#remember').prop('checked'); // 获取记住我选项
 
         // 显示加载状态
         const $submitBtn = $(this).find('button[type="submit"]');
-        const originalText = $submitBtn.text();
-        $submitBtn.prop('disabled', true).text('登录中...');
+        const originalText = $submitBtn.html();
+        $submitBtn.prop('disabled', true)
+            .html('<i class="fas fa-spinner fa-spin"></i> 登录中...');
 
         // 发送登录请求
         auth.login(username, password)
             .then(response => {
                 if (response.msg === "success") {
+                    // 保存token
                     localStorage.setItem('token', response.token);
-                    window.location.href = 'dashboard.html';
+
+                    // 如果选择了记住我,保存用户名
+                    if (remember) {
+                        localStorage.setItem('username', username);
+                    }
+
+                    // 跳转到返回地址或首页
+                    const returnUrl = sessionStorage.getItem('returnUrl') || 'dashboard.html';
+                    window.location.href = returnUrl;
                 } else {
                     showError('username', response.msg);
                 }
@@ -73,7 +86,28 @@ $(document).ready(function () {
                 showError('username', error.message || '登录失败，请稍后重试');
             })
             .finally(() => {
-                $submitBtn.prop('disabled', false).text(originalText);
+                $submitBtn.prop('disabled', false).html(originalText);
             });
     });
+
+    // 密码显示切换
+    $('.password-toggle').on('click', function () {
+        const $password = $('#password');
+        const $icon = $(this).find('i');
+
+        if ($password.attr('type') === 'password') {
+            $password.attr('type', 'text');
+            $icon.removeClass('fa-eye').addClass('fa-eye-slash');
+        } else {
+            $password.attr('type', 'password');
+            $icon.removeClass('fa-eye-slash').addClass('fa-eye');
+        }
+    });
+
+    // 如果存在保存的用户名,自动填充
+    const savedUsername = localStorage.getItem('username');
+    if (savedUsername) {
+        $('#username').val(savedUsername);
+        $('#remember').prop('checked', true);
+    }
 });
