@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 /**
  * 文章表对应的 JavaBean 类。
@@ -28,19 +26,19 @@ public class Article {
     private String content;
 
     /** 分类ID (1:心理 2:学习 3:生活 4:就业) */
-    private int categoryId;
+    private int category_id;
 
     /** 子分类ID，可以为空 */
     private Integer subCategoryId;
 
     /** 封面图片URL，可以为空 */
-    private String coverImage;
+    private String cover_image;
 
     /** 标签 (逗号分隔)，可以为空 */
     private String tags;
 
     /** 作者ID */
-    private int authorId;
+    private int author_id;
 
     /** 状态 (draft:草稿 pending:待审核 published:已发布) */
     private int status;
@@ -61,19 +59,19 @@ public class Article {
     private int commentCount;
 
     /** 创建时间，默认为当前时间 */
-    private LocalDateTime createTime;
+    private LocalDateTime create_time;
 
     /** 更新时间，默认为当前时间，数据更新时自动更新 */
-    private LocalDateTime updateTime;
+    private LocalDateTime update_time;
 
     private MultipartFile file;
 
     public void setCreateTime() {
-        this.createTime = LocalDateTime.now();
+        this.create_time = LocalDateTime.now();
     }
 
-    public void setUpdateTime() {
-        this.updateTime = LocalDateTime.now();
+    public void setUpdate_time() {
+        this.update_time = LocalDateTime.now();
     }
     // Getter and Setter methods...
 

@@ -52,7 +52,7 @@ public class zhxtController {
         article.setTitle(title);
         article.setContent(content);
         article.setTags(tags);
-        article.setCategoryId(Integer.parseInt(category_id));
+        article.setCategory_id(Integer.parseInt(category_id));
         log.info("文件上传:{}",file);
         try {
             //原始文件名
@@ -63,7 +63,7 @@ public class zhxtController {
             String objectName = UUID.randomUUID().toString() + extension;
             //上传文件
             String filePath = aliOssUtil.upload(file.getBytes(), objectName);
-            article.setCoverImage(filePath);
+            article.setCover_image(filePath);
         } catch (IOException e) {
             log.error("文件上传失败:{}",e);
         }
@@ -72,7 +72,7 @@ public class zhxtController {
         HttpSession session = request.getSession();
         String username = (String) session.getAttribute("username");
         int authorId = zhxtService.findIdByUsername(username);
-        article.setAuthorId(authorId);
+        article.setAuthor_id(authorId);
         int ret = zhxtService.publish(article);
         if (ret == 1) {
             return R.success("发布成功，待审核");
@@ -85,11 +85,12 @@ public class zhxtController {
      * @param pageQueryDTO
      * @return
      */
-    @GetMapping("list")
+    @PostMapping("list")
     @ApiOperation("文章列表")
     public R<PageResult> list(@RequestBody PageQueryDTO pageQueryDTO) {
         log.info("分页查询：{}", pageQueryDTO);
         PageResult pageResult = zhxtService.pageQuery(pageQueryDTO);
+        log.info("分页查询结果：{}", pageResult);
         return R.success(pageResult);
 
     }
@@ -165,6 +166,19 @@ public class zhxtController {
             return (Integer) userIdObj;
         }
         return 0;
+    }
+    /**
+     * 获取文章详情信息
+     */
+    @GetMapping("detail")
+    @ApiOperation("获取文章详情信息")
+    public R<Article> getArticleDetail(@RequestParam String id) {
+        log.info("获取文章详情信息：文章id={}", id);
+        Article article = zhxtService.getArticleDetail(id);
+        if (article != null) {
+            return R.success(article);
+        }
+        return R.error("文章不存在");
     }
     /**
      * 审核文章

@@ -34,4 +34,10 @@ unisoul:
     accessKeyId: LTAI5tDZHAq7wyyUY6vfSda9
     accessKeySecret: ot8o6jjntLvCEDNoHG9QqvQ9wgSuns
     bucketName: uni-soul
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
+
 

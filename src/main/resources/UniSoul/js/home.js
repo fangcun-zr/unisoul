@@ -1,3 +1,5 @@
+// const API_BASE_URL = 'http://localhost:8080';
+
 $(document).ready(function() {
     // 检查登录状态
     // if (!localStorage.getItem('token')) {
@@ -43,7 +45,7 @@ $(document).ready(function() {
     // 加载用户统计信息
     function loadUserStats() {
         // 获取文章数量
-        article.getList(1, 1)
+        article.getArticleList(1, 5)
             .then(response => {
                 if (response.code === 200) {
                     $('#articleCount').text(response.total || 0);
@@ -67,36 +69,73 @@ $(document).ready(function() {
             });
     }
 
-    // 加载文章列表
-    function loadArticles() {
-        article.getList(1, 5)
+    // 获取文章列表
+    article.getArticleList = function (page = 1, pageSize = 5, category_id = '') {
+        return $.ajax({
+            url: `${API_BASE_URL}/zhxt/list`,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                page: parseInt(page), // 确保 page 是整数
+                pageSize: parseInt(pageSize), // 确保 pageSize 是整数
+                category_id: category_id ? parseInt(category_id) : null // 处理 category_id
+            })
+        });
+    };
+
+// 加载文章列表
+    function loadArticles(page = 1, pageSize = 5, category_id = '') {
+        article.getArticleList(page, pageSize, category_id)
             .then(response => {
-                if (response.code === 200 && response.data) {
+                if (response.code === 1 && response.data) {
                     const articleList = $('#articleList');
                     articleList.empty();
 
-                    response.data.forEach(article => {
+                    response.data.records.forEach(article => {
+                        // 确保 article.id 存在并转换为字符串
+                        const articleId = article.id || 'unknown';
+
                         const articleHtml = `
-                            <div class="article-item">
-                                <h5 class="title">
-                                    <a href="#" class="text-decoration-none">${article.title}</a>
-                                </h5>
-                                <p class="text-muted mb-2">${article.summary}</p>
-                                <div class="meta">
-                                    <span><i class="far fa-user"></i> ${article.author}</span>
-                                    <span class="ms-3"><i class="far fa-clock"></i> ${article.createTime}</span>
-                                    <span class="ms-3"><i class="far fa-eye"></i> ${article.views || 0}</span>
-                                    <span class="ms-3"><i class="far fa-comment"></i> ${article.comments || 0}</span>
-                                </div>
+                        <div class="article-item">
+                            <h5 class="title">
+                                <!-- 通过 href 传递文章 ID 到详情页面 -->
+                                <a href="zhxt_article_details.html?id=${encodeURIComponent(articleId)}" class="text-decoration-none">${article.title || '无标题'}</a>
+                            </h5>
+                            <p class="text-muted mb-2">${article.content || '无摘要'}</p>
+                            <div class="meta">
+                                <span><i class="far fa-user"></i> ${article.author_id || '未知作者'}</span>
+                                <span class="ms-3"><i class="far fa-clock"></i> ${formatDate(article.create_time)}</span>
+                                <span class="ms-3"><i class="far fa-eye"></i> ${article.viewCount || 0}</span>
+                                <span class="ms-3"><i class="far fa-comment"></i> ${article.commentCount || 0}</span>
                             </div>
-                        `;
+                        </div>
+                    `;
                         articleList.append(articleHtml);
                     });
+
+                    updatePagination(response.data.total, page, pageSize);
+                } else {
+                    console.error('后端返回的数据无效或请求失败');
                 }
             })
             .catch(error => {
                 console.error('加载文章列表失败:', error);
             });
+    }
+
+// 格式化日期
+    function formatDate(dateStr) {
+        if (!dateStr) return '未知时间';
+        return new Date(dateStr).toLocaleString();
+    }
+
+// 更新分页信息
+    function updatePagination(total, currentPage, pageSize) {
+        const paginationElement = $('#paginationInfo');
+        if (paginationElement.length > 0) {
+            const totalPages = Math.ceil(total / pageSize);
+            paginationElement.text(`第 ${currentPage} 页 / 共 ${totalPages} 页 (${total} 条记录)`);
+        }
     }
 
     // 加载热门话题

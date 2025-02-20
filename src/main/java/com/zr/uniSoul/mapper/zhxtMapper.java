@@ -24,4 +24,14 @@ public interface zhxtMapper {
 
     int addComments(Comments comments);
     int likeComments(CommentLike commentLike);
+
+    Page<Article> pageQueryAll(PageQueryDTO pageQueryDTO);
+
+    @Select("SELECT COUNT(*) FROM article")
+    Long countQueryAll();
+
+
+    Long countQuery(PageQueryDTO pageQueryDTO);
+
+    Article getArticleDetailById(int articleId);
 }

@@ -20,4 +20,6 @@ public interface zhxtService {
     int likeComments(String articleCommentId, int userId);
 
     int checkArticle(Article article);
+
+    Article getArticleDetail(String id);
 }

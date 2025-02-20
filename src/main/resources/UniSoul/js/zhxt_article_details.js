@@ -1,19 +1,19 @@
 $(document).ready(function() {
     // 检查登录状态
-    if (!localStorage.getItem('token')) {
-        window.location.href = 'login.html';
-        return;
-    }
+    // if (!localStorage.getItem('token')) {
+    //     window.location.href = 'login.html';
+    //     return;
+    // }
 
     let commentPage = 1;
     const commentPageSize = 10;
     let totalCommentPages = 0;
     let currentReplyTo = null; // 当前回复的评论ID
 
-    // 从URL获取文章ID
+    // 获取 URL 参数中的文章 ID
     function getArticleIdFromUrl() {
         const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get('id');
+        return urlParams.get('id'); // 假设 URL 格式为 ?id=123
     }
 
     // 显示错误信息
@@ -37,13 +37,14 @@ $(document).ready(function() {
     function loadArticleDetail() {
         const articleId = getArticleIdFromUrl();
         if (!articleId) {
+            alert('文章不存在');
             window.location.href = 'articles.html';
             return;
         }
 
-        article.getDetail(articleId)
+        article.getArticleDetail(articleId)
             .then(response => {
-                if (response.code === 200) {
+                if (response.code === 1) {
                     const data = response.data;
 
                     // 更新文章内容
@@ -69,6 +70,8 @@ $(document).ready(function() {
                 alert('加载文章失败，请重试');
             });
     }
+
+
 
     // 加载评论列表
     function loadComments(page = 1) {

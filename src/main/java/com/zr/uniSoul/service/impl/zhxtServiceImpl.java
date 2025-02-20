@@ -37,7 +37,7 @@ public class zhxtServiceImpl implements zhxtService {
     @Override
     public Integer publish(Article article) {
         article.setCreateTime();
-        article.setUpdateTime();
+        article.setUpdate_time();
         return zhxtMapper.insert(article);
     }
 
@@ -48,10 +48,29 @@ public class zhxtServiceImpl implements zhxtService {
      */
     @Override
     public PageResult pageQuery(PageQueryDTO pageQueryDTO) {
-        PageHelper.startPage(pageQueryDTO.getPage(),pageQueryDTO.getPageSize());
-        //下一条sql进行分页，自动加入limit关键字分页
-        Page<Article> page = zhxtMapper.pageQuery(pageQueryDTO);
-        return new PageResult(page.getTotal(), page.getResult());
+        // 启动分页
+        PageHelper.startPage(pageQueryDTO.getPage(), pageQueryDTO.getPageSize());
+
+        // 根据条件选择不同的查询方法
+        if (pageQueryDTO.getCategory_id() == null) {
+            // 查询所有数据
+            Page<Article> page = zhxtMapper.pageQueryAll(pageQueryDTO);
+
+            // 手动获取总记录数
+            Long total = zhxtMapper.countQueryAll();
+
+            // 返回封装结果
+            return new PageResult(total, page.getResult());
+        } else {
+            // 查询带条件的数据
+            Page<Article> page = zhxtMapper.pageQuery(pageQueryDTO);
+
+            // 手动获取总记录数
+            Long total = zhxtMapper.countQuery(pageQueryDTO);
+
+            // 返回封装结果
+            return new PageResult(total, page.getResult());
+        }
     }
 
     /**
@@ -109,6 +128,12 @@ public class zhxtServiceImpl implements zhxtService {
     public int checkArticle(Article article) {
         //:TODO: 审核文章业务逻辑
         return 0;
+    }
+
+    @Override
+    public Article getArticleDetail(String id) {
+        int articleId = Integer.parseInt(id);
+        return zhxtMapper.getArticleDetailById(articleId);
     }
 
 }

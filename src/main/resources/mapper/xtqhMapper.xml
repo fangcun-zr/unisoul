@@ -1,28 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.zr.uniSoul.mapper.zhxtMapper">
+<mapper namespace="com.zr.uniSoul.mapper.xtqhMapper">
+    <update id="update">
+        update user set name=#{name},age=#{age},gender=#{gender},school=#{school},biography=#{biography},school=#{school},avatarUrl=#{avatarUrl}  where username = #{username}
+    </update>
 
-    <insert id="insert">
-        insert into article(title,author_id,content,create_time,cover_image,tags,category_id,update_time) values(#{title},#{authorId},#{content},#{createTime},#{coverImage},#{tags},#{categoryId},#{updateTime})
-    </insert>
-    <insert id="addComments">
-        insert into article_comment(article_id,user_id,create_time,content,update_time) values(#{articleId},#{userId},#{createTime},#{content},#{updateTime})
-    </insert>
-    <insert id="likeComments">
-        insert into likes(article_comment_id,user_id,create_time,update_time) values(#{articleCommentId},#{userId},#{createTime},#{updateTime})
-    </insert>
-    <select id="pageQuery" resultType="com.zr.uniSoul.pojo.entity.Article">
-        select * from article
-        <where>
-            <if test="category_id != null">
-                and category_id = #{category_id}
-            </if>
-        </where>
-        order by like_count asc , create_time desc
 
+    <select id="findByPasswordAndUsername" resultType="com.zr.uniSoul.pojo.entity.User">
+        select * from user where password = #{password} and username = #{username}
     </select>
-    <select id="getComments" resultType="com.zr.uniSoul.pojo.entity.Comments">
-        select * from article_comment where article_id = #{articleId} order by create_time desc
+    <select id="findByUsername" resultType="com.zr.uniSoul.pojo.entity.User">
+        select * from user where username = #{username}
     </select>
 </mapper>

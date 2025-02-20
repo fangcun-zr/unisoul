@@ -1,3 +1,4 @@
+const API_BASE_URL = 'http://localhost:8080';
 // 文章相关的API请求
 const article = {
     // 文章基础操作
@@ -39,20 +40,20 @@ const article = {
     },
 
     // 获取文章列表(分页)
-    getArticleList: function(page = 1, limit = 10, category = '') {
+
+    getArticleList: function(page = 1, pageSize = 5, category_id = '') {
         return $.ajax({
-            url: `${API_BASE_URL}/article/list`,
-            type: 'GET',
-            headers: {
-                'Authorization': localStorage.getItem('token')
-            },
-            data: {
+            url: `${API_BASE_URL}/zhxt/list`,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
                 page: page,
-                limit: limit,
-                category: category
-            }
+                pageSize: pageSize,
+                category_id: category_id
+            })
         });
     },
+
 
     // 获取我的文章列表
     getMyArticles: function(page = 1, limit = 10) {
@@ -72,18 +73,18 @@ const article = {
     // 获取文章详情
     getArticleDetail: function(articleId) {
         return $.ajax({
-            url: `${API_BASE_URL}/article/detail/${articleId}`,
+            url: `${API_BASE_URL}/zhxt/detail/${articleId}`,
             type: 'GET',
-            headers: {
-                'Authorization': localStorage.getItem('token')
-            }
+            // headers: {
+            //     'Authorization': localStorage.getItem('token')
+            // }
         });
     },
 
     // 获取文章分类列表
     getCategories: function() {
         return $.ajax({
-            url: `${API_BASE_URL}/article/categories`,
+            url: `${API_BASE_URL}/article/list`,
             type: 'GET',
             headers: {
                 'Authorization': localStorage.getItem('token')
@@ -237,10 +238,7 @@ const article = {
                 }
             });
         }
-    }
-};
-// 文章相关的API请求
-const article = {
+    },
     // 文章基础操作
     // ... 保持现有的文章基础操作不变 ...
 
@@ -349,6 +347,8 @@ const article = {
             });
         }
     },
+};
+
+
 
     // ... 保持现有的文章交互操作不变 ...
-};
