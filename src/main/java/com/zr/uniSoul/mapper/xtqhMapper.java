@@ -17,4 +17,8 @@ public interface xtqhMapper {
     User findByUsername(String username);
 
     int update(User user);
+
+    int follow(int user_id, int role_id);
+
+    Integer findIdByUsername(String role_name);
 }
