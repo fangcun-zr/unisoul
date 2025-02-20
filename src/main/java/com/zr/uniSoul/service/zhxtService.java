@@ -5,6 +5,7 @@ import com.zr.uniSoul.pojo.dto.CommentsPageDTO;
 import com.zr.uniSoul.pojo.dto.PageQueryDTO;
 import com.zr.uniSoul.pojo.dto.addCommentsDTO;
 import com.zr.uniSoul.pojo.entity.Article;
+import com.zr.uniSoul.pojo.entity.User;
 
 public interface zhxtService {
     int findIdByUsername(String username);
@@ -22,4 +23,6 @@ public interface zhxtService {
     int checkArticle(Article article);
 
     Article getArticleDetail(String id);
+
+    User getUserByArticleId(String articleId);
 }

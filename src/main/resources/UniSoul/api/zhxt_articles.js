@@ -81,6 +81,17 @@ const article = {
         });
     },
 
+    //获取作者详情信息
+    getAuthor_info: function(articleId) {
+        return $.ajax({
+            url: `${API_BASE_URL}/zhxt/author_info?id=${articleId}`,
+            type: 'GET',
+            // headers: {
+            //     'Authorization': localStorage.getItem('token')
+            // }
+        });
+    },
+
     // 获取文章分类列表
     getCategories: function() {
         return $.ajax({

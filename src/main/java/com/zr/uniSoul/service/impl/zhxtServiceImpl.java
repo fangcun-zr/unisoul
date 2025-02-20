@@ -8,6 +8,7 @@ import com.zr.uniSoul.pojo.dto.addCommentsDTO;
 import com.zr.uniSoul.pojo.entity.Article;
 import com.zr.uniSoul.pojo.entity.CommentLike;
 import com.zr.uniSoul.pojo.entity.Comments;
+import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.service.zhxtService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,6 +135,12 @@ public class zhxtServiceImpl implements zhxtService {
     public Article getArticleDetail(String id) {
         int articleId = Integer.parseInt(id);
         return zhxtMapper.getArticleDetailById(articleId);
+    }
+
+    @Override
+    public User getUserByArticleId(String articleId) {
+        int userId = zhxtMapper.getUserIdByArticleId(articleId);
+        return zhxtMapper.getUserById(userId);
     }
 
 }

@@ -6,6 +6,7 @@ import com.zr.uniSoul.pojo.dto.PageQueryDTO;
 import com.zr.uniSoul.pojo.entity.Article;
 import com.zr.uniSoul.pojo.entity.CommentLike;
 import com.zr.uniSoul.pojo.entity.Comments;
+import com.zr.uniSoul.pojo.entity.User;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -34,4 +35,8 @@ public interface zhxtMapper {
     Long countQuery(PageQueryDTO pageQueryDTO);
 
     Article getArticleDetailById(int articleId);
+
+    int getUserIdByArticleId(String articleId);
+
+    User getUserById(int userId);
 }

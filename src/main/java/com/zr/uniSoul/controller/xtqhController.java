@@ -157,20 +157,26 @@ public class xtqhController {
      */
     @GetMapping("follow")
     @ApiOperation("关注")
-    public R<String> follow(HttpServletRequest request, @RequestBody String username) throws JsonProcessingException {
-        log.info("关注接口,关注：{}",username);
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode rootNode = objectMapper.readTree(username);
-        String role_name = rootNode.path("username").asText(); // 提取 username 的值
-        log.info("关注接口,关注：{}",role_name);
+    public R<String> follow(@RequestParam("username") String username, HttpServletRequest request) {
+        log.info("关注接口, 关注: {}", username);
+
+        if (username == null || username.isEmpty()) {
+            return R.error("用户名不能为空");
+        }
+
         HttpSession session = request.getSession();
-        int user_Id = Integer.parseInt(session.getAttribute("userId").toString());
-        int ret = xtqhService.follow(user_Id,role_name);
-        if (ret == 0){
+        Object userIdObj = session.getAttribute("userId");
+        if (userIdObj == null) {
+            return R.error("用户未登录");
+        }
+
+        int user_Id = Integer.parseInt(userIdObj.toString());
+        int ret = xtqhService.follow(user_Id, username);
+
+        if (ret == 0) {
             log.info("关注失败");
             return R.error("关注失败");
         }
-        log.info("关注成功");
         return R.success("关注成功");
     }
 //    @PostMapping("likes")

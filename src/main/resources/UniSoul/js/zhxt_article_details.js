@@ -71,6 +71,32 @@ $(document).ready(function() {
             });
     }
 
+    //加载作者信息
+    function author_info() {
+        const articleId = getArticleIdFromUrl();
+        if (!articleId) {
+            alert('文章不存在');
+            window.location.href = 'articles.html';
+            return;
+        }
+
+        article.getAuthor_info(articleId)
+            .then(response => {
+                if (response.code === 1) {
+                    const data = response.data;
+                    // 更新作者信息内容
+                    $('.author-name').text(data.name);
+                    $('.author-bio').text(data.biography);
+                    $('.author-avatar').attr('src', data.avatarUrl);
+                    $('#btn-follow').data('username', data.username);
+                }
+            })
+            .catch(error => {
+                console.error('加载作者信息失败:', error);
+                alert('加载作者信息失败，请重试');
+            });
+    }
+
 
 
     // 加载评论列表
@@ -370,6 +396,63 @@ $(document).ready(function() {
         currentReplyTo = null;
     });
 
+
+        // 绑定点击事件
+        $('#btn-follow').click(function () {
+            const button = $(this); // 获取当前按钮
+            const username = button.data('username'); // 获取用户名
+            // alert(username)
+            const status = button.data('status'); // 获取当前状态
+            // 禁用按钮防止重复点击
+            button.prop('disabled', true);
+
+            if (status === 'unfollowed') {
+                // 调试：确保 username 不为空
+                if (!username) {
+                    alert("用户名为空，请检查按钮的 data-username 属性");
+                    return;
+                }
+
+                xtqh_follow.followUser(username)
+                    .then(response => {
+                        if (response.code === 1) {
+                            // 更新按钮状态为已关注
+                            button.data('status', 'followed');
+                            button.html('<i class="fas fa-check"></i> 取消关注'); // 更新按钮内容
+                            console.log('关注成功:', response.message);
+                        } else {
+                            alert('关注失败: ' + response.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('网络请求失败:', error);
+                        alert('网络请求失败，请稍后再试');
+                    });
+            } else if (status === 'followed') {
+                // 当前状态为已关注，执行取消关注操作
+                xtqh_follow.unfollowUser(username)
+                    .then(response => {
+                        if (response.code === 1) {
+                            // 更新按钮状态为未关注
+                            button.data('status', 'unfollowed');
+                            button.html('<i class="fas fa-plus"></i> 关注作者'); // 更新按钮内容
+                            console.log('取消关注成功:', response.message);
+                        } else {
+                            alert('取消关注失败: ' + response.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('网络请求失败:', error);
+                        alert('网络请求失败，请稍后再试');
+                    })
+                    .finally(() => {
+                        // 重新启用按钮
+                        button.prop('disabled', false);
+                    });
+            }
+        });
+
+    author_info();
     // 初始化加载
     loadArticleDetail();
 });
