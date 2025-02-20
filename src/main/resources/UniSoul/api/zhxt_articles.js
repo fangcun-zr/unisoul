@@ -73,7 +73,7 @@ const article = {
     // 获取文章详情
     getArticleDetail: function(articleId) {
         return $.ajax({
-            url: `${API_BASE_URL}/zhxt/detail/${articleId}`,
+            url: `${API_BASE_URL}/zhxt/detail?id=${articleId}`,
             type: 'GET',
             // headers: {
             //     'Authorization': localStorage.getItem('token')

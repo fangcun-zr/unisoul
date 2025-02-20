@@ -1,6 +1,5 @@
 package com.zr.uniSoul.service;
 
-import com.zr.uniSoul.pojo.entity.Article;
 import com.zr.uniSoul.pojo.entity.User;
 
 public interface xtqhService {
@@ -15,4 +14,5 @@ public interface xtqhService {
     int editUserInfo(User user);
 
 
+    int follow(int myUsername, String role_name);
 }

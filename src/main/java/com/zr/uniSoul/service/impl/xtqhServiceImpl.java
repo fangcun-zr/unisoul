@@ -90,4 +90,14 @@ public class xtqhServiceImpl implements xtqhService {
     public int editUserInfo(User user) {
         return xtqhmapper.update(user);
     }
+
+    @Override
+    public int follow(int user_id, String role_name) {
+        Integer role_id = xtqhmapper.findIdByUsername(role_name);
+        log.info("role_id:{}",role_id);
+        if (role_id == null){
+            return 0;
+        }
+        return xtqhmapper.follow(user_id,role_id);
+    }
 }

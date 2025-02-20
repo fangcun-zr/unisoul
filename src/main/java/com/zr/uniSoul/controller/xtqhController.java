@@ -1,5 +1,8 @@
 package com.zr.uniSoul.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zr.uniSoul.common.R;
 import com.zr.uniSoul.pojo.dto.userDTO;
 import com.zr.uniSoul.pojo.entity.User;
@@ -147,6 +150,28 @@ public class xtqhController {
             return R.success("编辑个人信息成功");
         }
         return R.error("编辑个人信息失败");
+    }
+
+    /**
+     * 关注
+     */
+    @GetMapping("follow")
+    @ApiOperation("关注")
+    public R<String> follow(HttpServletRequest request, @RequestBody String username) throws JsonProcessingException {
+        log.info("关注接口,关注：{}",username);
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode rootNode = objectMapper.readTree(username);
+        String role_name = rootNode.path("username").asText(); // 提取 username 的值
+        log.info("关注接口,关注：{}",role_name);
+        HttpSession session = request.getSession();
+        int user_Id = Integer.parseInt(session.getAttribute("userId").toString());
+        int ret = xtqhService.follow(user_Id,role_name);
+        if (ret == 0){
+            log.info("关注失败");
+            return R.error("关注失败");
+        }
+        log.info("关注成功");
+        return R.success("关注成功");
     }
 //    @PostMapping("likes")
 //    @ApiOperation("点赞")
