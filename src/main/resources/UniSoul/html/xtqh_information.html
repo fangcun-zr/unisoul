@@ -61,11 +61,11 @@
             <div class="profile-card animate__animated animate__fadeInLeft">
                 <div class="profile-header">
                     <div class="avatar-container">
-                        <div class="avatar-wrapper">
+                        <div class="avatar-wrapper" id="avatarWrapper">
                             <img src="../image/default-avatar.png" class="avatar" id="avatarPreview">
                             <div class="avatar-edit">
-                                <input type="file" id="avatarUpload" accept="image/*">
-                                <label for="avatarUpload">
+                                <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
+                                <label for="avatarUpload" class="avatar-label">
                                     <i class="fas fa-camera"></i>
                                 </label>
                             </div>
@@ -107,7 +107,7 @@
                     <h5><i class="fas fa-edit"></i> 编辑个人信息</h5>
                 </div>
                 <div class="card-body">
-                    <form id="profileForm">
+                    <form id="profileForm" enctype="multipart/form-data">
                         <div class="form-group">
                             <label class="form-label">
                                 <i class="fas fa-user"></i> 用户名
@@ -162,7 +162,44 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../api/user.js"></script>
-<script src="../api/xtqh_information.js"></script>
-<script src="../js/xtqh_information.js"></script>
+<script src="../js/profile.js"></script>
+<script>
+    // 处理头像上传
+    $('#avatarUpload').on('change', function() {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                $('#avatarPreview').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // 提交表单
+    $('#profileForm').on('submit', function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+        const avatarFile = $('#avatarUpload')[0].files[0];
+        if (avatarFile) {
+            formData.append('avatar', avatarFile);
+        }
+
+        $.ajax({
+            url: 'your_api_endpoint_here', // 替换为实际的API端点
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                alert('个人信息更新成功！');
+            },
+            error: function(error) {
+                alert('更新失败，请重试。');
+            }
+        });
+    });
+</script>
 </body>
 </html>
