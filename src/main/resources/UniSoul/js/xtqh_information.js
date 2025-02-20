@@ -1,9 +1,9 @@
 $(document).ready(function() {
     // 检查登录状态
-    if (!localStorage.getItem('token')) {
-        window.location.href = 'login.html';
-        return;
-    }
+    // if (!localStorage.getItem('token')) {
+    //     window.location.href = 'login.html';
+    //     return;
+    // }
 
     // 显示错误信息
     function showError(field, message) {
@@ -24,28 +24,25 @@ $(document).ready(function() {
 
     // 加载个人信息
     function loadProfile() {
-        user.getInformation()
-            .then(response => {
-                if (response.code === 200) {
-                    const data = response.data;
-                    // 填充表单
-                    $('#username').val(data.username);
-                    $('#displayUsername').text(data.username);
-                    $('#gender').val(data.gender || 'male');
-                    $('#age').val(data.age || '');
-                    $('#school').val(data.school || '');
-                    $('#displaySchool').text(data.school || '未设置学校');
-                    $('#biography').val(data.biography || '');
 
-                    // 设置头像
-                    if (data.avatar) {
-                        $('#avatarPreview').attr('src', data.avatar);
-                    }
-                }
-            })
-            .catch(error => {
-                alert('加载个人信息失败，请刷新页面重试');
-            });
+        // 检查localStorage中是否有用户信息
+        const userDetails = localStorage.getItem('userDetails');
+
+        if (userDetails) {
+            // 解析用户信息
+            const user = JSON.parse(userDetails);
+            // 将用户信息渲染到页面上
+            $('#username').text(user.username);
+            $('#displayUsername').text(user.username);
+            $('#gender').val(user.gender || 'male');
+            $('#school').val(user.school || '');
+            $('#userAvatar').attr('src', user.avatarUrl);
+            $('#sidebarUsername').text(user.name);
+            $('#displaySchool').text(user.school || '未设置学校');
+            $('#biography').val(user.biography || '');
+            $('#avatarPreview').attr('src', user.avatarUrl);
+            // ...渲染其他用户信息
+        }
     }
 
     // 处理头像上传

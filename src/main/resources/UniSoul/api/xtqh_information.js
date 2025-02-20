@@ -16,17 +16,15 @@ const xtqh_information = {
         return $.ajax({
             url: `${API_BASE_URL}/xtqh/information`,
             type: 'POST',
-            headers: {
-                'Authorization': localStorage.getItem('token')
-            },
             contentType: 'application/json',
+            charset:'UTF-8',
             data: JSON.stringify({
                 name: userData.name,
                 gender: userData.gender,
                 age: userData.age,
                 school: userData.school,
                 biography: userData.biography,
-                username: userData.username
+                avatar: userData.avatar
             })
         });
     },

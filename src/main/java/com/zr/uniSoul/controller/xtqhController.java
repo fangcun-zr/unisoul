@@ -1,17 +1,22 @@
 package com.zr.uniSoul.controller;
 
 import com.zr.uniSoul.common.R;
+import com.zr.uniSoul.pojo.dto.userDTO;
 import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.service.xtqhService;
+import com.zr.uniSoul.utils.AliOssUtil;
 import com.zr.uniSoul.utils.checkCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/xtqh")
@@ -22,7 +27,8 @@ public class xtqhController {
     @Autowired
     private xtqhService xtqhService;
 
-
+    @Autowired
+    private AliOssUtil aliOssUtil;
 
     /**
      * 用户登录
@@ -85,13 +91,56 @@ public class xtqhController {
     /**
      * 编辑个人信息
      */
-    @PostMapping("/information")
+    @PostMapping(value = "/information" , consumes = "multipart/form-data; charset=UTF-8")
     @ApiOperation("编辑个人信息")
-    public R<String> editUserInfo(HttpServletRequest request, @RequestBody User user){
+    public R<String> editUserInfo(HttpServletRequest request,
+                                  @RequestPart String name,
+                                  @RequestPart String age,
+                                  @RequestPart String gender,
+                                  @RequestPart MultipartFile avatar,
+                                  @RequestPart String school,
+                                  @RequestPart String biography
+
+                                  ){
         log.info("编辑个人信息接口");
+        userDTO userDTO  =  com.zr.uniSoul.pojo.dto.userDTO.builder()
+                        .name(name)
+                        .age(Integer.parseInt(age))
+                        .gender(Integer.parseInt(gender))
+                        .avatar(avatar)
+                        .school(school)
+                        .biography(biography)
+                .build();
+
+
         HttpSession session =  request.getSession();
-        user.setUsername(session.getAttribute("username").toString());
+        userDTO.setUsername(session.getAttribute("username").toString());
+
+        MultipartFile file = userDTO.getAvatar();
         //保存个人信息
+        User user = User.builder()
+                .age(userDTO.getAge())
+                .school(userDTO.getSchool())
+                .username(userDTO.getUsername())
+                .gender(userDTO.getGender())
+                .biography(userDTO.getBiography())
+                .build();
+        //将头像图片存入阿里云
+        log.info("文件上传:{}",userDTO.getAvatar());
+        try {
+            //原始文件名
+            String originalFilename = file.getOriginalFilename();
+            //截取原始文件后缀  xxx.png
+            String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            //生成新的文件名
+            String objectName = UUID.randomUUID().toString() + extension;
+            //上传文件
+            String filePath = aliOssUtil.upload(file.getBytes(), objectName);
+            user.setAvatarUrl(filePath);
+        } catch (IOException e) {
+            log.error("文件上传失败:{}",e);
+        }
+
         int ret = xtqhService.editUserInfo(user);
         if (ret != 0){
             log.info("编辑个人信息成功");

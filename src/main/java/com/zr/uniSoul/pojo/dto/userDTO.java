@@ -1,13 +1,57 @@
 package com.zr.uniSoul.pojo.dto;
+
+import lombok.Builder;
+import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
+import java.time.LocalDateTime;
+
 /**
  * @Description: 用户数据传输对象
  */
+@Data
+@Builder
 public class userDTO {
-    private String username;//用户名
-    private String password;//密码
-    private String email;//邮箱
-    private String phone;//电话
-    private String sex;//性别
-    private String birthday;//生日
+
+    private static final long serialVersionUID = 1L;
+
+   //用户id
+    private Long id;
+    //用户名
+    private String username;
+    //邮箱
+    private String email;
+    //密码
+    private String password;
+
+    //头像Url
+    private MultipartFile avatar;
+
+    private LocalDateTime createTime;//创建时间
+    //昵称
+    private String name;
+    //年龄
+    private int age;
+    //性别  1:男；2：女
+    private int gender;
+    //学校
+    private String school;
+    //简介
+    private String biography;
+
+    public void setAge(String age) {
+        if (age != null) {
+            this.age = Integer.parseInt(age);
+        }
+    }
+
+    public void setGender(String gender) {
+        if (gender != null) {
+            if(gender.equals("男")) {
+                this.gender = 1;
+            }else if(gender.equals("女")) {
+                this.gender = 2;
+            }
+        }
+    }
 
 }

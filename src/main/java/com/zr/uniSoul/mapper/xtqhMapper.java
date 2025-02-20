@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
 public interface xtqhMapper {
     User findByPasswordAndUsername(@Param("password") String password, @Param("username") String username);
 
-    @Insert("insert into user(username,password,email,created_at) values(#{username},#{password},#{email},#{createTime})")
-    int insert(String username, String password, String email, LocalDateTime createTime);
+    @Insert("insert into user(username,password,email,created_at,name,avatarUrl) values(#{username},#{password},#{email},#{createTime},#{name},#{avatarUrl})")
+    int insert(String username, String password, String email, LocalDateTime createTime, String name, String avatarUrl);
 
     User findByUsername(String username);
 

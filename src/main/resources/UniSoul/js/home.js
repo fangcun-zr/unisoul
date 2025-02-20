@@ -1,15 +1,29 @@
 $(document).ready(function() {
     // 检查登录状态
-    if (!localStorage.getItem('token')) {
-        window.location.href = 'login.html';
-        return;
-    }
+    // if (!localStorage.getItem('token')) {
+    //     window.location.href = 'login.html';
+    //     return;
+    // }
 
+    // 检查localStorage中是否有用户信息
+    const userDetails = localStorage.getItem('userDetails');
+
+    if (userDetails) {
+        // 解析用户信息
+        const user = JSON.parse(userDetails);
+        // 将用户信息渲染到页面上
+        $('#currentUsername').text(user.name);
+        $('#userAvatar').attr('src', user.avatarUrl);
+        $('#sidebarUsername').text(user.name);
+        $('#userSchool').text(user.school || '未设置学校');
+        $('.avatar-lg ').attr('src', user.avatarUrl);
+        // ...渲染其他用户信息
+    }
     // 加载用户信息
     function loadUserInfo() {
         xtqh_information.getInformation()
             .then(response => {
-                if (response.code === 200) {
+                if (response.code === 1) {
                     const data = response.data;
                     $('#currentUsername').text(data.username);
                     $('#sidebarUsername').text(data.username);
@@ -116,6 +130,9 @@ $(document).ready(function() {
         localStorage.removeItem('token');
         window.location.href = 'login.html';
     });
+
+
+
 
     // 初始化加载
     loadUserInfo();

@@ -19,6 +19,7 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+
     private Long id;
     //用户名
     private String username;
@@ -27,13 +28,16 @@ public class User implements Serializable {
     //密码
     private String password;
 
+    //头像Url
+    private String avatarUrl;
+
     private LocalDateTime createTime;//创建时间
     //昵称
     private String name;
     //年龄
     private int age;
     //性别  1:男；2：女
-    private int Gender;
+    private int gender;
     //学校
     private String school;
     //简介
@@ -48,9 +52,9 @@ public class User implements Serializable {
     public void setGender(String gender) {
         if (gender != null) {
             if(gender.equals("男")) {
-                this.Gender = 1;
+                this.gender = 1;
             }else if(gender.equals("女")) {
-                this.Gender = 2;
+                this.gender = 2;
             }
         }
     }

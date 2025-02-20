@@ -63,6 +63,10 @@ $(document).ready(function () {
         auth.login(username, password)
             .done(function (response) {
                 if (response.code === 1) { // 根据后端返回的结构判断成功
+
+                    // 将用户信息保存到localStorage
+                    localStorage.setItem('userDetails', JSON.stringify(response.data));
+
                     // 登录成功后跳转到首页
                     window.location.href = 'home.html';
                 } else {
