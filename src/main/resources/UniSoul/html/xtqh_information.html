@@ -62,7 +62,7 @@
                 <div class="profile-header">
                     <div class="avatar-container">
                         <div class="avatar-wrapper" id="avatarWrapper">
-                            <img src="../image/default-avatar.png" class="avatar" id="avatarPreview">
+                            <img src="../image/default-avatar.png" class="avatar" id="avatarPreview" onclick="document.getElementById('avatarUpload').click();">
                             <div class="avatar-edit">
                                 <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
                                 <label for="avatarUpload" class="avatar-label">
@@ -190,7 +190,7 @@
             url: 'your_api_endpoint_here', // 替换为实际的API端点
             type: 'POST',
             data: formData,
-            contentType: false,
+            contentType: 'application/json; charset=utf-8', // 设置请求头
             processData: false,
             success: function(response) {
                 alert('个人信息更新成功！');
