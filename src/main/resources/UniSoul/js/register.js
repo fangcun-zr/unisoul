@@ -77,27 +77,27 @@ $(document).ready(function() {
         return true;
     }
 
-    // 发送验证码
-    $sendCodeBtn.off('click').on('click', function() {
-        const email = $('#email').val().trim();
-
-        if (!isValidEmail(email)) {
-            showError('email', '请输入有效的邮箱地址');
-            return;
-        }
-
-        auth.sendVerifyCode(email)
-            .done(function(response) {
-                if (response.code === 200) {
-                    startCountdown();
-                } else {
-                    showError('email', response.message);
-                }
-            })
-            .fail(function(jqXHR) {
-                showError('email', '发送验证码失败，请稍后重试');
-            });
-    });
+    // // 发送验证码
+    // $sendCodeBtn.off('click').on('click', function() {
+    //     const email = $('#email').val().trim();
+    //     if (!isValidEmail(email)) {
+    //         showError('email', '请输入有效的邮箱地址');
+    //         return;
+    //     }
+    //
+    //     auth.sendVerifyCode(email)
+    //         .done(function(response) {
+    //             if (response.code === 1) {
+    //                 startCountdown();
+    //
+    //             } else {
+    //                 showError('email', response.message);
+    //             }
+    //         })
+    //         .fail(function(jqXHR) {
+    //             showError('email', '发送验证码失败，请稍后重试');
+    //         });
+    // });
 
     // 输入框事件处理
     $('.form-control').on('input', function() {

@@ -1,7 +1,7 @@
 // api/register.js
 
 const API_BASE_URL = 'http://localhost:8080';
-
+const $sendCodeBtn = $('#sendCode');
 const auth = {
     // 发送邮箱验证码
     sendVerifyCode: function (email) {
@@ -22,7 +22,21 @@ const auth = {
         });
     }
 };
+// 开始倒计时
+function startCountdown() {
+    countdown = 60;
+    $sendCodeBtn.prop('disabled', true);
 
+    timer = setInterval(() => {
+        countdown--;
+        $sendCodeBtn.text(`${countdown}秒后重试`);
+
+        if (countdown <= 0) {
+            clearInterval(timer);
+            $sendCodeBtn.prop('disabled', false).text('发送验证码');
+        }
+    }, 1000);
+}
 $(document).ready(function() {
     // 确保事件绑定只发生一次
     $('#sendCode').off('click').on('click', function() {
@@ -41,8 +55,9 @@ $(document).ready(function() {
             .done(function(response) {
                 console.log('验证码发送响应:', response); // 调试输出
                 if (response && response.code === 1) {
-                    alert('验证码发送成功:，请在邮箱查看');
+                    alert('验证码发送成功:，请输入的邮箱查看');
                     // 启动倒计时逻辑
+                    startCountdown()
                 } else {
                     alert('验证码发送失败: ' + (response ? response.msg : '未知错误'));
                 }

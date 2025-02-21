@@ -70,14 +70,18 @@
                                 <i class="fas fa-envelope"></i> 邮箱地址
                             </label>
                             <div class="input-group">
-                                <input type="email"
-                                       class="form-control"
-                                       id="email"
-                                       placeholder="请输入邮箱地址"
-                                       required>
-                                <button type="button" class="btn btn-send" id="sendCode">
-                                    发送验证码
-                                </button>
+                                <div class="col-9 p-0">
+                                    <input type="email"
+                                           class="form-control"
+                                           id="email"
+                                           placeholder="请输入邮箱地址"
+                                           required>
+                                </div>
+                                <div class="col-3 p-0">
+                                    <button type="button" class="btn btn-send w-100" id="sendCode" style="height: 58px;width: 90px" >
+                                        发送验证码
+                                    </button>
+                                </div>
                                 <div class="input-focus-bg"></div>
                             </div>
                             <div class="invalid-feedback"></div>
@@ -176,7 +180,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="../api/auth.js"></script>
+<script src="../api/register.js"></script>
 <script src="../js/register.js"></script>
 </body>
 </html>
