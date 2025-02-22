@@ -2,6 +2,7 @@ package com.zr.uniSoul.service.impl;
 
 import com.zr.uniSoul.mapper.xtqhMapper;
 import com.zr.uniSoul.pojo.entity.UserDTO;
+import com.zr.uniSoul.pojo.vo.ArticleLikesVO;
 import com.zr.uniSoul.service.xtqhService;
 import com.zr.uniSoul.utils.AliOssUtil;
 import com.zr.uniSoul.utils.MailUtils;
@@ -103,5 +104,16 @@ public class xtqhServiceImpl implements xtqhService {
             return 0;
         }
         return xtqhmapper.follow(user_id,following_id);
+    }
+    /**
+     * 点赞情况
+     * @param articleLikes
+     * @return
+     */
+    @Override
+    public ArticleLikesVO likes(ArticleLikesVO articleLikes) {
+        articleLikes.setLikesCount(articleLikes.getLikesCount()+1);
+        xtqhmapper.likes(articleLikes.getArticleId(), articleLikes.getLikesCount());
+        return articleLikes;
     }
 }

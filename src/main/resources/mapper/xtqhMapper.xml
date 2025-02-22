@@ -19,4 +19,9 @@
     <select id="findIdByUsername" resultType="java.lang.Integer">
         select id from user where username = #{username}
     </select>
+    <update id = "likes">
+        update article
+        set like_count = #{article_id}
+        where id = #{user_id}
+    </update>
 </mapper>

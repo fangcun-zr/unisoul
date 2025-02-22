@@ -25,4 +25,10 @@ public interface xtqhMapper {
 
     @Select("select count(*) from follow where follower_id = #{userId} and following_id = #{followingId}")
     int findFollow(int userId, Integer followingId);
+    /**
+     * 文章点赞
+     * @Param("article_id") int article_id
+     * @Param("user_id") int user_id
+     */
+    void likes(int article_id, int user_id);
 }

@@ -1,8 +1,10 @@
 package com.zr.uniSoul.controller;
 
 import com.zr.uniSoul.common.R;
+import com.zr.uniSoul.pojo.dto.ArticleLikesDTO;
 import com.zr.uniSoul.pojo.dto.userDTO;
 import com.zr.uniSoul.pojo.entity.UserDTO;
+import com.zr.uniSoul.pojo.vo.ArticleLikesVO;
 import com.zr.uniSoul.service.xtqhService;
 import com.zr.uniSoul.utils.AliOssUtil;
 import com.zr.uniSoul.utils.checkCode;
@@ -176,11 +178,15 @@ public class xtqhController {
         }
         return R.success("关注成功");
     }
-//    @PostMapping("likes")
-//    @ApiOperation("点赞")
-//    public R<String> likes(HttpServletRequest request, @RequestParam String username){
-//        log.info("点赞接口");
-//        int ret = xtqhService.likes(username);
-//    }
+    @GetMapping("/likes")
+    @ApiOperation("点赞")
+    public R<ArticleLikesVO> likes(@RequestParam int ArticleId, int LikesCount ){
+        ArticleLikesVO articleLikesVO = new ArticleLikesVO();
+        articleLikesVO.setLikesCount(LikesCount);
+        articleLikesVO.setArticleId(ArticleId);
+        log.info("点赞接口, 点赞: {}", articleLikesVO);
+        articleLikesVO  = xtqhService.likes(articleLikesVO);
+        return R.success(articleLikesVO);
+    }
 
 }
