@@ -1,7 +1,7 @@
 package com.zr.uniSoul.service.impl;
 
 import com.zr.uniSoul.mapper.xtqhMapper;
-import com.zr.uniSoul.pojo.entity.User;
+import com.zr.uniSoul.pojo.entity.UserDTO;
 import com.zr.uniSoul.service.xtqhService;
 import com.zr.uniSoul.utils.AliOssUtil;
 import com.zr.uniSoul.utils.MailUtils;
@@ -27,7 +27,7 @@ public class xtqhServiceImpl implements xtqhService {
     @Autowired
     private AliOssUtil aliOssUtil;
     @Override
-    public User login(User user) {
+    public UserDTO login(UserDTO user) {
 
         return  xtqhmapper.findByPasswordAndUsername(user.getPassword(), user.getUsername());
     }
@@ -47,14 +47,14 @@ public class xtqhServiceImpl implements xtqhService {
 
     /**
      * 用户注册
-     * @param user
+     * @param userDTO
      * @return
      */
     @Override
-    public int register(User user) {
-        user.setCreateTime(LocalDateTime.now());
+    public int register(UserDTO userDTO) {
+        userDTO.setCreateTime(LocalDateTime.now());
         //设置默认用户昵称
-        user.setName("用户"+user.getUsername());
+        userDTO.setName("用户"+userDTO.getUsername());
         //设置默认头像
         File file = new File("img/AvatarImg.jpg");
         //将项目中的默认头像上传至阿里云
@@ -71,33 +71,37 @@ public class xtqhServiceImpl implements xtqhService {
 
             String filePath = aliOssUtil.upload(fileBytes, objectName);
             //将上传后的文件路径存入数据库
-            user.setAvatarUrl(filePath);
+            userDTO.setAvatarUrl(filePath);
             log.info("上传成功:{}",filePath);
         } catch (IOException e) {
             log.error("文件上传失败:{}",e);
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
-        return xtqhmapper.insert(user.getUsername(),user.getPassword(),user.getEmail(),user.getCreateTime(),user.getName(),user.getAvatarUrl());
+        return xtqhmapper.insert(userDTO.getUsername(),userDTO.getPassword(),userDTO.getEmail(),userDTO.getCreateTime(),userDTO.getName(),userDTO.getAvatarUrl());
     }
 
     @Override
-    public User findByUsername(String username) {
+    public UserDTO findByUsername(String username) {
         return xtqhmapper.findByUsername(username);
     }
 
     @Override
-    public int editUserInfo(User user) {
+    public int editUserInfo(UserDTO user) {
         return xtqhmapper.update(user);
     }
 
     @Override
-    public int follow(int user_id, String role_name) {
-        Integer role_id = xtqhmapper.findIdByUsername(role_name);
-        log.info("role_id:{}",role_id);
-        if (role_id == null){
+    public int follow(int user_id, String following_name) {
+        Integer following_id = xtqhmapper.findIdByUsername(following_name);
+        log.info("following_id:{}",following_id);
+        if (following_id == null){
             return 0;
         }
-        return xtqhmapper.follow(user_id,role_id);
+        //先判断是否存在，如果已经存在则不插入数据
+        if (xtqhmapper.findFollow(user_id,following_id) >0){
+            return 0;
+        }
+        return xtqhmapper.follow(user_id,following_id);
     }
 }

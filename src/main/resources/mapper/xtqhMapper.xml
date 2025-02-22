@@ -10,10 +10,10 @@
     </update>
 
 
-    <select id="findByPasswordAndUsername" resultType="com.zr.uniSoul.pojo.entity.User">
+    <select id="findByPasswordAndUsername" resultType="com.zr.uniSoul.pojo.entity.UserDTO">
         select * from user where password = #{password} and username = #{username}
     </select>
-    <select id="findByUsername" resultType="com.zr.uniSoul.pojo.entity.User">
+    <select id="findByUsername" resultType="com.zr.uniSoul.pojo.entity.UserDTO">
         select * from user where username = #{username}
     </select>
     <select id="findIdByUsername" resultType="java.lang.Integer">

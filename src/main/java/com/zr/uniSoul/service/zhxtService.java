@@ -5,7 +5,7 @@ import com.zr.uniSoul.pojo.dto.CommentsPageDTO;
 import com.zr.uniSoul.pojo.dto.PageQueryDTO;
 import com.zr.uniSoul.pojo.dto.addCommentsDTO;
 import com.zr.uniSoul.pojo.entity.Article;
-import com.zr.uniSoul.pojo.entity.User;
+import com.zr.uniSoul.pojo.entity.UserDTO;
 
 public interface zhxtService {
     int findIdByUsername(String username);
@@ -24,5 +24,7 @@ public interface zhxtService {
 
     Article getArticleDetail(String id);
 
-    User getUserByArticleId(String articleId);
+    UserDTO getUserByArticleId(String articleId);
+
+    int checkFollowStatus(int follow_id, int following_id);
 }

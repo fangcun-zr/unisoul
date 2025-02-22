@@ -1,6 +1,4 @@
 $(document).ready(function() {
-    let countdown = 60;
-    const $sendCodeBtn = $('#sendCode');
     let timer = null;
 
     // 邮箱验证
@@ -25,22 +23,6 @@ $(document).ready(function() {
             .hide();
     }
 
-    // 开始倒计时
-    function startCountdown() {
-        countdown = 60;
-        $sendCodeBtn.prop('disabled', true);
-
-        timer = setInterval(() => {
-            countdown--;
-            $sendCodeBtn.text(`${countdown}秒后重试`);
-
-            if (countdown <= 0) {
-                clearInterval(timer);
-                $sendCodeBtn.prop('disabled', false).text('发送验证码');
-            }
-        }, 1000);
-    }
-
     // 表单验证
     function validateForm() {
         const email = $('#email').val().trim();
@@ -54,8 +36,8 @@ $(document).ready(function() {
             return false;
         }
 
-        if (!verifyCode || verifyCode.length !== 6) {
-            showError('verifyCode', '请输入6位验证码');
+        if (!verifyCode || verifyCode.length !== 4) {
+            showError('verifyCode', '请输入4位验证码');
             return false;
         }
 
@@ -76,28 +58,6 @@ $(document).ready(function() {
 
         return true;
     }
-
-    // // 发送验证码
-    // $sendCodeBtn.off('click').on('click', function() {
-    //     const email = $('#email').val().trim();
-    //     if (!isValidEmail(email)) {
-    //         showError('email', '请输入有效的邮箱地址');
-    //         return;
-    //     }
-    //
-    //     auth.sendVerifyCode(email)
-    //         .done(function(response) {
-    //             if (response.code === 1) {
-    //                 startCountdown();
-    //
-    //             } else {
-    //                 showError('email', response.message);
-    //             }
-    //         })
-    //         .fail(function(jqXHR) {
-    //             showError('email', '发送验证码失败，请稍后重试');
-    //         });
-    // });
 
     // 输入框事件处理
     $('.form-control').on('input', function() {
@@ -121,10 +81,15 @@ $(document).ready(function() {
         if (!validateForm()) {
             return;
         }
+        //验证码检查
+        const verifyCode = $('#verifyCode').val().trim();
+        if (verifyCode !== localStorage.getItem('verifyCode')) { // 检查验证码是否正确
+            showError('verifyCode', '验证码错误');
+            return;
+        }
 
         const userData = {
             email: $('#email').val().trim(),
-            verifyCode: $('#verifyCode').val().trim(),
             username: $('#username').val().trim(),
             password: $('#password').val().trim()
         };
@@ -136,7 +101,7 @@ $(document).ready(function() {
 
         auth.register(userData)
             .done(function(response) {
-                if (response.code === 200) {
+                if (response.code === 1) {
                     alert('注册成功！');
                     window.location.href = 'login.html';
                 } else {

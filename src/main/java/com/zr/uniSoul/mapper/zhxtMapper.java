@@ -6,8 +6,7 @@ import com.zr.uniSoul.pojo.dto.PageQueryDTO;
 import com.zr.uniSoul.pojo.entity.Article;
 import com.zr.uniSoul.pojo.entity.CommentLike;
 import com.zr.uniSoul.pojo.entity.Comments;
-import com.zr.uniSoul.pojo.entity.User;
-import org.apache.ibatis.annotations.Insert;
+import com.zr.uniSoul.pojo.entity.UserDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -38,5 +37,8 @@ public interface zhxtMapper {
 
     int getUserIdByArticleId(String articleId);
 
-    User getUserById(int userId);
+    UserDTO getUserById(int userId);
+
+    @Select("SELECT COUNT(*) FROM follow WHERE follower_id = #{followId} AND following_id = #{followingId}")
+    int checkFollowStatus(int followId, int followingId);
 }

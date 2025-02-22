@@ -1,14 +1,20 @@
+
 $(document).ready(function() {
     // 检查登录状态
     // if (!localStorage.getItem('token')) {
     //     window.location.href = 'login.html';
     //     return;
-    // }
+
+    // 添加点击事件处理程序
+    //声明变量并绑定按钮
+    const followButton = $('#btn-follow');
+// }
 
     let commentPage = 1;
     const commentPageSize = 10;
     let totalCommentPages = 0;
     let currentReplyTo = null; // 当前回复的评论ID
+
 
     // 获取 URL 参数中的文章 ID
     function getArticleIdFromUrl() {
@@ -452,7 +458,34 @@ $(document).ready(function() {
             }
         });
 
+
+
+    // 定义检查关注状态的函数
+    function checkFollowStatus(authorId) {
+        $.ajax({
+            url: '/api/check-follow-status?authorId=' + encodeURIComponent(authorId), // 使用查询参数
+            method: 'GET',
+            success: function (data) {
+                if (data.code === 1) { // 假设返回的 code 为 1 表示已关注
+                    followButton.data('status', 'followed');
+                    followButton.html('<i class="fas fa-check"></i> 取消关注'); // 更新按钮内容
+                } else {
+                    followButton.data('status', 'unfollowed');
+                    followButton.html('<i class="fas fa-user-plus"></i> 关注作者'); // 更新按钮内容
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error checking follow status:', xhr.responseText, status, error);
+            }
+        });
+    }
+
+    const articleId = getArticleIdFromUrl();
+
     author_info();
     // 初始化加载
     loadArticleDetail();
+
+    // 检查关注状态
+    checkFollowStatus(articleId);
 });

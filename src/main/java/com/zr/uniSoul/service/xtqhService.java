@@ -1,17 +1,17 @@
 package com.zr.uniSoul.service;
 
-import com.zr.uniSoul.pojo.entity.User;
+import com.zr.uniSoul.pojo.entity.UserDTO;
 
 public interface xtqhService {
-    User login(User user);
+    UserDTO login(UserDTO user);
 
     Boolean sendCheckCode(String email, String code);
 
-    int register(User user);
+    int register(UserDTO user);
 
-    User findByUsername(String username);
+    UserDTO findByUsername(String username);
 
-    int editUserInfo(User user);
+    int editUserInfo(UserDTO user);
 
 
     int follow(int myUsername, String role_name);

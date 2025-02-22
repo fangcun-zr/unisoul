@@ -1,6 +1,11 @@
 const API_BASE_URL = 'http://localhost:8080';
 // 文章相关的API请求
 const article = {
+
+
+
+
+
     // 文章基础操作
     // 发布文章
     publish: function (articleData) {

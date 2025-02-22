@@ -8,7 +8,7 @@ import com.zr.uniSoul.pojo.dto.addCommentsDTO;
 import com.zr.uniSoul.pojo.entity.Article;
 import com.zr.uniSoul.pojo.entity.CommentLike;
 import com.zr.uniSoul.pojo.entity.Comments;
-import com.zr.uniSoul.pojo.entity.User;
+import com.zr.uniSoul.pojo.entity.UserDTO;
 import com.zr.uniSoul.service.zhxtService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -138,9 +138,14 @@ public class zhxtServiceImpl implements zhxtService {
     }
 
     @Override
-    public User getUserByArticleId(String articleId) {
+    public UserDTO getUserByArticleId(String articleId) {
         int userId = zhxtMapper.getUserIdByArticleId(articleId);
         return zhxtMapper.getUserById(userId);
+    }
+
+    @Override
+    public int checkFollowStatus(int follow_id, int following_id) {
+        return zhxtMapper.checkFollowStatus(follow_id, following_id);
     }
 
 }

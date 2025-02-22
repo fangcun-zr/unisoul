@@ -6,7 +6,7 @@ import com.zr.uniSoul.pojo.dto.CommentsPageDTO;
 import com.zr.uniSoul.pojo.dto.PageQueryDTO;
 import com.zr.uniSoul.pojo.dto.addCommentsDTO;
 import com.zr.uniSoul.pojo.entity.Article;
-import com.zr.uniSoul.pojo.entity.User;
+import com.zr.uniSoul.pojo.entity.UserDTO;
 import com.zr.uniSoul.utils.AliOssUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -184,9 +184,9 @@ public class zhxtController {
 
     @GetMapping("author_info")
     @ApiOperation("获取文章详情信息")
-    public R<User> getAuthor_info(@RequestParam String id) {
+    public R<UserDTO> getAuthor_info(@RequestParam String id) {
         log.info("获取文章作者信息：文章id={}", id);
-        User authorUser = zhxtService.getUserByArticleId(id);
+        UserDTO authorUser = zhxtService.getUserByArticleId(id);
         if (authorUser != null) {
             return R.success(authorUser);
         }
@@ -205,5 +205,33 @@ public class zhxtController {
             return R.success("审核成功");
         }
         return R.error("审核失败");
+    }
+
+    /**
+     * 检查关注状态
+     */
+    @GetMapping("check-follow-status")
+    @ApiOperation("检查关注状态")
+    public R checkFollowStatus(@RequestParam("authorId") int authorId, HttpServletRequest request) {
+        log.info("检查关注状态：authorId = {}", authorId);
+        HttpSession session = request.getSession();
+        int userId = 0;
+        Object userIdObj = session.getAttribute("userId");
+        if (userIdObj instanceof Integer) {
+            userId = (Integer) userIdObj;
+        } else if (userIdObj instanceof Long) {
+            userId = ((Long) userIdObj).intValue();
+        } else {
+            // 处理其他情况或抛出异常
+        }
+        if (userId == 0) {
+            return R.error("用户未登录");
+        }
+        int status = zhxtService.checkFollowStatus(authorId, userId);
+        if (status == 1) {
+            return R.success("已关注");
+        }
+        return R.error("未关注");
+
     }
 }

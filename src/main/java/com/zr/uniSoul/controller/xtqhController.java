@@ -1,11 +1,8 @@
 package com.zr.uniSoul.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zr.uniSoul.common.R;
 import com.zr.uniSoul.pojo.dto.userDTO;
-import com.zr.uniSoul.pojo.entity.User;
+import com.zr.uniSoul.pojo.entity.UserDTO;
 import com.zr.uniSoul.service.xtqhService;
 import com.zr.uniSoul.utils.AliOssUtil;
 import com.zr.uniSoul.utils.checkCode;
@@ -41,11 +38,11 @@ public class xtqhController {
      */
     @PostMapping("/login")
     @ApiOperation("用户登录接口")
-    public R<User> login(HttpServletRequest request, @RequestBody User user){
+    public R<UserDTO> login(HttpServletRequest request, @RequestBody UserDTO user){
         log.info("用户登录接口");
         //TODO:添加JWT或MD5加密处理
 
-        User loginUser = xtqhService.login(user);
+        UserDTO loginUser = xtqhService.login(user);
         if (loginUser != null){
             log.info("用户登录成功");
             //将用户的用户名存入session
@@ -73,11 +70,11 @@ public class xtqhController {
     }
     @PostMapping("register")
     @ApiOperation("用户注册接口")
-    public R<String> register(HttpServletRequest request, @RequestBody User user){
+    public R<String> register(HttpServletRequest request, @RequestBody UserDTO user){
         log.info("用户注册接口");
         //TODO:添加JWT或MD5加密处理
         //先判断用户名是否已经存在
-        User user1 = xtqhService.findByUsername(user.getUsername());
+        UserDTO user1 = xtqhService.findByUsername(user.getUsername());
         if (user1 != null){
             log.info("用户名已存在");
             return R.error("用户名已存在");
@@ -121,7 +118,7 @@ public class xtqhController {
 
         MultipartFile file = userDTO.getAvatar();
         //保存个人信息
-        User user = User.builder()
+        UserDTO user = UserDTO.builder()
                 .age(userDTO.getAge())
                 .school(userDTO.getSchool())
                 .username(userDTO.getUsername())

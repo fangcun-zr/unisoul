@@ -56,6 +56,8 @@ $(document).ready(function() {
                 console.log('验证码发送响应:', response); // 调试输出
                 if (response && response.code === 1) {
                     alert('验证码发送成功:，请输入的邮箱查看');
+                    //将验证码存入localStorage
+                    localStorage.setItem('verifyCode', response.data);
                     // 启动倒计时逻辑
                     startCountdown()
                 } else {
@@ -73,6 +75,7 @@ $(document).ready(function() {
 
     // 注册请求
     $('#registerForm').off('submit').on('submit', function(event) {
+        alert("点击了注册按钮")
         event.preventDefault();
 
         const email = $('#email').val().trim();
@@ -81,6 +84,11 @@ $(document).ready(function() {
         const password = $('#password').val().trim();
         const confirmPassword = $('#confirmPassword').val().trim();
 
+        //验证码校验
+        if (verifyCode !== localStorage.getItem('verifyCode')) {
+            alert('验证码错误');
+            return;
+        }
         if (password !== confirmPassword) {
             alert('两次输入的密码不一致');
             return;
@@ -88,7 +96,6 @@ $(document).ready(function() {
 
         const userData = {
             email: email,
-            verifyCode: verifyCode,
             username: username,
             password: password
         };
