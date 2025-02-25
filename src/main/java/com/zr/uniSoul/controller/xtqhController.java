@@ -4,6 +4,7 @@ import com.zr.uniSoul.common.R;
 import com.zr.uniSoul.pojo.dto.userDTO;
 import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.pojo.vo.ArticleLikesVO;
+import com.zr.uniSoul.pojo.vo.FollowersVO;
 import com.zr.uniSoul.service.xtqhService;
 import com.zr.uniSoul.utils.AliOssUtil;
 import com.zr.uniSoul.utils.checkCode;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -182,6 +184,13 @@ public class xtqhController {
         }
         return R.success("关注成功");
     }
+
+    /**
+     * 点赞
+     * @param ArticleId
+     * @param LikesCount
+     * @return
+     */
     @GetMapping("/likes")
     @ApiOperation("点赞")
     public R<ArticleLikesVO> likes(@RequestParam int ArticleId, int LikesCount ){
@@ -191,6 +200,21 @@ public class xtqhController {
         log.info("点赞接口, 点赞: {}", articleLikesVO);
         articleLikesVO  = xtqhService.likes(articleLikesVO);
         return R.success(articleLikesVO);
+    }
+
+    /**
+     * 获取粉丝昵称
+     * @return
+     */
+    @GetMapping("/followers")
+    @ApiOperation("获取粉丝昵称")
+    public R<FollowersVO> getFollowers(@RequestParam String username){
+        log.info("获取粉丝昵称接口,{}", username);
+        FollowersVO followersVO = new FollowersVO();
+        List<String> followers = xtqhService.getFollowersByUsername(username);
+        followersVO.setFollowers(followers);
+        followersVO.setFollowersCount(followers.size());
+        return R.success(followersVO);
     }
 
 }

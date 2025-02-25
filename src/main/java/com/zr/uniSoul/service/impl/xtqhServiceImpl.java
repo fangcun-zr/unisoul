@@ -15,6 +15,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -120,5 +121,16 @@ public class xtqhServiceImpl implements xtqhService {
     @Override
     public int editUserAvatar(String username, String filePath) {
         return xtqhmapper.updateAvatar(username,filePath);
+    }
+
+    /**
+     * 获取粉丝昵称
+     * @param username
+     * @return
+     */
+    @Override
+    public List<String> getFollowersByUsername(String username) {
+        List<String> list = xtqhmapper.getFollowersByUsername(username);
+        return list;
     }
 }

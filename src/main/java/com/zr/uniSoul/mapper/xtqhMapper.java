@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Mapper
 public interface xtqhMapper {
@@ -33,4 +34,11 @@ public interface xtqhMapper {
     void likes(int article_id, int user_id);
 
     int updateAvatar(String username, String filePath);
+
+    /**
+     * 根据用户名获取粉丝
+     * @param username
+     * @return
+     */
+    List<String> getFollowersByUsername(String username);
 }

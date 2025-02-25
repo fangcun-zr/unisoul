@@ -3,6 +3,8 @@ package com.zr.uniSoul.service;
 import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.pojo.vo.ArticleLikesVO;
 
+import java.util.List;
+
 public interface xtqhService {
     User login(User user);
 
@@ -24,4 +26,11 @@ public interface xtqhService {
     ArticleLikesVO likes(ArticleLikesVO articleLikes);
 
     int editUserAvatar(String username, String filePath);
+
+    /**
+     * 获取粉丝昵称
+     * @param username
+     * @return
+     */
+    List<String> getFollowersByUsername(String username);
 }

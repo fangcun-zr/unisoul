@@ -27,4 +27,12 @@
     <update id="updateAvatar">
         update user set avatarUrl = #{filePath} where username = #{username}
     </update>
+    <select id="getFollowersByUsername" resultType="java.lang.String">
+        SELECT u.username
+        FROM user u
+                 JOIN follow f ON u.id = f.follower_id
+        WHERE f.following_id = (
+            SELECT id FROM user WHERE username = #{username}
+        )
+        </select>
 </mapper>
