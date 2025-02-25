@@ -84,5 +84,17 @@ const xtqh_information = {
                 senderName: messageData.senderName
             }
         });
+    },
+
+    uploadAvatar: function (formData) {
+        return $.ajax({
+            url: `${API_BASE_URL}/xtqh/changeAvatar`,
+            type: 'POST',
+            enctype: 'multipart/form-data',
+            data: formData,
+            processData: false,  // 告诉jQuery不要处理发送的数据
+            contentType: false   // 告诉jQuery不要设置Content-Type请求头
+        });
     }
+
 };

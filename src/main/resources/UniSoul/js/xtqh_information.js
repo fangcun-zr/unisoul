@@ -73,11 +73,11 @@ $(document).ready(function() {
         const formData = new FormData();
         formData.append('avatar', file);
 
-        user.uploadAvatar(formData)
+        xtqh_information.uploadAvatar(formData)
             .then(response => {
-                if (response.code === 200) {
+                if (response.code === 1) {
                     // 更新头像预览
-                    $('#avatarPreview').attr('src', response.data.avatarUrl);
+                    $('#avatarPreview').attr('src', response.data);
                 } else {
                     alert('上传头像失败：' + response.message);
                 }
