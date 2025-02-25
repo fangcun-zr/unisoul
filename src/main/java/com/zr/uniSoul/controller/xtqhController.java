@@ -129,7 +129,7 @@ public class xtqhController {
     @PostMapping(value = "/changeAvatar")
     @ApiOperation("更改头像")
     public R<String> editUserAvatar(HttpServletRequest request,
-                                  @RequestParam("avatarImg") MultipartFile file
+                                  @RequestParam("avatar") MultipartFile file
                                   ){
         log.info("更改头像接口");
         HttpSession session =  request.getSession();
@@ -153,7 +153,7 @@ public class xtqhController {
         int ret = xtqhService.editUserAvatar(username,filePath);
         if (ret != 0){
             log.info("更改头像成功");
-            return R.success("更改头像成功");
+            return R.success(filePath);
         }
         return R.error("更改头像失败");
     }
