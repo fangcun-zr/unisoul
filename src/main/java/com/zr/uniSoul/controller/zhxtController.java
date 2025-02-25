@@ -6,7 +6,7 @@ import com.zr.uniSoul.pojo.dto.CommentsPageDTO;
 import com.zr.uniSoul.pojo.dto.PageQueryDTO;
 import com.zr.uniSoul.pojo.dto.addCommentsDTO;
 import com.zr.uniSoul.pojo.entity.Article;
-import com.zr.uniSoul.pojo.entity.UserDTO;
+import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.utils.AliOssUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -91,7 +91,6 @@ public class zhxtController {
     public R<PageResult> list(@RequestBody PageQueryDTO pageQueryDTO) {
         log.info("分页查询：{}", pageQueryDTO);
         PageResult pageResult = zhxtService.pageQuery(pageQueryDTO);
-        log.info("分页查询结果：{}", pageResult);
         return R.success(pageResult);
 
     }
@@ -184,9 +183,9 @@ public class zhxtController {
 
     @GetMapping("author_info")
     @ApiOperation("获取文章详情信息")
-    public R<UserDTO> getAuthor_info(@RequestParam String id) {
+    public R<User> getAuthor_info(@RequestParam String id) {
         log.info("获取文章作者信息：文章id={}", id);
-        UserDTO authorUser = zhxtService.getUserByArticleId(id);
+        User authorUser = zhxtService.getUserByArticleId(id);
         if (authorUser != null) {
             return R.success(authorUser);
         }

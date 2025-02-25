@@ -1,15 +1,17 @@
+API_BASE_URL = "http://localhost:8080";
+
 // 学途启航-个人信息相关的API请求
 const xtqh_information = {
-    // 获取个人信息
-    getInformation: function() {
-        return $.ajax({
-            url: `${API_BASE_URL}/xtqh/information`,
-            type: 'GET',
-            headers: {
-                'Authorization': localStorage.getItem('token')
-            }
-        });
-    },
+    // // 获取个人信息
+    // getInformation: function() {
+    //     return $.ajax({
+    //         url: `${API_BASE_URL}/xtqh/information`,
+    //         type: 'GET',
+    //         headers: {
+    //             'Authorization': localStorage.getItem('token')
+    //         }
+    //     });
+    // },
 
     // 更新个人信息
     updateInformation: function(userData) {
@@ -24,7 +26,6 @@ const xtqh_information = {
                 age: userData.age,
                 school: userData.school,
                 biography: userData.biography,
-                avatar: userData.avatar
             })
         });
     },

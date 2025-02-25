@@ -1,9 +1,8 @@
 package com.zr.uniSoul.controller;
 
 import com.zr.uniSoul.common.R;
-import com.zr.uniSoul.pojo.dto.ArticleLikesDTO;
 import com.zr.uniSoul.pojo.dto.userDTO;
-import com.zr.uniSoul.pojo.entity.UserDTO;
+import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.pojo.vo.ArticleLikesVO;
 import com.zr.uniSoul.service.xtqhService;
 import com.zr.uniSoul.utils.AliOssUtil;
@@ -40,11 +39,11 @@ public class xtqhController {
      */
     @PostMapping("/login")
     @ApiOperation("用户登录接口")
-    public R<UserDTO> login(HttpServletRequest request, @RequestBody UserDTO user){
+    public R<User> login(HttpServletRequest request, @RequestBody User user){
         log.info("用户登录接口");
         //TODO:添加JWT或MD5加密处理
 
-        UserDTO loginUser = xtqhService.login(user);
+        User loginUser = xtqhService.login(user);
         if (loginUser != null){
             log.info("用户登录成功");
             //将用户的用户名存入session
@@ -72,11 +71,11 @@ public class xtqhController {
     }
     @PostMapping("register")
     @ApiOperation("用户注册接口")
-    public R<String> register(HttpServletRequest request, @RequestBody UserDTO user){
+    public R<String> register(HttpServletRequest request, @RequestBody User user){
         log.info("用户注册接口");
         //TODO:添加JWT或MD5加密处理
         //先判断用户名是否已经存在
-        UserDTO user1 = xtqhService.findByUsername(user.getUsername());
+        User user1 = xtqhService.findByUsername(user.getUsername());
         if (user1 != null){
             log.info("用户名已存在");
             return R.error("用户名已存在");
@@ -93,55 +92,26 @@ public class xtqhController {
     /**
      * 编辑个人信息
      */
-    @PostMapping(value = "/information" , consumes = "multipart/form-data; charset=UTF-8")
+    @PostMapping(value = "/information" , consumes = "application/json")
     @ApiOperation("编辑个人信息")
     public R<String> editUserInfo(HttpServletRequest request,
-                                  @RequestPart String name,
-                                  @RequestPart String age,
-                                  @RequestPart String gender,
-                                  @RequestPart MultipartFile avatar,
-                                  @RequestPart String school,
-                                  @RequestPart String biography
-
+                                  @RequestBody  userDTO userDTO
                                   ){
         log.info("编辑个人信息接口");
-        userDTO userDTO  =  com.zr.uniSoul.pojo.dto.userDTO.builder()
-                        .name(name)
-                        .age(Integer.parseInt(age))
-                        .gender(Integer.parseInt(gender))
-                        .avatar(avatar)
-                        .school(school)
-                        .biography(biography)
-                .build();
 
 
         HttpSession session =  request.getSession();
         userDTO.setUsername(session.getAttribute("username").toString());
-
-        MultipartFile file = userDTO.getAvatar();
         //保存个人信息
-        UserDTO user = UserDTO.builder()
+        User user = User.builder()
                 .age(userDTO.getAge())
                 .school(userDTO.getSchool())
-                .username(userDTO.getUsername())
+                .name(userDTO.getName())
                 .gender(userDTO.getGender())
                 .biography(userDTO.getBiography())
+                .username(userDTO.getUsername())
                 .build();
-        //将头像图片存入阿里云
-        log.info("文件上传:{}",userDTO.getAvatar());
-        try {
-            //原始文件名
-            String originalFilename = file.getOriginalFilename();
-            //截取原始文件后缀  xxx.png
-            String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-            //生成新的文件名
-            String objectName = UUID.randomUUID().toString() + extension;
-            //上传文件
-            String filePath = aliOssUtil.upload(file.getBytes(), objectName);
-            user.setAvatarUrl(filePath);
-        } catch (IOException e) {
-            log.error("文件上传失败:{}",e);
-        }
+
 
         int ret = xtqhService.editUserInfo(user);
         if (ret != 0){
@@ -151,6 +121,40 @@ public class xtqhController {
         return R.error("编辑个人信息失败");
     }
 
+    /**
+     * 更改头像
+     */
+    @PostMapping(value = "/changeAvatar")
+    @ApiOperation("更改头像")
+    public R<String> editUserAvatar(HttpServletRequest request,
+                                  @RequestParam("avatarImg") MultipartFile file
+                                  ){
+        log.info("更改头像接口");
+        HttpSession session =  request.getSession();
+        String username = session.getAttribute("username").toString();
+
+        String filePath = "";
+                //将头像图片存入阿里云
+        try {
+            //原始文件名
+            String originalFilename = file.getOriginalFilename();
+            //截取原始文件后缀  xxx.png
+            String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            //生成新的文件名
+            String objectName = UUID.randomUUID().toString() + extension;
+            //上传文件
+            filePath = aliOssUtil.upload(file.getBytes(), objectName);
+        } catch (IOException e) {
+            log.error("文件上传失败:{}",e);
+        }
+
+        int ret = xtqhService.editUserAvatar(username,filePath);
+        if (ret != 0){
+            log.info("更改头像成功");
+            return R.success("更改头像成功");
+        }
+        return R.error("更改头像失败");
+    }
     /**
      * 关注
      */

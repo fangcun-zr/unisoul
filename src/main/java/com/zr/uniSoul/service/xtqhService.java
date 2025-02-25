@@ -1,18 +1,18 @@
 package com.zr.uniSoul.service;
 
-import com.zr.uniSoul.pojo.entity.UserDTO;
+import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.pojo.vo.ArticleLikesVO;
 
 public interface xtqhService {
-    UserDTO login(UserDTO user);
+    User login(User user);
 
     Boolean sendCheckCode(String email, String code);
 
-    int register(UserDTO user);
+    int register(User user);
 
-    UserDTO findByUsername(String username);
+    User findByUsername(String username);
 
-    int editUserInfo(UserDTO user);
+    int editUserInfo(User user);
 
 
     int follow(int myUsername, String role_name);
@@ -22,4 +22,6 @@ public interface xtqhService {
      * @return
      */
     ArticleLikesVO likes(ArticleLikesVO articleLikes);
+
+    int editUserAvatar(String username, String filePath);
 }

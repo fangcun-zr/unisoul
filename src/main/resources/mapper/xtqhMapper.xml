@@ -6,14 +6,14 @@
         insert into follow(follower_id,following_id) values(#{user_id},#{role_id})
     </insert>
     <update id="update">
-        update user set name=#{name},age=#{age},gender=#{gender},school=#{school},biography=#{biography},school=#{school},avatarUrl=#{avatarUrl}  where username = #{username}
+        update user set name=#{name},age=#{age},gender=#{gender},school=#{school},biography=#{biography},school=#{school}  where username = #{username}
     </update>
 
 
-    <select id="findByPasswordAndUsername" resultType="com.zr.uniSoul.pojo.entity.UserDTO">
+    <select id="findByPasswordAndUsername" resultType="com.zr.uniSoul.pojo.entity.User">
         select * from user where password = #{password} and username = #{username}
     </select>
-    <select id="findByUsername" resultType="com.zr.uniSoul.pojo.entity.UserDTO">
+    <select id="findByUsername" resultType="com.zr.uniSoul.pojo.entity.User">
         select * from user where username = #{username}
     </select>
     <select id="findIdByUsername" resultType="java.lang.Integer">
@@ -23,5 +23,8 @@
         update article
         set like_count = #{article_id}
         where id = #{user_id}
+    </update>
+    <update id="updateAvatar">
+        update user set avatarUrl = #{filePath} where username = #{username}
     </update>
 </mapper>

@@ -3,14 +3,15 @@ package com.zr.uniSoul.pojo.dto;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
  * @Description: 用户数据传输对象
  */
 @Data
-@Builder
-public class userDTO {
+public class userDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

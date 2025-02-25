@@ -38,7 +38,7 @@
     <select id="getUserIdByArticleId" resultType="java.lang.Integer">
         select author_id from article where id = #{articleId}
     </select>
-    <select id="getUserById" resultType="com.zr.uniSoul.pojo.entity.UserDTO">
+    <select id="getUserById" resultType="com.zr.uniSoul.pojo.entity.User">
      select * from user where id = #{userId}
     </select>
 </mapper>

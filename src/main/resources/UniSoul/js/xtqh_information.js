@@ -41,6 +41,8 @@ $(document).ready(function() {
             $('#displaySchool').text(user.school || '未设置学校');
             $('#biography').val(user.biography || '');
             $('#avatarPreview').attr('src', user.avatarUrl);
+            $('#age').val(user.age || '');
+            $('#n  ame').val(user.name || '');
             // ...渲染其他用户信息
         }
     }
@@ -111,7 +113,7 @@ $(document).ready(function() {
     }
 
     // 处理表单提交
-    $('#profileForm').on('submit', function(e) {
+    $('#profileFormSubmitBtn').off('click').on('click', function(e)  {
         e.preventDefault();
 
         if (!validateForm()) {
@@ -119,6 +121,7 @@ $(document).ready(function() {
         }
 
         const userData = {
+            name: $('#name').val().trim(),
             gender: $('#gender').val(),
             age: $('#age').val().trim(),
             school: $('#school').val().trim(),
@@ -130,9 +133,10 @@ $(document).ready(function() {
         const originalText = $submitBtn.text();
         $submitBtn.prop('disabled', true).text('保存中...');
 
-        user.updateInformation(userData)
+        alert("哈哈哈哈哈哈")
+        xtqh_information.updateInformation(userData)
             .then(response => {
-                if (response.code === 200) {
+                if (response.code === 1) {
                     alert('保存成功！');
                     loadProfile(); // 重新加载个人信息
                 } else {

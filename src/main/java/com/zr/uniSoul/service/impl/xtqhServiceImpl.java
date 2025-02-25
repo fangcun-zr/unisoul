@@ -1,7 +1,7 @@
 package com.zr.uniSoul.service.impl;
 
 import com.zr.uniSoul.mapper.xtqhMapper;
-import com.zr.uniSoul.pojo.entity.UserDTO;
+import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.pojo.vo.ArticleLikesVO;
 import com.zr.uniSoul.service.xtqhService;
 import com.zr.uniSoul.utils.AliOssUtil;
@@ -28,7 +28,7 @@ public class xtqhServiceImpl implements xtqhService {
     @Autowired
     private AliOssUtil aliOssUtil;
     @Override
-    public UserDTO login(UserDTO user) {
+    public User login(User user) {
 
         return  xtqhmapper.findByPasswordAndUsername(user.getPassword(), user.getUsername());
     }
@@ -48,14 +48,14 @@ public class xtqhServiceImpl implements xtqhService {
 
     /**
      * 用户注册
-     * @param userDTO
+     * @param user
      * @return
      */
     @Override
-    public int register(UserDTO userDTO) {
-        userDTO.setCreateTime(LocalDateTime.now());
+    public int register(User user) {
+        user.setCreateTime(LocalDateTime.now());
         //设置默认用户昵称
-        userDTO.setName("用户"+userDTO.getUsername());
+        user.setName("用户"+ user.getUsername());
         //设置默认头像
         File file = new File("img/AvatarImg.jpg");
         //将项目中的默认头像上传至阿里云
@@ -72,23 +72,23 @@ public class xtqhServiceImpl implements xtqhService {
 
             String filePath = aliOssUtil.upload(fileBytes, objectName);
             //将上传后的文件路径存入数据库
-            userDTO.setAvatarUrl(filePath);
+            user.setAvatarUrl(filePath);
             log.info("上传成功:{}",filePath);
         } catch (IOException e) {
             log.error("文件上传失败:{}",e);
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
-        return xtqhmapper.insert(userDTO.getUsername(),userDTO.getPassword(),userDTO.getEmail(),userDTO.getCreateTime(),userDTO.getName(),userDTO.getAvatarUrl());
+        return xtqhmapper.insert(user.getUsername(), user.getPassword(), user.getEmail(), user.getCreateTime(), user.getName(), user.getAvatarUrl());
     }
 
     @Override
-    public UserDTO findByUsername(String username) {
+    public User findByUsername(String username) {
         return xtqhmapper.findByUsername(username);
     }
 
     @Override
-    public int editUserInfo(UserDTO user) {
+    public int editUserInfo(User user) {
         return xtqhmapper.update(user);
     }
 
@@ -115,5 +115,10 @@ public class xtqhServiceImpl implements xtqhService {
         articleLikes.setLikesCount(articleLikes.getLikesCount()+1);
         xtqhmapper.likes(articleLikes.getArticleId(), articleLikes.getLikesCount());
         return articleLikes;
+    }
+
+    @Override
+    public int editUserAvatar(String username, String filePath) {
+        return xtqhmapper.updateAvatar(username,filePath);
     }
 }
