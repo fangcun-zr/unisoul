@@ -3,6 +3,7 @@ package com.zr.uniSoul.service.impl;
 import com.zr.uniSoul.mapper.xtqhMapper;
 import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.pojo.vo.ArticleLikesVO;
+import com.zr.uniSoul.pojo.vo.ArticleVO;
 import com.zr.uniSoul.service.xtqhService;
 import com.zr.uniSoul.utils.AliOssUtil;
 import com.zr.uniSoul.utils.MailUtils;
@@ -132,5 +133,10 @@ public class xtqhServiceImpl implements xtqhService {
     public List<String> getFollowersByUsername(String username) {
         List<String> list = xtqhmapper.getFollowersByUsername(username);
         return list;
+    }
+
+    @Override
+    public List<ArticleVO> getMyArticles(int authorId) {
+        return xtqhmapper.getMyArticles(authorId);
     }
 }

@@ -2,6 +2,7 @@ package com.zr.uniSoul.service;
 
 import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.pojo.vo.ArticleLikesVO;
+import com.zr.uniSoul.pojo.vo.ArticleVO;
 
 import java.util.List;
 
@@ -33,4 +34,6 @@ public interface xtqhService {
      * @return
      */
     List<String> getFollowersByUsername(String username);
+
+    List<ArticleVO> getMyArticles(int userId);
 }

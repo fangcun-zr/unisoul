@@ -4,6 +4,7 @@ import com.zr.uniSoul.common.R;
 import com.zr.uniSoul.pojo.dto.userDTO;
 import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.pojo.vo.ArticleLikesVO;
+import com.zr.uniSoul.pojo.vo.ArticleVO;
 import com.zr.uniSoul.pojo.vo.FollowersVO;
 import com.zr.uniSoul.service.xtqhService;
 import com.zr.uniSoul.utils.AliOssUtil;
@@ -75,7 +76,7 @@ public class xtqhController {
     @ApiOperation("用户注册接口")
     public R<String> register(HttpServletRequest request, @RequestBody User user){
         log.info("用户注册接口");
-        //TODO:添加JWT或MD5加密处理
+        //TODO:添加JWT  ，MD5加密处理
         //先判断用户名是否已经存在
         User user1 = xtqhService.findByUsername(user.getUsername());
         if (user1 != null){
@@ -215,6 +216,22 @@ public class xtqhController {
         followersVO.setFollowers(followers);
         followersVO.setFollowersCount(followers.size());
         return R.success(followersVO);
+    }
+    /**
+     * 获取我的文章列表哦
+     */
+    @GetMapping("/getMyArticles")
+    @ApiOperation("获取我的文章列表")
+    public R<List<ArticleVO>> getMyArticle(HttpServletRequest request){
+        log.info("获取我的文章列表接口");
+        HttpSession session = request.getSession();
+        String userId = session.getAttribute("userId").toString();
+        List<ArticleVO> articleVOList = xtqhService.getMyArticles(Integer.parseInt(userId));
+        if (articleVOList == null || articleVOList.isEmpty()) {
+            log.info("获取我的文章列表失败");
+            return R.error("获取我的文章列表失败");
+        }
+        return R.success(articleVOList);
     }
 
 }
