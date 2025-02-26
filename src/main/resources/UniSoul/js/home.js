@@ -21,68 +21,33 @@ $(document).ready(function() {
         $('.avatar-lg ').attr('src', user.avatarUrl);
         // ...渲染其他用户信息
     }
-    // 加载用户信息
-    function loadUserInfo() {
-        xtqh_information.getInformation()
-            .then(response => {
-                if (response.code === 1) {
-                    const data = response.data;
-                    $('#currentUsername').text(data.username);
-                    $('#sidebarUsername').text(data.username);
-                    $('#userSchool').text(data.school || '未设置学校');
 
-                    // 如果有头像则显示
-                    if (data.avatar) {
-                        $('.avatar-sm, .avatar-lg').attr('src', data.avatar);
-                    }
-                }
-            })
-            .catch(error => {
-                console.error('加载用户信息失败:', error);
-            });
-    }
-
-    // 加载用户统计信息
-    function loadUserStats() {
-        // 获取文章数量
-        article.getArticleList(1, 5)
-            .then(response => {
-                if (response.code === 1) {
-                    $('#articleCount').text(response.total || 0);
-                }
-            });
-
-        // 获取粉丝数量
-        xtqh_information.getFollowers()
-            .then(response => {
-                if (response.code === 1) {
-                    $('#followersCount').text(response.total || 0);
-                }
-            });
-
-        // 获取关注数量
-        xtqh_information.getFollowing()
-            .then(response => {
-                if (response.code === 1) {
-                    $('#followingCount').text(response.total || 0);
-                }
-            });
-    }
-
-    // 获取文章列表
-    article.getArticleList = function (page = 1, pageSize = 5, category_id = '') {
-        return $.ajax({
-            url: `${API_BASE_URL}/zhxt/list`,
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({
-                page: parseInt(page), // 确保 page 是整数
-                pageSize: parseInt(pageSize), // 确保 pageSize 是整数
-                category_id: category_id ? parseInt(category_id) : null // 处理 category_id
-            })
-        });
-    };
-
+    // // 加载用户统计信息
+    // function loadUserStats() {
+    //     // 获取文章数量
+    //     article.getArticleList(1, 5)
+    //         .then(response => {
+    //             if (response.code === 1) {
+    //                 $('#articleCount').text(response.total || 0);
+    //             }
+    //         });
+    //
+    //     // 获取粉丝数量
+    //     xtqh_information.getFollowers()
+    //         .then(response => {
+    //             if (response.code === 1) {
+    //                 $('#followersCount').text(response.total || 0);
+    //             }
+    //         });
+    //
+    //     // 获取关注数量
+    //     xtqh_information.getFollowing()
+    //         .then(response => {
+    //             if (response.code === 1) {
+    //                 $('#followingCount').text(response.total || 0);
+    //             }
+    //         });
+    // }
 // 加载文章列表
     function loadArticles(page = 1, pageSize = 5, category_id = '') {
         article.getArticleList(page, pageSize, category_id)
@@ -92,26 +57,27 @@ $(document).ready(function() {
                     articleList.empty();
 
                     response.data.records.forEach(article => {
-                        // 确保 article.id 存在并转换为字符串
-                        const articleId = article.id || 'unknown';
-
                         const articleHtml = `
-                        <div class="article-item">
-                            <h5 class="title">
-                                <!-- 通过 href 传递文章 ID 到详情页面 -->
-                                <a href="zhxt_article_details.html?id=${encodeURIComponent(articleId)}" class="text-decoration-none">${article.title || '无标题'}</a>
-                            </h5>
-                            <p class="text-muted mb-2">${article.content || '无摘要'}</p>
-                            <div class="meta">
-                                <span><i class="far fa-user"></i> ${article.author_id || '未知作者'}</span>
-                                <span class="ms-3"><i class="far fa-clock"></i> ${formatDate(article.create_time)}</span>
-                                <span class="ms-3"><i class="far fa-eye"></i> ${article.viewCount || 0}</span>
-                                <span class="ms-3"><i class="far fa-comment"></i> ${article.commentCount || 0}</span>
-                            </div>
-                        </div>
-                    `;
+        <div class="article-item">
+            <h5 class="title">
+                <a href="zhxt_article_details.html?id=${encodeURIComponent(article.id)}" class="text-decoration-none">${article.title || '无标题'}</a>
+            </h5>
+            <img src="${article.cover_image}" alt="${article.title}" class="cover-image">
+            <p class="text-muted mb-2">${article.content.substring(0, 100)}...</p>  <!-- 只显示前100个字符 -->
+            <div class="meta">
+                <span><i class="far fa-folder"></i> 分类: ${article.category_id}</span>
+                <span class="ms-3"><i class="far fa-tag"></i> 标签: ${article.tags}</span>
+                <span class="ms-3"><i class="far fa-eye"></i> 浏览次数: ${article.viewCount || 0}</span>
+                <span class="ms-3"><i class="far fa-thumbs-up"></i> 点赞数: ${article.likeCount || 0}</span>
+                <span class="ms-3"><i class="far fa-comment"></i> 评论数: ${article.commentCount || 0}</span>
+                <span class="ms-3"><i class="far fa-clock"></i> 发布时间: ${formatDate(article.create_time)}</span>
+                <span class="ms-3"><i class="far fa-clock"></i> 更新时间: ${formatDate(article.update_time)}</span>
+            </div>
+        </div>
+    `;
                         articleList.append(articleHtml);
                     });
+
 
                     updatePagination(response.data.total, page, pageSize);
                 } else {
@@ -174,8 +140,7 @@ $(document).ready(function() {
 
 
     // 初始化加载
-    loadUserInfo();
-    loadUserStats();
+    // loadUserStats();
     loadArticles();
     loadHotTopics();
 });
