@@ -61,17 +61,10 @@ const article = {
 
 
     // 获取我的文章列表
-    getMyArticles: function(page = 1, limit = 10) {
+    getMyArticles: function() {
         return $.ajax({
-            url: `${API_BASE_URL}/article/my/list`,
+            url: `${API_BASE_URL}/xtqh/getMyArticles`,
             type: 'GET',
-            headers: {
-                'Authorization': localStorage.getItem('token')
-            },
-            data: {
-                page: page,
-                limit: limit
-            }
         });
     },
 

@@ -47,7 +47,7 @@ $(document).ready(function() {
         // 获取文章数量
         article.getArticleList(1, 5)
             .then(response => {
-                if (response.code === 200) {
+                if (response.code === 1) {
                     $('#articleCount').text(response.total || 0);
                 }
             });
@@ -55,7 +55,7 @@ $(document).ready(function() {
         // 获取粉丝数量
         xtqh_information.getFollowers()
             .then(response => {
-                if (response.code === 200) {
+                if (response.code === 1) {
                     $('#followersCount').text(response.total || 0);
                 }
             });
@@ -63,7 +63,7 @@ $(document).ready(function() {
         // 获取关注数量
         xtqh_information.getFollowing()
             .then(response => {
-                if (response.code === 200) {
+                if (response.code === 1) {
                     $('#followingCount').text(response.total || 0);
                 }
             });

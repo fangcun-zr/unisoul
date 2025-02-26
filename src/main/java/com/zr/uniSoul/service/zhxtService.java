@@ -7,6 +7,8 @@ import com.zr.uniSoul.pojo.dto.addCommentsDTO;
 import com.zr.uniSoul.pojo.entity.Article;
 import com.zr.uniSoul.pojo.entity.User;
 
+import java.util.List;
+
 public interface zhxtService {
     int findIdByUsername(String username);
 
