@@ -98,10 +98,8 @@ body {
 .article-list .article-item {
     border-bottom: 1px solid #eee;
     padding: 1rem 0;
-}
-
-.article-item:last-child {
-    border-bottom: none;
+    display: flex;
+    flex-direction: column;
 }
 
 .article-item .title {
@@ -110,10 +108,29 @@ body {
     margin-bottom: 0.5rem;
 }
 
+.article-item .cover-image {
+    width: 100%;
+    height: 200px;  /* 设置图片高度为 200px */
+    object-fit: cover;  /* 使用 cover 保持图片宽高比 */
+    margin-bottom: 0.5rem;
+}
+
+
 .article-item .meta {
     font-size: 0.875rem;
     color: #6c757d;
+    display: flex;
+    flex-wrap: wrap;
 }
+
+.article-item .meta span {
+    margin-right: 20px;
+}
+
+.article-item .meta span i {
+    margin-right: 5px;
+}
+
 
 /* 用户统计样式 */
 .user-stats {

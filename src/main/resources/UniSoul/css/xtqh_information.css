@@ -9,6 +9,37 @@
     --border-radius: 20px;
     --transition: all 0.3s ease;
 }
+.list-group-item {
+    margin-bottom: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.list-group-item h5 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.list-group-item p {
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #666;
+}
+
+.list-group-item img {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 10px;
+}
+
+.list-group-item .btn {
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
 
 body {
     background-color: var(--background);

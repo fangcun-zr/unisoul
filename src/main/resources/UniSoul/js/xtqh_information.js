@@ -47,6 +47,56 @@ $(document).ready(function() {
         }
     }
 
+    //加载我的文章列表
+    function loadMyArticles() {
+        //先判断登录情况
+        // 检查localStorage中是否有用户信息
+        const userDetails = localStorage.getItem('userDetails');
+
+        if (userDetails) {
+            //发送请求获取我的文章
+            article.getMyArticles()
+                .then(response => {
+                    if (response.code === 1) {
+                        const articles = response.data;
+// 将文章列表渲染到页面上
+                        $('#articleList').empty();
+
+                        if (articles === null || articles.length === 0) {
+                            $('#articleList').append(`
+        <li class="list-group-item">您还未发布文章，快去发布您的第一篇文章吧</li>
+    `);
+                        } else {
+                            articles.forEach(article => {
+                                $('#articleList').append(`
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+                <h5>${article.title}</h5>
+                <p>分类ID: ${article.category_id}</p>
+                <p>封面图片: <img src="${article.cover_image}" alt="${article.title}" style="width: 100px; height: 100px;"></p>
+                <p>标签: ${article.tags}</p>
+                <p>状态: ${article.status === 0 ? '待审核' : '已审核'}</p>
+                <p>浏览次数: ${article.viewCount}</p>
+                <p>点赞数: ${article.likeCount}</p>
+                <p>评论数: ${article.commentCount}</p>
+                <p>发布时间: ${article.create_time}</p>
+                <p>更新时间: ${article.update_time}</p>
+            </div>
+            <div>
+                <button class="btn btn-sm btn-primary mr-2" onclick="editArticle(${article.id})">编辑</button>
+                <button class="btn btn-sm btn-danger" value="${article.id}" onclick="deleteArticle(${article.id})">删除</button>
+            </div>
+        </li>
+    `);
+                            });
+
+                        }
+
+                    }
+                })
+        }
+    }
+
     // 处理头像上传
     $('#avatarUpload').change(function(e) {
         const file = e.target.files[0];
@@ -57,8 +107,8 @@ $(document).ready(function() {
             alert('请选择图片文件');
             return;
         }
-        if (file.size > 5 * 1024 * 1024) {
-            alert('图片大小不能超过5MB');
+        if (file.size > 20 * 1024 * 1024) {
+            alert('图片大小不能超过20MB');
             return;
         }
 
@@ -132,8 +182,6 @@ $(document).ready(function() {
         const $submitBtn = $(this).find('button[type="submit"]');
         const originalText = $submitBtn.text();
         $submitBtn.prop('disabled', true).text('保存中...');
-
-        alert("哈哈哈哈哈哈")
         xtqh_information.updateInformation(userData)
             .then(response => {
                 if (response.code === 1) {
@@ -164,4 +212,6 @@ $(document).ready(function() {
 
     // 初始化加载
     loadProfile();
+
+    loadMyArticles();
 });

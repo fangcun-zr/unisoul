@@ -1,6 +1,7 @@
 package com.zr.uniSoul.mapper;
 
 import com.zr.uniSoul.pojo.entity.User;
+import com.zr.uniSoul.pojo.vo.ArticleVO;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -41,4 +42,6 @@ public interface xtqhMapper {
      * @return
      */
     List<String> getFollowersByUsername(String username);
+
+    List<ArticleVO> getMyArticles(int authorId);
 }

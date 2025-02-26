@@ -1,4 +1,4 @@
-API_BASE_URL = "http://localhost:8080";
+ // API_BASE_URL = "http://localhost:8080";
 
 // 学途启航-个人信息相关的API请求
 const xtqh_information = {
