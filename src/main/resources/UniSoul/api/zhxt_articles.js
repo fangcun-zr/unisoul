@@ -7,16 +7,20 @@ const article = {
 
 
     // 文章基础操作
-    // 发布文章
     publish: function (articleData) {
+        const formData = new FormData();
+        formData.append('title', articleData.title);
+        formData.append('content', articleData.content);
+        if (articleData.file) {
+            formData.append('file', articleData.file);
+        }
+
         return $.ajax({
-            url: `${API_BASE_URL}/article/publish`,
+            url: `${API_BASE_URL}/zhxt/publish`,
             type: 'POST',
-            headers: {
-                'Authorization': localStorage.getItem('token')
-            },
-            contentType: 'application/json',
-            data: JSON.stringify(articleData)
+            processData: false,
+            contentType: false,
+            data: formData
         });
     },
 
