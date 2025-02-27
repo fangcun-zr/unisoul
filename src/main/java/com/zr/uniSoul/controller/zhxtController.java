@@ -185,7 +185,7 @@ public class zhxtController {
     }
 
     @GetMapping("author_info")
-    @ApiOperation("获取文章详情信息")
+    @ApiOperation("获取作者详情信息")
     public R<User> getAuthor_info(@RequestParam String id) {
         log.info("获取文章作者信息：文章id={}", id);
         User authorUser = zhxtService.getUserByArticleId(id);
