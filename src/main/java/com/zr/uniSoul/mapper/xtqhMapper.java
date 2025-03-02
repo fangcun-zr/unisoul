@@ -28,11 +28,19 @@ public interface xtqhMapper {
     @Select("select count(*) from follow where follower_id = #{userId} and following_id = #{followingId}")
     int findFollow(int userId, Integer followingId);
     /**
-     * 文章点赞
+     * 文章点赞，修改文章的点赞数量
      * @Param("article_id") int article_id
      * @Param("user_id") int user_id
      */
-    void likes(int article_id, int user_id);
+    void likes(int article_id, int likesCount);
+
+    /**
+     * 添加对文章点赞的信息
+     * @param userId
+     * @param articleId
+     * @param createTime
+     */
+    void likesArticle(long userId, int articleId , LocalDateTime createTime);
 
     int updateAvatar(String username, String filePath);
 
@@ -44,4 +52,20 @@ public interface xtqhMapper {
     List<String> getFollowersByUsername(String username);
 
     List<ArticleVO> getMyArticles(int authorId);
+
+    /**
+     * 查询点赞情况
+     * @param articleId
+     * @param userId
+     * @return
+     */
+    @Select("select id from likes_article where article_id = #{articleId} and user_id = #{userId} ")
+    Integer inquireLikeStatus(Long userId,int articleId);
+
+    /**
+     * 取消点赞
+     * @param userId
+     * @param articleId
+     */
+    void deleteLikesArticle(Long userId, Integer articleId);
 }

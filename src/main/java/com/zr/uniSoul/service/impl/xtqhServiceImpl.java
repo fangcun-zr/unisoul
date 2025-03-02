@@ -108,14 +108,23 @@ public class xtqhServiceImpl implements xtqhService {
         return xtqhmapper.follow(user_id,following_id);
     }
     /**
-     * 点赞情况
+     * 点赞
      * @param articleLikes
      * @return
      */
     @Override
     public ArticleLikesVO likes(ArticleLikesVO articleLikes) {
-        articleLikes.setLikesCount(articleLikes.getLikesCount()+1);
-        xtqhmapper.likes(articleLikes.getArticleId(), articleLikes.getLikesCount());
+        if(!inquireLikeStatus(articleLikes.getUserId(),articleLikes.getArticleId())) {//在没有点赞的情况下
+            articleLikes.setLikesCount(articleLikes.getLikesCount() + 1);
+            articleLikes.setIsLike(true);
+            xtqhmapper.likes(articleLikes.getArticleId(), articleLikes.getLikesCount());//修改文章的点赞数量
+            xtqhmapper.likesArticle(articleLikes.getUserId(), articleLikes.getArticleId(), LocalDateTime.now());//添加文章点赞和点赞着的关系
+        }else{//已经对文章点过赞了
+            articleLikes.setLikesCount(articleLikes.getLikesCount() - 1);
+            articleLikes.setIsLike(false);
+            xtqhmapper.likes(articleLikes.getArticleId(), articleLikes.getLikesCount());//修改文章的点赞数量
+            xtqhmapper.deleteLikesArticle(articleLikes.getUserId(), articleLikes.getArticleId());//删除文章点赞和点赞着的关系
+        }
         return articleLikes;
     }
 
@@ -138,5 +147,21 @@ public class xtqhServiceImpl implements xtqhService {
     @Override
     public List<ArticleVO> getMyArticles(int authorId) {
         return xtqhmapper.getMyArticles(authorId);
+    }
+
+    /**
+     * 查询点赞状态
+     * @param userId
+     * @param articleId
+     * @return
+     */
+    @Override
+    public boolean inquireLikeStatus(Long userId, int articleId) {
+        Integer status = xtqhmapper.inquireLikeStatus(userId, articleId);
+        if (status == null) {
+            return false;//代表没有点赞
+        } else {
+            return true;//代表点过赞了
+        }
     }
 }

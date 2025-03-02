@@ -1,5 +1,6 @@
 package com.zr.uniSoul.controller;
 
+import com.sun.jdi.BooleanValue;
 import com.zr.uniSoul.common.R;
 import com.zr.uniSoul.pojo.dto.userDTO;
 import com.zr.uniSoul.pojo.entity.User;
@@ -13,6 +14,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.cassandra.CassandraProperties;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -194,10 +196,15 @@ public class xtqhController {
      */
     @GetMapping("/likes")
     @ApiOperation("点赞")
-    public R<ArticleLikesVO> likes(@RequestParam int ArticleId, int LikesCount ){
+    public R<ArticleLikesVO> likes(HttpServletRequest request,@RequestParam int ArticleId, int LikesCount ,boolean isLike){
         ArticleLikesVO articleLikesVO = new ArticleLikesVO();
         articleLikesVO.setLikesCount(LikesCount);
         articleLikesVO.setArticleId(ArticleId);
+        if(!new Boolean(isLike).booleanValue()) isLike = false;
+        articleLikesVO.setIsLike(isLike);
+        String name = request.getSession().getAttributeNames().nextElement();
+        Long userId = (Long)request.getSession().getAttribute("userId");
+        articleLikesVO.setUserId(userId);
         log.info("点赞接口, 点赞: {}", articleLikesVO);
         articleLikesVO  = xtqhService.likes(articleLikesVO);
         return R.success(articleLikesVO);
