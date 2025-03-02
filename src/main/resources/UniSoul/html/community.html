@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>知识社区 - 探索无限可能</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/community.css">
+</head>
+<body>
+<!-- 背景装饰 -->
+<div class="background-decoration">
+    <div class="circle c1"></div>
+    <div class="circle c2"></div>
+    <div class="circle c3"></div>
+    <div class="wave-container">
+        <svg viewBox="0 0 1440 320" class="wave">
+            <path fill="#4299e1" fill-opacity="0.2" d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+        </svg>
+    </div>
+</div>
+
+<!-- 导航栏 -->
+<nav class="navbar navbar-expand-lg navbar-glass fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="#">
+            <i class="fas fa-brain"></i>
+            <span>知识社区</span>
+        </a>
+
+        <div class="navbar-collapse">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">
+                        <i class="fas fa-home"></i> 首页
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="fas fa-compass"></i> 发现
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="fas fa-book"></i> 专栏
+                    </a>
+                </li>
+            </ul>
+
+            <div class="search-box">
+                <input type="text" class="form-control" placeholder="搜索感兴趣的内容...">
+                <i class="fas fa-search"></i>
+            </div>
+
+            <div class="user-actions">
+                <button class="btn btn-create" id="createPostBtn">
+                    <i class="fas fa-pen"></i>
+                    <span>创作文章</span>
+                </button>
+
+                <div class="notification-center">
+                    <div class="icon-badge" data-bs-toggle="dropdown">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">3</span>
+                    </div>
+                    <div class="dropdown-menu notification-menu">
+                        <!-- 通知内容 -->
+                    </div>
+                </div>
+
+                <div class="user-profile dropdown">
+                    <div class="profile-toggle" data-bs-toggle="dropdown">
+                        <img src="../images/avatar.jpg" alt="用户头像" class="avatar">
+                        <span class="username">张三</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-user"></i> 个人主页</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog"></i> 设置</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="#"><i class="fas fa-sign-out-alt"></i> 退出</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- 主要内容 -->
+<div class="main-container">
+    <div class="container">
+        <!-- 统计面板 -->
+        <div class="stats-panel">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 class="stat-value">1,234</h3>
+                            <p class="stat-label">文章总数</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 class="stat-value">45.6K</h3>
+                            <p class="stat-label">总浏览量</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 class="stat-value">789</h3>
+                            <p class="stat-label">关注者</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 class="stat-value">4.9</h3>
+                            <p class="stat-label">平均评分</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 内容区域 -->
+        <div class="content-container">
+            <!-- 左侧分类栏 -->
+            <div class="category-sidebar">
+                <div class="category-header">
+                    <h5><i class="fas fa-th-large"></i> 内容分类</h5>
+                </div>
+                <div class="category-list">
+                    <div class="category-item active">
+                        <i class="fas fa-fire"></i>
+                        <span>热门推荐</span>
+                        <span class="count">99+</span>
+                    </div>
+                    <div class="category-item">
+                        <i class="fas fa-code"></i>
+                        <span>技术开发</span>
+                        <span class="count">56</span>
+                    </div>
+                    <!-- 更多分类... -->
+                </div>
+            </div>
+
+            <!-- 中间文章列表 -->
+            <div class="article-container">
+                <!-- 筛选栏 -->
+                <div class="filter-panel">
+                    <div class="filter-tabs">
+                        <button class="filter-tab active">
+                            <i class="fas fa-star"></i> 推荐
+                        </button>
+                        <button class="filter-tab">
+                            <i class="fas fa-clock"></i> 最新
+                        </button>
+                        <button class="filter-tab">
+                            <i class="fas fa-fire"></i> 热门
+                        </button>
+                    </div>
+                    <div class="filter-actions">
+                        <button class="btn btn-filter">
+                            <i class="fas fa-sort"></i> 排序
+                        </button>
+                        <button class="btn btn-filter">
+                            <i class="fas fa-filter"></i> 筛选
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 文章列表 -->
+                <div class="article-list">
+                    <!-- 文章卡片示例 -->
+                    <div class="article-card">
+                        <!-- 文章内容将通过JS动态加载 -->
+                    </div>
+                </div>
+
+                <!-- 加载更多 -->
+                <div class="load-more">
+                    <button class="btn btn-load-more" id="loadMore">
+                        <i class="fas fa-sync-alt"></i> 加载更多
+                    </button>
+                </div>
+            </div>
+
+            <!-- 右侧推荐 -->
+            <div class="recommend-sidebar">
+                <!-- 推荐作者 -->
+                <div class="sidebar-card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-user-circle"></i> 推荐作者</h5>
+                        <a href="#" class="refresh-link">
+                            <i class="fas fa-sync-alt"></i> 换一批
+                        </a>
+                    </div>
+                    <div class="author-list">
+                        <!-- 作者列表将通过JS动态加载 -->
+                    </div>
+                </div>
+
+                <!-- 热门文章 -->
+                <div class="sidebar-card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-fire"></i> 热门文章</h5>
+                    </div>
+                    <div class="hot-article-list">
+                        <!-- 热门文章将通过JS动态加载 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 创作文章模态框 -->
+<div class="modal fade" id="createPostModal" tabindex="-1">
+    <!-- 模态框内容将通过JS动态加载 -->
+</div>
+
+<!-- 脚本引入 -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
+<script src="../api/api.js" type="module"></script>
+<script src="../js/main.js" type="module"></script>
+</body>
+</html>

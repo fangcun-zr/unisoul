@@ -3,205 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>发布文章 - 心旅坊</title>
+    <title>创作中心 - 心旅坊</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css">
     <link rel="stylesheet" href="../css/zhxt_publishArticle.css">
 </head>
-<body>
-<!-- 背景装饰 -->
-<div class="background-decoration">
-    <div class="circle c1"></div>
-    <div class="circle c2"></div>
-    <div class="circle c3"></div>
-    <div class="wave-container">
-        <svg viewBox="0 0 1440 320" class="wave">
-            <path fill="#4299e1" fill-opacity="0.2" d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
-        </svg>
-    </div>
-</div>
-
-<!-- 导航栏 -->
-<nav class="navbar navbar-expand-lg navbar-glass">
-    <div class="container">
-        <a class="navbar-brand" href="#">心旅坊</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <i class="fas fa-bars"></i>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="home.html"><i class="fas fa-home"></i> 首页</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="publishArticle.html"><i class="fas fa-pencil-alt"></i> 发布文章</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> 退出</a>
-                </li>
-            </ul>
+<body class="writing-mode">
+<!-- 顶部导航栏 -->
+<nav class="navbar navbar-expand-lg navbar-glass fixed-top">
+    <div class="container-fluid px-4">
+        <a class="navbar-brand" href="#">
+            <i class="fas fa-feather-alt"></i> 创作中心
+        </a>
+        <div class="navbar-text save-status">
+            <i class="fas fa-check-circle"></i> 已自动保存
+        </div>
+        <div class="nav-actions">
+            <button class="btn btn-outline-primary me-2" id="previewBtn">
+                <i class="fas fa-eye"></i> 预览
+            </button>
+            <button class="btn btn-primary" id="publishBtn">
+                <i class="fas fa-paper-plane"></i> 发布文章
+            </button>
         </div>
     </div>
 </nav>
 
-<!-- 主要内容 -->
-<div class="container mt-4">
-    <!-- 写作工具栏 -->
-    <div class="writing-toolbar">
-        <div class="toolbar-left">
-            <button class="btn btn-icon" title="保存草稿" id="saveDraft">
+<!-- 主要内容区 -->
+<div class="main-container">
+    <!-- 左侧工具栏 -->
+    <div class="sidebar">
+        <div class="tool-group">
+            <button class="tool-btn" title="返回首页">
+                <i class="fas fa-home"></i>
+            </button>
+            <button class="tool-btn" title="保存草稿">
                 <i class="fas fa-save"></i>
             </button>
-            <button class="btn btn-icon" title="撤销" id="undo">
+            <button class="tool-btn" title="撤销">
                 <i class="fas fa-undo"></i>
             </button>
-            <button class="btn btn-icon" title="重做" id="redo">
+            <button class="tool-btn" title="重做">
                 <i class="fas fa-redo"></i>
             </button>
         </div>
-        <div class="toolbar-center">
-            <span class="save-status">
-                <i class="fas fa-check-circle"></i> 已自动保存
-            </span>
-        </div>
-        <div class="toolbar-right">
-            <button class="btn btn-outline-primary btn-preview" id="previewArticle">
-                <i class="fas fa-eye"></i> 预览
+        <div class="tool-group">
+            <button class="tool-btn" title="插入图片">
+                <i class="fas fa-image"></i>
             </button>
-            <button class="btn btn-primary btn-publish" id="publishArticle">
-                <i class="fas fa-paper-plane"></i> 发布
+            <button class="tool-btn" title="插入链接">
+                <i class="fas fa-link"></i>
+            </button>
+            <button class="tool-btn" title="插入表格">
+                <i class="fas fa-table"></i>
             </button>
         </div>
     </div>
 
-    <div class="publish-container">
-        <!-- 左侧编辑区 -->
-        <div class="edit-section animate__animated animate__fadeInLeft">
-            <form id="publishArticleForm">
-                <!-- 标题输入 -->
-                <div class="title-input">
-                    <input type="text" class="form-control" id="articleTitle" placeholder="请输入文章标题..." required>
-                    <div class="title-counter">0/100</div>
-                </div>
-
-                <!-- 封面上传 -->
-                <div class="cover-upload" id="coverUpload">
-                    <div class="upload-preview">
-                        <img src="../image/default-cover.jpg" alt="封面预览">
-                        <div class="upload-overlay">
-                            <i class="fas fa-camera"></i>
-                            <span>点击上传封面</span>
-                            <p class="upload-tip">建议尺寸: 1200 x 675</p>
-                        </div>
-                    </div>
-                    <input type="file" id="coverImage" accept="image/*" hidden>
-                </div>
-
-                <!-- 富文本编辑器 -->
-                <div class="editor-container">
-                    <div id="editor"></div>
-                    <div class="editor-footer">
-                        <div class="word-counter">字数统计: <span>0</span></div>
-                        <div class="editor-tips">
-                            <button type="button" class="btn btn-link" data-bs-toggle="tooltip" title="写作技巧">
-                                <i class="fas fa-lightbulb"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </form>
+    <!-- 中间编辑区 -->
+    <div class="editor-container">
+        <!-- 标题区 -->
+        <div class="title-section">
+            <input type="text" id="articleTitle" class="title-input" placeholder="请输入文章标题..." maxlength="100">
+            <div class="title-counter">0/100</div>
         </div>
 
-        <!-- 右侧设置区 -->
-        <div class="settings-section animate__animated animate__fadeInRight">
-            <div class="settings-card">
-                <h3 class="settings-title">
-                    <i class="fas fa-cog"></i> 文章设置
-                </h3>
+        <!-- 封面上传区 -->
+        <div class="avatar-wrapper" id="avatarWrapper">
+            <img src="../image/default-avatar.png" class="avatar" id="avatarPreview" alt="Avatar Preview">
+            <div class="avatar-edit">
+                <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
+                <label for="avatarUpload" class="avatar-label">
+                    <i class="fas fa-camera"></i>
+                    <span>点击更换封面</span>
+                </label>
+            </div>
+        </div>
 
-                <div class="setting-group">
-                    <label class="setting-label">
-                        <i class="fas fa-folder"></i> 文章分类
-                    </label>
-                    <div class="category-selector">
-                        <div class="category-list">
-                            <div class="category-item active" data-category="心理健康">
-                                <i class="fas fa-heart"></i> 心理健康
-                            </div>
-                            <div class="category-item" data-category="情感咨询">
-                                <i class="fas fa-comments"></i> 情感咨询
-                            </div>
-                            <div class="category-item" data-category="个人成长">
-                                <i class="fas fa-seedling"></i> 个人成长
-                            </div>
-                        </div>
-                    </div>
+        <!-- 编辑器区 -->
+        <div id="editor"></div>
+    </div>
+
+    <!-- 右侧设置区 -->
+    <div class="settings-panel">
+        <div class="panel-section">
+            <h3 class="section-title">
+                <i class="fas fa-tags"></i> 文章标签
+            </h3>
+            <div class="tag-container">
+                <div class="tag-list"></div>
+                <input type="text" class="tag-input" placeholder="输入标签按回车添加">
+                <div class="suggested-tags">
+                    <span class="tag-suggestion">心理</span>
+                    <span class="tag-suggestion">成长</span>
+                    <span class="tag-suggestion">情感</span>
                 </div>
+            </div>
+        </div>
 
-                <div class="setting-group">
-                    <label class="setting-label">
-                        <i class="fas fa-tags"></i> 文章标签
-                    </label>
-                    <div class="tag-input">
-                        <div class="tag-list"></div>
-                        <input type="text" class="form-control" placeholder="输入标签后按回车添加">
-                        <div class="tag-suggestions">
-                            <span>推荐标签:</span>
-                            <button type="button" class="tag-suggestion">心理</button>
-                            <button type="button" class="tag-suggestion">成长</button>
-                            <button type="button" class="tag-suggestion">情感</button>
-                        </div>
-                    </div>
+        <div class="panel-section">
+            <h3 class="section-title">
+                <i class="fas fa-folder"></i> 文章分类
+            </h3>
+            <div class="category-list">
+                <div class="category-item active" data-category_id = 1>
+                    <i class="fas fa-heart"></i>
+                    <span>心理健康</span>
                 </div>
+                <div class="category-item" data-category_id = 2>
+                    <i class="fas fa-comments"></i>
+                    <span>情感咨询</span>
+                </div>
+                <div class="category-item" data-category_id = 3>
+                    <i class="fas fa-seedling"></i>
+                    <span>个人成长</span>
+                </div>
+            </div>
+        </div>
 
-                <div class="setting-group">
-                    <label class="setting-label">
-                        <i class="fas fa-sliders-h"></i> 高级设置
+        <div class="panel-section">
+            <h3 class="section-title">
+                <i class="fas fa-cog"></i> 文章设置
+            </h3>
+            <div class="settings-list">
+                <div class="setting-item">
+                    <span>允许评论</span>
+                    <label class="switch">
+                        <input type="checkbox" id="allowComment" checked>
+                        <span class="slider round"></span>
                     </label>
-                    <div class="advanced-settings">
-                        <div class="setting-item">
-                            <div class="setting-item-left">
-                                <i class="fas fa-comments"></i>
-                                <span>允许评论</span>
-                            </div>
-                            <div class="setting-item-right">
-                                <label class="switch">
-                                    <input type="checkbox" id="allowComment" checked>
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="setting-item">
-                            <div class="setting-item-left">
-                                <i class="fas fa-copyright"></i>
-                                <span>原创文章</span>
-                            </div>
-                            <div class="setting-item-right">
-                                <label class="switch">
-                                    <input type="checkbox" id="isOriginal" checked>
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
+                </div>
+                <div class="setting-item">
+                    <span>原创声明</span>
+                    <label class="switch">
+                        <input type="checkbox" id="isOriginal" checked>
+                        <span class="slider round"></span>
+                    </label>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- 发布确认模态框 -->
-<div class="modal fade" id="publishModal" tabindex="-1" aria-labelledby="publishModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+<!-- 发布确认弹窗 -->
+<div class="modal fade" id="publishModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="publishModalLabel">确认发布</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title">发布文章</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                您确定要发布这篇文章吗？
+                <div class="publish-preview">
+                    <div class="preview-cover">
+                        <img src="" alt="封面预览">
+                    </div>
+                    <div class="preview-content">
+                        <h3 class="preview-title"></h3>
+                        <div class="preview-meta">
+                            <span class="category"></span>
+                            <span class="tags"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="publish-confirm">
+                    确认发布这篇文章吗？发布后将立即对所有用户可见。
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>帮助中心 - 心旅坊</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/help_center.css">
+</head>
+<body>
+<!-- 背景装饰 -->
+<div class="background-decoration">
+    <div class="circle c1"></div>
+    <div class="circle c2"></div>
+    <div class="circle c3"></div>
+    <div class="wave-container">
+        <svg viewBox="0 0 1440 320" class="wave">
+            <path fill="#4299e1" fill-opacity="0.2" d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+        </svg>
+    </div>
+</div>
+
+<!-- 导航栏 -->
+<nav class="navbar navbar-expand-lg navbar-glass">
+    <div class="container">
+        <a class="navbar-brand" href="dashboard.html">
+            <img src="../image/logo.png" alt="Logo" class="nav-logo">
+            心旅坊
+        </a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="dashboard.html">
+                        <i class="fas fa-home"></i> 首页
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="help-center.html">
+                        <i class="fas fa-question-circle"></i> 帮助中心
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <div class="nav-divider"></div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                        <img src="../image/avatar.png" alt="Avatar" class="nav-avatar">
+                        <span class="username">用户名</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="profile.html">个人信息</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="#" id="logoutBtn">退出登录</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- 主要内容 -->
+<div class="container mt-4">
+    <!-- 帮助中心头部 -->
+    <div class="help-header">
+        <div class="header-content">
+            <h1 class="animate__animated animate__fadeIn">欢迎来到帮助中心</h1>
+            <p class="animate__animated animate__fadeIn animate__delay-1s">
+                我们随时为您提供支持和帮助，让您的心理成长之旅更加顺畅
+            </p>
+            <div class="search-box animate__animated animate__fadeIn animate__delay-2s">
+                <input type="text" class="form-control" placeholder="搜索您需要的帮助...">
+                <button class="btn btn-search">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 快速通道 -->
+    <div class="quick-access">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="quick-card animate__animated animate__fadeInUp">
+                    <div class="card-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <h3>新手指南</h3>
+                    <p>快速了解平台功能和使用方法</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="quick-card animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
+                    <div class="card-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>账号安全</h3>
+                    <p>保护您的账号和个人信息安全</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="quick-card animate__animated animate__fadeInUp" style="animation-delay: 0.4s;">
+                    <div class="card-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h3>咨询服务</h3>
+                    <p>了解咨询流程和注意事项</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="quick-card animate__animated animate__fadeInUp" style="animation-delay: 0.6s;">
+                    <div class="card-icon">
+                        <i class="fas fa-hand-holding-heart"></i>
+                    </div>
+                    <h3>社区规范</h3>
+                    <p>共建友善互助的社区环境</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 热门问题 -->
+    <div class="hot-questions">
+        <div class="section-header">
+            <h2>热门问题</h2>
+            <a href="#" class="btn btn-more">查看全部 <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div class="question-grid">
+            <div class="question-card animate__animated animate__fadeInUp">
+                <div class="question-icon">
+                    <i class="fas fa-question-circle"></i>
+                </div>
+                <h4>如何预约心理咨询？</h4>
+                <p>了解预约流程、咨询师选择等详细信息</p>
+                <a href="#" class="card-link">查看详情 <i class="fas fa-chevron-right"></i></a>
+            </div>
+            <!-- 更多问题卡片 -->
+        </div>
+    </div>
+
+    <!-- 帮助分类 -->
+    <div class="help-categories">
+        <div class="section-header">
+            <h2>帮助分类</h2>
+        </div>
+        <div class="category-tabs">
+            <button class="category-tab active" data-category="all">
+                全部
+            </button>
+            <button class="category-tab" data-category="account">
+                账号相关
+            </button>
+            <button class="category-tab" data-category="service">
+                服务相关
+            </button>
+            <button class="category-tab" data-category="community">
+                社区相关
+            </button>
+            <button class="category-tab" data-category="payment">
+                支付相关
+            </button>
+        </div>
+        <div class="help-content">
+            <!-- 帮助内容将通过JS动态加载 -->
+        </div>
+    </div>
+
+    <!-- 联系我们 -->
+    <div class="contact-section">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="contact-card animate__animated animate__fadeInLeft">
+                    <div class="card-header">
+                        <i class="fas fa-headset"></i>
+                        <h3>在线客服</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>工作时间：周一至周日 9:00-22:00</p>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-comments"></i> 立即咨询
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="contact-card animate__animated animate__fadeInRight">
+                    <div class="card-header">
+                        <i class="fas fa-envelope"></i>
+                        <h3>意见反馈</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>帮助我们提供更好的服务</p>
+                        <button class="btn btn-outline-primary">
+                            <i class="fas fa-paper-plane"></i> 提交反馈
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 反馈模态框 -->
+<div class="modal fade" id="feedbackModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">提交反馈</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="feedbackForm">
+                    <div class="mb-3">
+                        <label class="form-label">反馈类型</label>
+                        <select class="form-select" name="type" required>
+                            <option value="suggestion">功能建议</option>
+                            <option value="bug">问题反馈</option>
+                            <option value="other">其他</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">反馈内容</label>
+                        <textarea class="form-control" name="content" rows="4" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">联系方式（选填）</label>
+                        <input type="text" class="form-control" name="contact" placeholder="邮箱或手机号">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="submitFeedback">提交</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 客服聊天窗口 -->
+<div class="chat-window" id="chatWindow">
+    <div class="chat-header">
+        <h5><i class="fas fa-headset"></i> 在线客服</h5>
+        <button class="btn-close" id="closeChatBtn"></button>
+    </div>
+    <div class="chat-messages">
+        <!-- 消息内容将通过JS动态加载 -->
+    </div>
+    <div class="chat-input">
+        <input type="text" class="form-control" placeholder="输入消息...">
+        <button class="btn btn-send">
+            <i class="fas fa-paper-plane"></i>
+        </button>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../api/help-center.js"></script>
+<script src="../js/help-center.js"></script>
+</body>
+</html>

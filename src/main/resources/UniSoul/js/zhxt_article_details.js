@@ -463,7 +463,7 @@ $(document).ready(function() {
     // 定义检查关注状态的函数
     function checkFollowStatus(authorId) {
         $.ajax({
-            url: '/api/check-follow-status?authorId=' + encodeURIComponent(authorId), // 使用查询参数
+            url: '/zhxt/check-follow-status?authorId=' + encodeURIComponent(authorId), // 使用查询参数
             method: 'GET',
             success: function (data) {
                 if (data.code === 1) { // 假设返回的 code 为 1 表示已关注

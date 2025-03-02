@@ -115,7 +115,7 @@ $(document).ready(function() {
         // 预览图片
         const reader = new FileReader();
         reader.onload = function(e) {
-            $('#avatarPreview').attr('src', e.target.result);
+            $('#coverPreview').attr('src', e.target.result);
         };
         reader.readAsDataURL(file);
 
