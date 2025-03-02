@@ -21,7 +21,18 @@
     </select>
     <update id = "likes">
         update article
-        set like_count = #{article_id}
+        set like_count = #{likesCount}
+        where id = #{article_id}
+    </update>
+    <insert id="likesArticle">
+        insert into likes_article(user_id,article_id,create_time) values(#{userId},#{articleId},#{createTime})
+    </insert>
+    <delete id="deleteLikesArticle">
+        delete from likes_article where user_id = #{userId} and article_id = #{articleId}
+    </delete>
+    <update id="updateLikes">
+        update article
+        set like_count = like_count + #{likesCount}
         where id = #{user_id}
     </update>
     <update id="updateAvatar">
