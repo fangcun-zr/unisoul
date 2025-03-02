@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发现 - 心旅坊</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/found.css">
+</head>
+<body>
+<!-- 背景装饰 -->
+<div class="background-decoration">
+    <div class="circle c1"></div>
+    <div class="circle c2"></div>
+    <div class="circle c3"></div>
+    <div class="wave-container">
+        <svg viewBox="0 0 1440 320" class="wave">
+            <path fill="#4299e1" fill-opacity="0.2" d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+        </svg>
+    </div>
+</div>
+
+<!-- 导航栏 -->
+<nav class="navbar navbar-expand-lg navbar-glass">
+    <div class="container">
+        <a class="navbar-brand" href="dashboard.html">
+            <img src="../image/logo.png" alt="Logo" class="nav-logo">
+            心旅坊
+        </a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="dashboard.html">
+                        <i class="fas fa-home"></i> 首页
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="discover.html">
+                        <i class="fas fa-compass"></i> 发现
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="articles.html">
+                        <i class="fas fa-book-open"></i> 文章
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <div class="nav-divider"></div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                        <img src="../image/avatar.png" alt="Avatar" class="nav-avatar">
+                        <span class="username">用户名</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="information.html">个人信息</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="#" id="logoutBtn">退出登录</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- 主要内容 -->
+<div class="container mt-4">
+    <!-- 热门话题轮播 -->
+    <div class="featured-carousel">
+        <div class="row">
+            <div class="col-lg-8">
+                <div id="topicCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <div class="featured-card">
+                                <img src="../image/topic1.jpg" alt="热门话题" class="featured-image">
+                                <div class="featured-content">
+                                    <span class="featured-tag">热门话题</span>
+                                    <h2>探索心理健康的新维度</h2>
+                                    <p>深入了解现代社会中的心理健康问题和解决方案...</p>
+                                    <div class="featured-stats">
+                                        <span><i class="fas fa-users"></i> 2.3k 参与</span>
+                                        <span><i class="fas fa-comments"></i> 1.5k 讨论</span>
+                                        <span><i class="fas fa-heart"></i> 4.2k 关注</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 更多轮播项 -->
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#topicCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon"></span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#topicCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon"></span>
+                    </button>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="trending-panel">
+                    <h3><i class="fas fa-fire"></i> 实时热点</h3>
+                    <div class="trending-list">
+                        <div class="trending-item">
+                            <span class="trending-rank">1</span>
+                            <div class="trending-content">
+                                <h4>冥想与压力管理</h4>
+                                <div class="trending-stats">
+                                    <span><i class="fas fa-eye"></i> 12.5k</span>
+                                    <span><i class="fas fa-comment"></i> 328</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 更多热点项 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 内容分类展示 -->
+    <div class="content-categories">
+        <div class="category-header">
+            <h3>探索领域</h3>
+            <div class="category-filters">
+                <button class="btn btn-filter active" data-filter="all">全部</button>
+                <button class="btn btn-filter" data-filter="psychology">心理学</button>
+                <button class="btn btn-filter" data-filter="growth">个人成长</button>
+                <button class="btn btn-filter" data-filter="relationship">人际关系</button>
+            </div>
+        </div>
+        <div class="category-grid">
+            <div class="category-card psychology">
+                <div class="card-image">
+                    <img src="../image/category1.jpg" alt="心理学">
+                    <div class="card-overlay">
+                        <span class="card-tag">心理学</span>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h4>认知行为疗法入门</h4>
+                    <p>探索CBT技术如何帮助改善心理健康...</p>
+                    <div class="card-stats">
+                        <span><i class="fas fa-user"></i> 专家课程</span>
+                        <span><i class="fas fa-star"></i> 4.9</span>
+                    </div>
+                </div>
+            </div>
+            <!-- 更多分类卡片 -->
+        </div>
+    </div>
+
+    <!-- 专家推荐 -->
+    <div class="expert-recommendations">
+        <div class="section-header">
+            <h3><i class="fas fa-user-md"></i> 专家推荐</h3>
+            <button class="btn btn-refresh" id="refreshExperts">
+                <i class="fas fa-sync-alt"></i> 换一批
+            </button>
+        </div>
+        <div class="expert-grid">
+            <div class="expert-card">
+                <img src="../image/expert1.jpg" alt="专家头像" class="expert-avatar">
+                <div class="expert-info">
+                    <h4>李医生</h4>
+                    <p>心理咨询师 | 10年经验</p>
+                    <div class="expert-stats">
+                        <span>文章 56</span>
+                        <span>咨询 1.2k</span>
+                    </div>
+                    <button class="btn btn-follow">关注</button>
+                </div>
+            </div>
+            <!-- 更多专家卡片 -->
+        </div>
+    </div>
+
+    <!-- 热门活动 -->
+    <div class="events-section">
+        <div class="section-header">
+            <h3><i class="fas fa-calendar-alt"></i> 近期活动</h3>
+            <a href="#" class="view-all">查看全部 <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div class="event-grid">
+            <div class="event-card">
+                <div class="event-date">
+                    <span class="date">25</span>
+                    <span class="month">MAR</span>
+                </div>
+                <div class="event-info">
+                    <h4>心理健康工作坊</h4>
+                    <p class="event-desc">线下互动活动，专业心理咨询师带你探索内心世界...</p>
+                    <div class="event-meta">
+                        <span><i class="fas fa-map-marker-alt"></i> 线下活动</span>
+                        <span><i class="fas fa-users"></i> 50人已报名</span>
+                    </div>
+                </div>
+                <button class="btn btn-join">立即报名</button>
+            </div>
+            <!-- 更多活动卡片 -->
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../api/discover.js" type="module"></script>
+<script src="../js/discover.js" type="module"></script>
+</body>
+</html>

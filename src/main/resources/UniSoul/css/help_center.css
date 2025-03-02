@@ -1,0 +1,433 @@
+/* 全局变量 */
+:root {
+    --primary-color: #4299e1;
+    --secondary-color: #667eea;
+    --success-color: #48bb78;
+    --danger-color: #f56565;
+    --warning-color: #ed8936;
+    --text-color: #2d3748;
+    --light-text: #718096;
+    --border-color: #e2e8f0;
+    --bg-color: #f7fafc;
+    --card-bg: #ffffff;
+    --glass-bg: rgba(255, 255, 255, 0.9);
+    --transition: all 0.3s ease;
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    --gradient-primary: linear-gradient(135deg, #4299e1 0%, #667eea 100%);
+    --gradient-secondary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* 全局样式 */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    min-height: 100vh;
+    padding-top: 70px;
+}
+
+/* 背景装饰 */
+.background-decoration {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.circle {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.1;
+}
+
+.c1 {
+    width: 300px;
+    height: 300px;
+    background: var(--primary-color);
+    top: -100px;
+    right: -100px;
+    animation: float 8s ease-in-out infinite;
+}
+
+.c2 {
+    width: 200px;
+    height: 200px;
+    background: var(--secondary-color);
+    bottom: -50px;
+    left: -50px;
+    animation: float 6s ease-in-out infinite;
+}
+
+.c3 {
+    width: 150px;
+    height: 150px;
+    background: var(--warning-color);
+    top: 50%;
+    left: 50%;
+    animation: float 10s ease-in-out infinite;
+}
+
+/* 导航栏样式 */
+.navbar-glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.nav-logo {
+    height: 40px;
+    margin-right: 10px;
+}
+
+.nav-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+/* 帮助中心头部 */
+.help-header {
+    text-align: center;
+    padding: 4rem 0;
+    margin-bottom: 3rem;
+    background: var(--gradient-primary);
+    border-radius: 20px;
+    color: white;
+}
+
+.help-header h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.help-header p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    margin-bottom: 2rem;
+}
+
+.search-box {
+    max-width: 600px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.search-box input {
+    padding: 1.2rem 1.5rem;
+    border-radius: 50px;
+    border: none;
+    box-shadow: var(--shadow-lg);
+    padding-right: 50px;
+}
+
+.btn-search {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--gradient-secondary);
+    color: white;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    transition: var(--transition);
+}
+
+.btn-search:hover {
+    transform: translateY(-50%) scale(1.1);
+}
+
+/* 快速通道 */
+.quick-access {
+    margin-bottom: 4rem;
+}
+
+.quick-card {
+    background: var(--card-bg);
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+    height: 100%;
+}
+
+.quick-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-lg);
+}
+
+.card-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--gradient-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.quick-card h3 {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.quick-card p {
+    color: var(--light-text);
+    margin: 0;
+}
+
+/* 热门问题 */
+.hot-questions {
+    margin-bottom: 4rem;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.btn-more {
+    color: var(--primary-color);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: var(--transition);
+}
+
+.btn-more:hover {
+    transform: translateX(5px);
+}
+
+.question-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.question-card {
+    background: var(--card-bg);
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+}
+
+.question-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.question-icon {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.question-card h4 {
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.question-card p {
+    color: var(--light-text);
+    margin-bottom: 1rem;
+}
+
+.card-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+/* 帮助分类 */
+.help-categories {
+    margin-bottom: 4rem;
+}
+
+.category-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+}
+
+.category-tab {
+    padding: 0.75rem 1.5rem;
+    border: 2px solid var(--border-color);
+    border-radius: 20px;
+    background: transparent;
+    color: var(--text-color);
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+.category-tab.active,
+.category-tab:hover {
+    background: var(--gradient-primary);
+    color: white;
+    border-color: transparent;
+}
+
+/* 联系我们 */
+.contact-section {
+    margin-bottom: 4rem;
+}
+
+.contact-card {
+    background: var(--card-bg);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    height: 100%;
+}
+
+.contact-card .card-header {
+    background: var(--gradient-primary);
+    color: white;
+    padding: 2rem;
+    text-align: center;
+}
+
+.contact-card .card-header i {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.contact-card .card-body {
+    padding: 2rem;
+    text-align: center;
+}
+
+.contact-card .btn {
+    margin-top: 1rem;
+    padding: 0.75rem 2rem;
+    border-radius: 50px;
+}
+
+/* 聊天窗口 */
+.chat-window {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 350px;
+    background: var(--card-bg);
+    border-radius: 15px;
+    box-shadow: var(--shadow-lg);
+    display: none;
+    z-index: 1000;
+}
+
+.chat-header {
+    background: var(--gradient-primary);
+    color: white;
+    padding: 1rem;
+    border-radius: 15px 15px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-messages {
+    height: 300px;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+.chat-input {
+    padding: 1rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-send {
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 动画效果 */
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-20px) rotate(10deg);
+    }
+}
+
+/* 响应式设计 */
+@media (max-width: 992px) {
+    .help-header {
+        padding: 3rem 1rem;
+    }
+
+    .help-header h1 {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .help-header h1 {
+        font-size: 2rem;
+    }
+
+    .category-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+    }
+
+    .chat-window {
+        width: 100%;
+        bottom: 0;
+        right: 0;
+        border-radius: 15px 15px 0 0;
+    }
+}
+
+/* 自定义滚动条 */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--secondary-color);
+}

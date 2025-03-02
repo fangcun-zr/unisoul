@@ -14,7 +14,7 @@ $(document).ready(function () {
     function loadCategories() {
         article.getCategories()
             .then(response => {
-                if (response.code === 200) {
+                if (response.code === 1) {
                     const categoryList = $('.category-list');
                     categoryList.empty();
 
@@ -45,7 +45,7 @@ $(document).ready(function () {
     function loadArticles(page = 1) {
         article.getArticleList(page, pageSize, currentCategory)
             .then(response => {
-                if (response.code === 200) {
+                if (response.code === 1) {
                     const articleList = $('.article-list');
                     articleList.empty();
 
@@ -154,4 +154,9 @@ $(document).ready(function () {
     // 初始化加载
     loadCategories();
     loadArticles();
+
+
+
+
+
 });

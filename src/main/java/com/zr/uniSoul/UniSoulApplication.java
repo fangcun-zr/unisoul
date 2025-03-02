@@ -14,5 +14,6 @@ public class UniSoulApplication {
     public static void main(String[] args) {
         SpringApplication.run(UniSoulApplication.class, args);
         log.info("UniSoulApplication 启动成功");
+        log.info("localhost:8080/UniSoul/html/login.html");
     }
 }
