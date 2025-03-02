@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="generator.mapper.ArticleMapper">
+
+    <resultMap id="BaseResultMap" type="generator.domain.Article">
+            <id property="id" column="id" />
+            <result property="title" column="title" />
+            <result property="content" column="content" />
+            <result property="category_id" column="category_id" />
+            <result property="sub_category_id" column="sub_category_id" />
+            <result property="cover_image" column="cover_image" />
+            <result property="tags" column="tags" />
+            <result property="author_id" column="author_id" />
+            <result property="status" column="status" />
+            <result property="review_message" column="review_message" />
+            <result property="reviewer_id" column="reviewer_id" />
+            <result property="view_count" column="view_count" />
+            <result property="like_count" column="like_count" />
+            <result property="comment_count" column="comment_count" />
+            <result property="create_time" column="create_time" />
+            <result property="update_time" column="update_time" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,title,content,category_id,sub_category_id,cover_image,
+        tags,author_id,status,review_message,reviewer_id,
+        view_count,like_count,comment_count,create_time,update_time
+    </sql>
+</mapper>
