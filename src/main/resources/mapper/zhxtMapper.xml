@@ -4,7 +4,7 @@
 <mapper namespace="com.zr.uniSoul.mapper.zhxtMapper">
 
     <insert id="insert">
-        insert into article(title,author_id,content,create_time,cover_image,tags,category_id,update_time) values(#{title},#{authorId},#{content},#{createTime},#{coverImage},#{tags},#{categoryId},#{updateTime})
+        insert into article(title,author_id,content,create_time,cover_image,tags,category_id,update_time) values(#{title},#{author_id},#{content},#{create_time},#{cover_image},#{tags},#{category_id},#{update_time})
     </insert>
     <insert id="addComments">
         insert into article_comment(article_id,user_id,create_time,content,update_time) values(#{articleId},#{userId},#{createTime},#{content},#{updateTime})

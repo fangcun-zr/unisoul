@@ -138,7 +138,7 @@ $(document).ready(function() {
         });
 
         formData.append('tags', JSON.stringify(tags));
-        formData.append('category_id', $('.category-item.active').data('category'));
+        formData.append('category_id', $('.category-item.active').data('category_id'));
         formData.append('allowComment', $('#allowComment').prop('checked'));
         formData.append('isOriginal', $('#isOriginal').prop('checked'));
         formData.append('content', quill.root.innerHTML);
@@ -148,17 +148,15 @@ $(document).ready(function() {
 
     // 表单验证
     function validateForm() {
-        const data = getFormData();
-
-        if (!data.title) {
+        if (!formData.get('title')) {
             alert('请输入文章标题');
             return false;
         }
-        if (!data.content || data.content === '<p><br></p>') {
+        if (! formData.get('content') || formData.get('content') === '<p><br></p>') {
             alert('请输入文章内容');
             return false;
         }
-        if (data.tags.length === 0) {
+        if (formData.get('tags').length === 0) {
             alert('请至少添加一个标签');
             return false;
         }
@@ -167,35 +165,26 @@ $(document).ready(function() {
 
     // 发布文章
     $('#publishBtn').on('click', function() {
+        alert("点击确定发布文章");
         if (validateForm()) {
             updatePublishPreview();
+            alert("点击确定发布文章")
             $('#publishModal').modal('show');
         }
     });
 
     function updatePublishPreview() {
-        const data = getFormData();
-        $('.preview-title').text(data.title);
-        $('.preview-meta .category').text(data.category_id);
-        $('.preview-meta .tags').text(data.tags.join(', '));
+        $('.preview-title').text(formData.get('title'));
+        $('.preview-meta .category').text(formData.get('category_id'));
+        $('.preview-meta .date').text(new Date().toLocaleDateString());
+        $('.preview-content').html(formData.get('content'));
+        $('.preview-meta .tags').text(formData.get('tags'));
     }
 
     $('#confirmPublish').on('click', function() {
-        const formData = new FormData();
-        const data = getFormData();
-
-        // 添加基本信息
-        formData.append('title', data.title);
-        formData.append('content', data.content);
-        formData.append('category_id', data.category_id);
-        formData.append('tags', JSON.stringify(data.tags));
-        formData.append('allowComment', data.allowComment);
-        formData.append('isOriginal', data.isOriginal);
-
-        // 添加封面图片
-        const coverImage = $('#coverImage')[0].files[0];
-        if (coverImage) {
-            formData.append('coverImage', coverImage);
+        alert("点击确定发布文章")
+        for (let [key, value] of formData.entries()) {
+            console.log(key, value);
         }
 
         // 发送请求

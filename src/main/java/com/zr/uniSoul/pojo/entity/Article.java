@@ -1,9 +1,6 @@
 package com.zr.uniSoul.pojo.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -59,6 +56,7 @@ public class Article {
     private int commentCount;
 
     /** 创建时间，默认为当前时间 */
+    @Getter
     private LocalDateTime create_time;
 
     /** 更新时间，默认为当前时间，数据更新时自动更新 */
