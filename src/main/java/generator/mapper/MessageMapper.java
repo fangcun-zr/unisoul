@@ -1,7 +1,7 @@
 package generator.mapper;
 
-import generator.domain.Message;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import generator.domain.Message;
 
 /**
 * @author 陈怡帆

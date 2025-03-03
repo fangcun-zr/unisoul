@@ -1,7 +1,7 @@
 package generator.service;
 
-import generator.domain.Article;
 import com.baomidou.mybatisplus.extension.service.IService;
+import generator.domain.Article;
 
 /**
 * @author 陈怡帆

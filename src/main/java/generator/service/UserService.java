@@ -1,7 +1,7 @@
 package generator.service;
 
-import generator.domain.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import generator.domain.User;
 
 /**
 * @author 陈怡帆
@@ -16,4 +16,6 @@ public interface UserService extends IService<User> {
      * @return true=存在
      */
     boolean existsById(Long userId);
+
+//    User getById(long userId);
 }
