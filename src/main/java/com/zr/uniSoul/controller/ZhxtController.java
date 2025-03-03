@@ -4,7 +4,7 @@ import com.zr.uniSoul.common.PageResult;
 import com.zr.uniSoul.common.R;
 import com.zr.uniSoul.pojo.dto.CommentsPageDTO;
 import com.zr.uniSoul.pojo.dto.PageQueryDTO;
-import com.zr.uniSoul.pojo.dto.addCommentsDTO;
+import com.zr.uniSoul.pojo.dto.AddCommentsDTO;
 import com.zr.uniSoul.pojo.entity.Article;
 import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.utils.AliOssUtil;
@@ -20,7 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.List;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.UUID;
 
 /**
@@ -30,7 +31,7 @@ import java.util.UUID;
 @RequestMapping("/zhxt")
 @Api(tags = "智绘心途")
 @Slf4j
-public class zhxtController {
+public class ZhxtController {
 
     @Autowired
     private zhxtService zhxtService;
@@ -42,7 +43,7 @@ public class zhxtController {
      * 发布文章
      * @return
      */
-    @PostMapping("publish")
+    @PostMapping(value = "publish")
     @ApiOperation("发布接口")
     public R publish(HttpServletRequest request ,
                      @RequestPart String title,
@@ -50,6 +51,24 @@ public class zhxtController {
                      @RequestPart String tags,
                      @RequestPart String category_id
                     ,@RequestPart MultipartFile file) {
+
+        try {
+            // 将接收到的乱码字符串转换为字节数组，然后用正确的编码重新解码
+            title = new String(title.getBytes("ISO-8859-1"), "UTF-8");
+            content = new String(content.getBytes("ISO-8859-1"), "UTF-8");
+
+            // 如果需要对其他字段也进行处理，可以类似操作
+            tags = new String(tags.getBytes("ISO-8859-1"), "UTF-8");
+            category_id = new String(category_id.getBytes("ISO-8859-1"), "UTF-8");
+
+        } catch (UnsupportedEncodingException e) {
+            log.error("解码失败: {}", e.getMessage());
+            return R.error("解码失败，请检查输入");
+        }
+
+        log.info("发布文章接口:{}",content);
+
+
         Article article = new Article();
         article.setTitle(title);
         article.setContent(content);
@@ -110,7 +129,7 @@ public class zhxtController {
     }
     @PostMapping("add")
     @ApiOperation("添加评论")
-    public R addComments(@RequestBody addCommentsDTO addcommentsDTO, HttpServletRequest request) {
+    public R addComments(@RequestBody AddCommentsDTO addcommentsDTO, HttpServletRequest request) {
         log.info("添加评论：{}", addcommentsDTO);
         HttpSession session = request.getSession();
         int userId = 0;

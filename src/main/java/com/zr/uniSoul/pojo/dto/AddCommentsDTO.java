@@ -3,7 +3,7 @@ package com.zr.uniSoul.pojo.dto;
 import lombok.Data;
 
 @Data
-public class addCommentsDTO {
+public class AddCommentsDTO {
 
     private Integer article_id;//文章id
 

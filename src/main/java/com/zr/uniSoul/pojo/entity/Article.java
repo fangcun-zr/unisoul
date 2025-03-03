@@ -64,7 +64,7 @@ public class Article {
     /** 更新时间，默认为当前时间，数据更新时自动更新 */
     private LocalDateTime update_time;
 
-    private byte[] file;
+    private MultipartFile file;
 
     public void setCreateTime() {
         this.create_time = LocalDateTime.now();

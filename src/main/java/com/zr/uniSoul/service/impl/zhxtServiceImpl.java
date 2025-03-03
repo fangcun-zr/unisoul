@@ -4,7 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.zr.uniSoul.common.PageResult;
 import com.zr.uniSoul.pojo.dto.CommentsPageDTO;
 import com.zr.uniSoul.pojo.dto.PageQueryDTO;
-import com.zr.uniSoul.pojo.dto.addCommentsDTO;
+import com.zr.uniSoul.pojo.dto.AddCommentsDTO;
 import com.zr.uniSoul.pojo.entity.Article;
 import com.zr.uniSoul.pojo.entity.CommentLike;
 import com.zr.uniSoul.pojo.entity.Comments;
@@ -18,7 +18,6 @@ import com.github.pagehelper.Page;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @Slf4j
@@ -102,7 +101,7 @@ public class zhxtServiceImpl implements zhxtService {
      * @return
      */
     @Override
-    public int addComments(addCommentsDTO addcommentsDTO, int userId) {
+    public int addComments(AddCommentsDTO addcommentsDTO, int userId) {
 
         Comments comments = Comments.builder()
                 .articleId(addcommentsDTO.getArticle_id())

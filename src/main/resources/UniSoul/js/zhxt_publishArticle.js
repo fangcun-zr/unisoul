@@ -97,38 +97,38 @@ $(document).ready(function() {
         $(this).addClass('active');
     });
 
-    // 自动保存
-    let autoSaveTimer;
-    function autoSave() {
-        const data = getFormData();
-        localStorage.setItem('article_draft', JSON.stringify(data));
-        $('.save-status').html('<i class="fas fa-check-circle"></i> 已自动保存');
-    }
-
-    $('#articleTitle, #editor').on('input', function() {
-        clearTimeout(autoSaveTimer);
-        $('.save-status').html('<i class="fas fa-sync-alt fa-spin"></i> 保存中...');
-        autoSaveTimer = setTimeout(autoSave, 1000);
-    });
-
-    // 加载草稿
-    function loadDraft() {
-        const draft = localStorage.getItem('article_draft');
-        if (draft) {
-            const data = JSON.parse(draft);
-            $('#articleTitle').val(data.title);
-            quill.root.innerHTML = data.content;
-            if (data.tags) {
-                data.tags.forEach(tag => addTag(tag));
-            }
-            if (data.category) {
-                $(`.category-item[data-category="${data.category}"]`).click();
-            }
-            $('#allowComment').prop('checked', data.allowComment);
-            $('#isOriginal').prop('checked', data.isOriginal);
-            $('.title-counter').text(`${data.title.length}/100`);
-        }
-    }
+    // // 自动保存
+    // let autoSaveTimer;
+    // function autoSave() {
+    //     const data = getFormData();
+    //     localStorage.setItem('article_draft', JSON.stringify(data));
+    //     $('.save-status').html('<i class="fas fa-check-circle"></i> 已自动保存');
+    // }
+    //
+    // $('#articleTitle, #editor').on('input', function() {
+    //     clearTimeout(autoSaveTimer);
+    //     $('.save-status').html('<i class="fas fa-sync-alt fa-spin"></i> 保存中...');
+    //     autoSaveTimer = setTimeout(autoSave, 1000);
+    // });
+    //
+    // // 加载草稿
+    // function loadDraft() {
+    //     const draft = localStorage.getItem('article_draft');
+    //     if (draft) {
+    //         const data = JSON.parse(draft);
+    //         $('#articleTitle').val(data.title);
+    //         quill.root.innerHTML = data.content;
+    //         if (data.tags) {
+    //             data.tags.forEach(tag => addTag(tag));
+    //         }
+    //         if (data.category) {
+    //             $(`.category-item[data-category="${data.category}"]`).click();
+    //         }
+    //         $('#allowComment').prop('checked', data.allowComment);
+    //         $('#isOriginal').prop('checked', data.isOriginal);
+    //         $('.title-counter').text(`${data.title.length}/100`);
+    //     }
+    // }
 
     // 获取表单数据
     function getFormData() {
@@ -136,15 +136,19 @@ $(document).ready(function() {
         $('.tag').each(function() {
             tags.push($(this).text().trim());
         });
+        console.log(quill); // 检查 quill 是否是一个有效的 Quill 实例
+        console.log(quill.root); // 检查 quill.root 是否存在
+        console.log(quill.root.innerText); // 检查 quill.root.innerText 的值
 
+
+        formData.append('title', $('#articleTitle').val().trim());
         formData.append('tags', JSON.stringify(tags));
         formData.append('category_id', $('.category-item.active').data('category_id'));
         formData.append('allowComment', $('#allowComment').prop('checked'));
         formData.append('isOriginal', $('#isOriginal').prop('checked'));
         // formData.append('content', quill.root.innerText);
-        formData.append('content', quill.getText().trim());
-        alert(formData.get('content'));
-        formData.append('title', $('#articleTitle').val().trim());
+        formData.append('content', quill.root.innerText);
+
         return formData;
     }
 
@@ -167,6 +171,7 @@ $(document).ready(function() {
 
     // 发布文章
     $('#publishBtn').on('click', function() {
+        getFormData();
         if (validateForm()) {
             updatePublishPreview();
             $('#publishModal').modal('show');
@@ -174,6 +179,7 @@ $(document).ready(function() {
     });
 
     function updatePublishPreview() {
+
         $('.preview-title').text(formData.get('title'));
         $('.preview-meta .category').text(formData.get('category_id'));
         $('.preview-meta .date').text(new Date().toLocaleDateString());
@@ -186,6 +192,8 @@ $(document).ready(function() {
             console.log(key, value);
         }
 
+        alert(JSON.stringify(formData));
+        console.log(formData);
         // 发送请求
         $.ajax({
             url: `${API_BASE_URL}/zhxt/publish`,
@@ -222,5 +230,5 @@ $(document).ready(function() {
     });
 
     // 页面加载时恢复草稿
-    loadDraft();
+    // loadDraft();
 });
