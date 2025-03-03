@@ -1,11 +1,15 @@
 package generator.controller;
 
 
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import generator.common.*;
+import generator.constant.CommonConstant;
 import generator.domain.Message;
 import generator.domain.MessageThread;
 import generator.domain.dto.MessageDTO;
+import generator.domain.vo.MessageVO;
 import generator.service.MessageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -51,13 +55,27 @@ public class MessageController {
 
     // 2. 获取双方历史消息（带分页）
     @GetMapping("/history")
-    public BaseResponse<Page<Message>> getMessageHistory(
+    public BaseResponse<Page<MessageVO>> getMessageHistory(
             @RequestParam Long user1,
             @RequestParam Long user2,
-            @ModelAttribute PageRequest pageRequest // 自定义分页参数
-    ) {
-        // 示例：返回分页数据（需处理分页逻辑）
-        return ResultUtils.success(null);
+            @ModelAttribute PageRequest pageRequest) {
+
+        // 1. 将自定义分页参数转换为 MyBatis Plus 的 Page 对象
+        Page<Message> page = new Page<>(pageRequest.getCurrent(), pageRequest.getPageSize());
+
+        // 2. 处理排序（如果指定了排序字段）
+        if (StringUtils.isNotBlank(pageRequest.getSortField())) {
+            // 根据排序顺序添加排序规则
+            String order = CommonConstant.SORT_ORDER_ASC.equalsIgnoreCase(pageRequest.getSortOrder()) ?
+                    "ASC" : "DESC";
+            page.addOrder(new OrderItem(pageRequest.getSortField(), "ASC".equals(order)));
+        }
+
+        // 3. 调用服务层获取分页数据
+        Page<MessageVO> resultPage = messageService.getConversationHistory(user1, user2, page);
+
+        // 4. 返回统一响应格式
+        return ResultUtils.success(resultPage);
     }
 
     // 3. 获取当前用户的私信列表

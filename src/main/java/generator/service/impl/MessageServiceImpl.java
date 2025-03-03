@@ -1,5 +1,6 @@
 package generator.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import generator.common.ErrorCode;
@@ -9,6 +10,7 @@ import generator.domain.User;
 import generator.domain.vo.MessageVO;
 import generator.exception.BusinessException;
 import generator.mapper.MessageMapper;
+import generator.service.ArticleService;
 import generator.service.MessageService;
 import generator.service.UserService;
 import org.hibernate.validator.internal.util.stereotypes.Lazy;
@@ -19,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -34,6 +38,9 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>
     @Autowired
     @Lazy // 避免循环依赖
     private UserService userService;
+
+    @Autowired
+    private MessageMapper messageMapper;
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW) // 独立事务
@@ -72,7 +79,43 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>
 
     @Override
     public Page<MessageVO> getConversationHistory(Long currentUserId, Long targetUserId, Page<Message> page) {
-        return null;
+        // 构建查询条件
+        QueryWrapper<Message> queryWrapper = new QueryWrapper<>();
+        queryWrapper.nested(wq -> wq
+                        .eq("sender_id", currentUserId)
+                        .eq("receiver_id", targetUserId)
+                )
+                .or(wq -> wq
+                        .eq("sender_id", targetUserId)
+                        .eq("receiver_id", currentUserId)
+                );
+
+        // 执行分页查询
+        Page<Message> messagePage = messageMapper.selectPage(page, queryWrapper);
+
+        // 手动创建新的 Page 对象（关键修复点）
+        Page<MessageVO> voPage = new Page<>();
+        voPage.setRecords(messagePage.getRecords().stream()
+                .map(this::convertToVO)
+                .collect(Collectors.toList()));
+        voPage.setTotal(messagePage.getTotal());
+        voPage.setSize(messagePage.getSize());
+        voPage.setCurrent(messagePage.getCurrent());
+        voPage.setOrders(messagePage.getOrders());
+
+        return voPage;
+    }
+
+    private MessageVO convertToVO(Message message) {
+        MessageVO vo = new MessageVO();
+        vo.setId(message.getId());
+        vo.setSenderId(message.getSender_id());
+        vo.setReceiverId(message.getReceiver_id());
+        vo.setContent(message.getContent());
+        vo.setSendTime(message.getSend_time());
+        vo.setReadStatus(message.getRead_status());
+        vo.setParentId(message.getParent_id());
+        return vo;
     }
 
     @Override
