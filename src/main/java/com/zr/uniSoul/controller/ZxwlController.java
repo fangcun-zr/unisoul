@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/zhXuet")
-@Api(tags = "智绘学途")
+@RequestMapping("/zxwl")
+@Api(tags = "智选未来")
 @Slf4j
-public class zhXuetController {
+public class ZxwlController {
 }

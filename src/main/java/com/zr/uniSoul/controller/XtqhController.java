@@ -1,8 +1,7 @@
 package com.zr.uniSoul.controller;
 
-import com.sun.jdi.BooleanValue;
 import com.zr.uniSoul.common.R;
-import com.zr.uniSoul.pojo.dto.userDTO;
+import com.zr.uniSoul.pojo.dto.UserDTO;
 import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.pojo.vo.ArticleLikesVO;
 import com.zr.uniSoul.pojo.vo.ArticleVO;
@@ -14,7 +13,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.cassandra.CassandraProperties;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,7 +26,7 @@ import java.util.UUID;
 @RequestMapping("/xtqh")
 @Api(tags = "学途启航")
 @Slf4j
-public class xtqhController {
+public class XtqhController {
 
     @Autowired
     private xtqhService xtqhService;
@@ -100,7 +98,7 @@ public class xtqhController {
     @PostMapping(value = "/information" , consumes = "application/json")
     @ApiOperation("编辑个人信息")
     public R<String> editUserInfo(HttpServletRequest request,
-                                  @RequestBody  userDTO userDTO
+                                  @RequestBody UserDTO userDTO
                                   ){
         log.info("编辑个人信息接口");
 

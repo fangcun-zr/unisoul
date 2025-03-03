@@ -1,6 +1,5 @@
 package com.zr.uniSoul.pojo.dto;
 
-import lombok.Builder;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,7 +10,7 @@ import java.time.LocalDateTime;
  * @Description: 用户数据传输对象
  */
 @Data
-public class userDTO implements Serializable {
+public class UserDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
