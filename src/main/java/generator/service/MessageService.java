@@ -1,9 +1,9 @@
 package generator.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.IService;
 import generator.domain.Article;
 import generator.domain.Message;
-import com.baomidou.mybatisplus.extension.service.IService;
 import generator.domain.vo.MessageVO;
 
 import java.util.List;

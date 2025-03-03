@@ -2,8 +2,8 @@ package generator.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import generator.domain.User;
-import generator.service.UserService;
 import generator.mapper.UserMapper;
+import generator.service.UserService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -21,6 +21,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         // 或使用 MyBatis-Plus 的快捷方法
         // return lambdaQuery().eq(User::getId, userId).count() > 0;
     }
+
+//    @Override
+//    public User getById(long userId) {
+//
+//        return baseMapper.selectById(userId);
+//    }
 
 }
 
