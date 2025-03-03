@@ -40,3 +40,6 @@ unisoul:
     accessKeySecret: ot8o6jjntLvCEDNoHG9QqvQ9wgSuns
     bucketName: uni-soul
 
+logging:
+  level:
+    com.example.mapper: debug

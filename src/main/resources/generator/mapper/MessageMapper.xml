@@ -14,6 +14,27 @@
             <result property="parent_id" column="parent_id" />
     </resultMap>
 
+
+    <select id="selectThreadBaseInfo" resultType="generator.domain.MessageThread">
+        SELECT
+            contact_id AS contactId,
+            MAX(send_time) AS lastMessageTime,  -- 确保映射到 LocalDateTime 字段
+            MAX(content) AS lastMessage          -- 确保映射到 String 字段
+        FROM (
+                 SELECT
+                     CASE
+                         WHEN sender_id = #{currentUserId} THEN receiver_id
+                         ELSE sender_id
+                         END AS contact_id,
+                     send_time,
+                     content
+                 FROM message
+                 WHERE sender_id = #{currentUserId} OR receiver_id = #{currentUserId}
+             ) tmp
+        GROUP BY contact_id
+        ORDER BY lastMessageTime DESC
+    </select>
+
     <sql id="Base_Column_List">
         id,sender_id,receiver_id,content,send_time,read_status,
         parent_id

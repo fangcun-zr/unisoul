@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import generator.domain.Article;
 import generator.domain.Message;
+import generator.domain.MessageThread;
 import generator.domain.vo.MessageVO;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public interface MessageService extends IService<Message> {
      * @param page          分页参数
      * @return 包含发送者基础信息的消息分页数据
      */
-    Page<MessageVO> getMessageList(Long currentUserId, Page<Message> page);
+    Page<MessageThread> getMessageList(Long currentUserId, Page<Message> page);
 
     /**
      * 获取与指定用户的对话历史

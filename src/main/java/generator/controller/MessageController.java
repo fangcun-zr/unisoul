@@ -79,12 +79,23 @@ public class MessageController {
     }
 
     // 3. 获取当前用户的私信列表
-    @GetMapping
-    public BaseResponse<List<MessageThread>> getMessageThreads(
-            @RequestParam Long userId
-    ) {
-        // 示例：返回私信列表（逻辑需补充）
-        return ResultUtils.success(null);
+    @GetMapping("/threads")
+    public BaseResponse<Page<MessageThread>> getMessageThreads(
+            @RequestParam Long userId,
+            @ModelAttribute PageRequest pageRequest) {
+
+        // 转换分页参数
+        Page<Message> page = new Page<>(pageRequest.getCurrent(), pageRequest.getPageSize());
+
+        // 处理排序
+        if (StringUtils.isNotBlank(pageRequest.getSortField())) {
+            boolean asc = CommonConstant.SORT_ORDER_ASC.equalsIgnoreCase(pageRequest.getSortOrder());
+            page.addOrder(asc ? OrderItem.asc(pageRequest.getSortField()) : OrderItem.desc(pageRequest.getSortField()));
+        }
+
+        // 获取分页数据
+        Page<MessageThread> result = messageService.getMessageList(userId, page);
+        return ResultUtils.success(result);
     }
 
     // 4. 删除单条消息（逻辑删除）

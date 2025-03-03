@@ -3,9 +3,12 @@ package generator.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import generator.common.ErrorCode;
 import generator.domain.Article;
 import generator.domain.Message;
+import generator.domain.MessageThread;
 import generator.domain.User;
 import generator.domain.vo.MessageVO;
 import generator.exception.BusinessException;
@@ -21,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
@@ -70,12 +75,71 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>
         return message;
     }
 
+//    @Override
+//    public Page<MessageThread> getMessageList(Long currentUserId, Page<Message> page) {
+//        // 1. 手动设置分页参数（参数类型需为 int）
+//        PageHelper.startPage((int) page.getCurrent(), (int) page.getSize());
+//
+//        // 2. 执行查询（Mapper 接口已移除 page 参数）
+//        Page<MessageThread> threadPage = messageMapper.selectThreadBaseInfo(currentUserId);
+//
+//        // 3. 后续批量查询和填充逻辑...
+//        return threadPage;
+//    }
+@Override
+public Page<MessageThread> getMessageList(Long currentUserId, Page<Message> page) {
+    // 创建 MyBatis-Plus 的 Page 对象
+    Page<MessageThread> threadPage = new Page<>(page.getCurrent(), page.getSize());
 
+    // 执行分页查询
+    threadPage = messageMapper.selectThreadBaseInfo(threadPage, currentUserId);
 
-    @Override
-    public Page<MessageVO> getMessageList(Long currentUserId, Page<Message> page) {
-        return null;
-    }
+    // 后续批量查询和填充逻辑...
+    return threadPage;
+}
+
+//    @Override
+//    public Page<MessageThread> getMessageList(Long currentUserId, Page<Message> page) {
+//        Page<MessageThread> threadPage = new Page<>(page.getCurrent(), page.getSize());
+//        threadPage = messageMapper.selectThreadBaseInfo(threadPage, currentUserId);
+//        // ...后续逻辑
+//        return threadPage;
+//    }
+
+//    @Override
+//    public Page<MessageThread> getMessageList(Long currentUserId, Page<Message> page) {
+//
+//        PageHelper.startPage((int) page.getCurrent(), (int) page.getSize()); // 手动设置分页参数
+//        Page<MessageThread> threadPage = messageMapper.selectThreadBaseInfo(currentUserId); // 移除 page 参数
+//
+//
+//        // 1. 查询基础会话列表（带分页）
+////        Page<MessageThread> threadPage = messageMapper.selectThreadBaseInfo(currentUserId, page);
+//
+//        // 2. 批量查询用户信息和未读数
+//        List<Long> contactIds = threadPage.getRecords().stream()
+//                .map(MessageThread::getContactId)
+//                .collect(Collectors.toList());
+//
+//        // 批量查询用户信息
+//        Map<Long, User> userMap = userService.listByIds(contactIds).stream()
+//                .collect(Collectors.toMap(User::getId, Function.identity()));
+//
+//        // 批量查询未读消息数
+//        Map<Long, Integer> unreadCountMap = messageMapper.batchSelectUnreadCount(currentUserId, contactIds);
+//
+//        // 3. 填充会话列表信息
+//        threadPage.getRecords().forEach(thread -> {
+//            User contactUser = userMap.get(thread.getContactId());
+//            if (contactUser != null) {
+//                thread.setContactName(contactUser.getUsername());
+//                thread.setContactAvatar(contactUser.getAvatarUrl());
+//            }
+//            thread.setUnreadCount(unreadCountMap.getOrDefault(thread.getContactId(), 0));
+//        });
+//
+//        return threadPage;
+//    }
 
     @Override
     public Page<MessageVO> getConversationHistory(Long currentUserId, Long targetUserId, Page<Message> page) {
