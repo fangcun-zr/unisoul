@@ -3,6 +3,7 @@ package com.zr.uniSoul.pojo.entity;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.Column;
 import java.time.LocalDateTime;
 
 /**
@@ -29,6 +30,7 @@ public class Article {
     private Integer subCategoryId;
 
     /** 封面图片URL，可以为空 */
+//    @Column(name = "cover_image")
     private String cover_image;
 
     /** 标签 (逗号分隔)，可以为空 */
@@ -62,7 +64,7 @@ public class Article {
     /** 更新时间，默认为当前时间，数据更新时自动更新 */
     private LocalDateTime update_time;
 
-    private MultipartFile file;
+    private byte[] file;
 
     public void setCreateTime() {
         this.create_time = LocalDateTime.now();

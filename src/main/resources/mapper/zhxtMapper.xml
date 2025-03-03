@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.zr.uniSoul.mapper.zhxtMapper">
-
     <insert id="insert">
         insert into article(title,author_id,content,create_time,cover_image,tags,category_id,update_time) values(#{title},#{author_id},#{content},#{create_time},#{cover_image},#{tags},#{category_id},#{update_time})
     </insert>
@@ -12,8 +11,25 @@
     <insert id="likeComments">
         insert into likes(article_comment_id,user_id,create_time,update_time) values(#{articleCommentId},#{userId},#{createTime},#{updateTime})
     </insert>
-    <select id="pageQuery" resultType="com.zr.uniSoul.pojo.entity.Article">
-        select id, title, content, category_id, create_time, like_count
+
+    <resultMap id="article" type="com.zr.uniSoul.pojo.entity.Article">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="category_id" column="category_id"/>
+        <result property="cover_image" column="cover_image"/> <!-- 确保字段名一致 -->
+        <result property="tags" column="tags"/>
+        <result property="author_id" column="author_id"/>
+        <result property="status" column="status"/>
+        <result property="viewCount" column="view_count"/>
+        <result property="likeCount" column="like_count"/>
+        <result property="commentCount" column="comment_count"/>
+        <result property="create_time" column="create_time"/>
+        <result property="update_time" column="update_time"/>
+    </resultMap>
+
+    <select id="pageQuery" resultMap="article">
+        select id,title,content,cover_image,tags,author_id,status,view_count,like_count,comment_count,create_time,update_time
         from article
         <where>
             <if test="category_id != null">
@@ -26,8 +42,9 @@
     <select id="getComments" resultType="com.zr.uniSoul.pojo.entity.Comments">
         select * from article_comment where article_id = #{articleId} order by create_time desc
     </select>
-    <select id="pageQueryAll" resultType="com.zr.uniSoul.pojo.entity.Article">
-        select * from article order by like_count asc , create_time desc
+    <select id="pageQueryAll" resultMap="article">
+        select id,id,title,content,category_id,cover_image,tags,author_id,status,view_count,like_count,comment_count,create_time,update_time
+        from article order by like_count asc , create_time desc
     </select>
     <select id="countQuery" resultType="java.lang.Long">
         SELECT COUNT(*) FROM article <where> <if test='category_id != null'>AND category_id = #{category_id}</if></where>

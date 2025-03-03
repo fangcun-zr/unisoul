@@ -141,7 +141,9 @@ $(document).ready(function() {
         formData.append('category_id', $('.category-item.active').data('category_id'));
         formData.append('allowComment', $('#allowComment').prop('checked'));
         formData.append('isOriginal', $('#isOriginal').prop('checked'));
-        formData.append('content', quill.root.innerHTML);
+        // formData.append('content', quill.root.innerText);
+        formData.append('content', quill.getText().trim());
+        alert(formData.get('content'));
         formData.append('title', $('#articleTitle').val().trim());
         return formData;
     }
@@ -152,7 +154,7 @@ $(document).ready(function() {
             alert('请输入文章标题');
             return false;
         }
-        if (! formData.get('content') || formData.get('content') === '<p><br></p>') {
+        if (! formData.get('content')) {
             alert('请输入文章内容');
             return false;
         }
@@ -165,10 +167,8 @@ $(document).ready(function() {
 
     // 发布文章
     $('#publishBtn').on('click', function() {
-        alert("点击确定发布文章");
         if (validateForm()) {
             updatePublishPreview();
-            alert("点击确定发布文章")
             $('#publishModal').modal('show');
         }
     });
@@ -182,7 +182,6 @@ $(document).ready(function() {
     }
 
     $('#confirmPublish').on('click', function() {
-        alert("点击确定发布文章")
         for (let [key, value] of formData.entries()) {
             console.log(key, value);
         }
