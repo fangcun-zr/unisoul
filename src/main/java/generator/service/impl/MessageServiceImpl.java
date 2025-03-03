@@ -11,11 +11,15 @@ import generator.exception.BusinessException;
 import generator.mapper.MessageMapper;
 import generator.service.MessageService;
 import generator.service.UserService;
+import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 /**
 * @author 陈怡帆
@@ -23,17 +27,25 @@ import java.util.List;
 * @createDate 2025-03-01 00:43:09
 */
 @Service
+@Slf4j
 public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>
     implements MessageService{
 
     @Autowired
-    private  UserService userService;
+    @Lazy // 避免循环依赖
+    private UserService userService;
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW) // 独立事务
     public Message sendMessage(Long senderId, Long receiverId, String content, Long parentId) {
-        // 校验用户是否存在
+        log.info("开始查询发送者用户信息，senderId: {}", senderId);
         User sender = userService.getById(senderId);
+        log.info("发送者用户信息查询完成，sender: {}", sender);
+
+        log.info("开始查询接收者用户信息，receiverId: {}", receiverId);
         User receiver = userService.getById(receiverId);
+        log.info("接收者用户信息查询完成，receiver: {}", receiver);
+
         if (sender == null || receiver == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "用户不存在");
         }
@@ -44,12 +56,13 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>
         message.setReceiver_id(receiverId); // 使用传入的receiverId
         message.setContent(content); // 使用传入的内容
         message.setSend_time(new Date());
-        message.setParent_id(parentId != null ? parentId : 0L); // 设置父消息ID，如果为null则设为默认值
+        message.setParent_id(parentId != null ? parentId : null); // 设置父消息ID，如果为null则设为默认值
 
         // 保存到数据库
         this.save(message);
         return message;
     }
+
 
 
     @Override
