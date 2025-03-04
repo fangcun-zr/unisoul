@@ -57,7 +57,6 @@ public class ZhxtController {
             title = new String(title.getBytes("ISO-8859-1"), "UTF-8");
             content = new String(content.getBytes("ISO-8859-1"), "UTF-8");
 
-            // 如果需要对其他字段也进行处理，可以类似操作
             tags = new String(tags.getBytes("ISO-8859-1"), "UTF-8");
             category_id = new String(category_id.getBytes("ISO-8859-1"), "UTF-8");
 
@@ -99,6 +98,20 @@ public class ZhxtController {
             return R.success("发布成功，待审核");
         }
         return R.error("发布失败");
+    }
+
+    /**
+     * 删除文章
+     */
+    @DeleteMapping ("deleteArticle")
+    @ApiOperation("删除文章")
+    public R deleteArticle(@RequestParam int articleId) {
+        log.info("删除文章接口, 文章id: {}", articleId);
+        int ret = zhxtService.deleteArticle(articleId);
+        if (ret == 1) {
+            return R.success("删除成功");
+        }
+        return R.error("删除失败");
     }
 
     /**

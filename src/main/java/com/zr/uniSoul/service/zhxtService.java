@@ -27,4 +27,6 @@ public interface zhxtService {
     User getUserByArticleId(String articleId);
 
     int checkFollowStatus(int follow_id, int following_id);
+
+    int deleteArticle(int articleId);
 }

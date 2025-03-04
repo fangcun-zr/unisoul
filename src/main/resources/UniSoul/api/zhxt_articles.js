@@ -40,11 +40,12 @@ const article = {
     // 删除文章
     delete: function (articleId) {
         return $.ajax({
-            url: `${API_BASE_URL}/article/delete/${articleId}`,
+            url: `${API_BASE_URL}/zhxt/deleteArticle?articleId=${articleId}`,
             type: 'DELETE',
-            headers: {
-                'Authorization': localStorage.getItem('token')
-            }
+
+            // headers: {
+            //     'Authorization': localStorage.getItem('token')
+            // }
         });
     },
 

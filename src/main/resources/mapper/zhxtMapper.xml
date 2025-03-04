@@ -11,6 +11,9 @@
     <insert id="likeComments">
         insert into likes(article_comment_id,user_id,create_time,update_time) values(#{articleCommentId},#{userId},#{createTime},#{updateTime})
     </insert>
+    <delete id="deleteArticle">
+        delete from article where id = #{articleId}
+    </delete>
 
     <resultMap id="article" type="com.zr.uniSoul.pojo.entity.Article">
         <id property="id" column="id"/>

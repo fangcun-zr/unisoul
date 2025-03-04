@@ -84,7 +84,7 @@ $(document).ready(function() {
             </div>
             <div>
                 <button class="btn btn-sm btn-primary mr-2" onclick="editArticle(${article.id})">编辑</button>
-                <button class="btn btn-sm btn-danger" value="${article.id}" onclick="deleteArticle(${article.id})">删除</button>
+                <button class="btn btn-sm btn-danger" value="${article.id}">删除</button>
             </div>
         </li>
     `);
@@ -96,6 +96,26 @@ $(document).ready(function() {
                 })
         }
     }
+
+    //删除文章按钮绑定单击事件
+    $(document).on('click', '.btn.btn-sm.btn-danger', function() {
+        var articleId = $(this).val();
+        if (confirm('确认要删除该文章吗？删除后无法恢复。')) {
+            article.delete(articleId)
+                .then(response => {
+                    if (response.code === 1) {
+                        alert('删除成功');
+                        // 删除成功后，重新加载文章列表
+                        loadMyArticles();
+                    }
+
+                }, error => {
+                    console.error(error);
+                }
+            );
+        }
+    });
+
 
     // 处理头像上传
     $('#avatarUpload').change(function(e) {

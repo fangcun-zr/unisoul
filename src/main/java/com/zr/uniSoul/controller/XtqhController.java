@@ -8,7 +8,7 @@ import com.zr.uniSoul.pojo.vo.ArticleVO;
 import com.zr.uniSoul.pojo.vo.FollowersVO;
 import com.zr.uniSoul.service.xtqhService;
 import com.zr.uniSoul.utils.AliOssUtil;
-import com.zr.uniSoul.utils.checkCode;
+import com.zr.uniSoul.utils.CheckCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -62,7 +62,7 @@ public class XtqhController {
     public R<String> sendCheckCode(HttpServletRequest request, @RequestParam String email){
         log.info("发送验证码");
         //获取验证码
-        String Code = checkCode.generateVerificationCode();
+        String Code = CheckCode.generateVerificationCode();
         //发送验证码
         Boolean flag = xtqhService.sendCheckCode(email,Code);
         if (flag){

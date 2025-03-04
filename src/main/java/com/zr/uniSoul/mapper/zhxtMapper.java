@@ -41,4 +41,6 @@ public interface zhxtMapper {
 
     @Select("SELECT COUNT(*) FROM follow WHERE follower_id = #{followId} AND following_id = #{followingId}")
     int checkFollowStatus(int followId, int followingId);
+
+    int deleteArticle(int articleId);
 }

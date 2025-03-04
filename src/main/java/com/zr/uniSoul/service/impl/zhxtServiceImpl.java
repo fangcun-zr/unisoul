@@ -148,5 +148,10 @@ public class zhxtServiceImpl implements zhxtService {
         return zhxtMapper.checkFollowStatus(follow_id, following_id);
     }
 
+    @Override
+    public int deleteArticle(int articleId) {
+        return zhxtMapper.deleteArticle(articleId);
+    }
+
 
 }
