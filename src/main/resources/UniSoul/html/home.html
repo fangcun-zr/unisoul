@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>心旅坊 - 首页</title>
+    <title>学途心绘坊 - 首页</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="../css/home.css">
+    <link rel="stylesheet" href="/UniSoul/css/home.css">
 </head>
 <body>
 <!-- 顶部导航栏 -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
     <div class="container">
         <a class="navbar-brand" href="#">
-            <img src="../image/logo.png" alt="Logo" class="nav-logo">
-            心旅坊
+            <img src="../image/logo.png" alt="Logo" class="nav-logo"style="height: 80px;width: 90px;">
+            学途心绘坊
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
@@ -25,10 +25,10 @@
                     <a class="nav-link active" href="#"><i class="fas fa-home"></i> 首页</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="zhxt_articles.html"><i class="fas fa-book-reader"></i> 文章</a>
+                    <a class="nav-link" href="#articles"><i class="fas fa-book-reader"></i> 文章</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="community.html"><i class="fas fa-users"></i> 社区</a>
+                    <a class="nav-link" href="#community"><i class="fas fa-users"></i> 社区</a>
                 </li>
             </ul>
             <div class="d-flex align-items-center">
@@ -38,7 +38,7 @@
                 </div>
                 <div class="dropdown">
                     <a class="nav-link dropdown-toggle text-white" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
-                        <img src="../image/default-avatar.png" id="userAvatar" alt="Avatar" class="avatar-sm">
+                        <img src="../image/default-avatar.png" id="userAvatar" alt="Avatar" class="avatar-sm"style="height: 50px;width: 50px;">
                         <span id="currentUsername">用户名</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
@@ -91,19 +91,19 @@
             <div class="col-md-3 col-6">
                 <div class="quick-link">
                     <i class="fas fa-comments"></i>
-                    <span><a href="onlineService.html" >在线咨询</a></span>
+                    <span>在线咨询</span>
                 </div>
             </div>
             <div class="col-md-3 col-6">
                 <div class="quick-link">
                     <i class="fas fa-calendar-alt"></i>
-                    <span><a href="onlineService.html" >预约服务</a></span>
+                    <span>预约服务</span>
                 </div>
             </div>
             <div class="col-md-3 col-6">
                 <div class="quick-link">
                     <i class="fas fa-question-circle"></i>
-                    <span><a href="help_center.html" >帮助中心</a></span>
+                    <span>帮助中心</span>
                 </div>
             </div>
         </div>
@@ -114,7 +114,7 @@
                 <div class="card">
                     <div class="card-header bg-white d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">最新文章</h5>
-                        <a href="zhxt_articles.html" class="btn btn-outline-primary btn-sm">查看更多</a>
+                        <a href="#" class="btn btn-outline-primary btn-sm">查看更多</a>
                     </div>
                     <div class="card-body">
                         <div id="articleList" class="article-list">
