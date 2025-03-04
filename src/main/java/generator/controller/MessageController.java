@@ -104,7 +104,13 @@ public class MessageController {
             @PathVariable Long messageId,
             @RequestBody @Valid DeleteRequest deleteRequest // 包含操作者ID
     ) {
-        // 示例：鉴权通过后删除（需补充校验逻辑）
+        // 1. 获取当前用户ID
+        Long currentUserId = deleteRequest.getId();
+
+        // 2. 调用 Service 层删除逻辑
+        messageService.deleteMessage(messageId, currentUserId);
+
+        // 3. 返回成功响应
         return ResultUtils.success(null);
     }
 
