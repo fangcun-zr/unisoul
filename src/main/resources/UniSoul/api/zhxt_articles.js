@@ -64,6 +64,15 @@ const article = {
         });
     },
 
+    //获取我的信息
+    getMyData: function() {
+        return $.ajax({
+            url: `${API_BASE_URL}/zhxt/getMyData`,
+            type: 'GET',
+        }
+        );
+
+    },
 
     // 获取我的文章列表
     getMyArticles: function() {

@@ -44,33 +44,8 @@ const xtqh_information = {
         });
     },
 
-    // 获取粉丝列表
-    getFollowers: function() {
-        return $.ajax({
-            url: `${API_BASE_URL}/xtqh/followers`,
-            type: 'GET',
-            headers: {
-                'Authorization': localStorage.getItem('token')
-            },
-            data: {
-                followerName: "string"
-            }
-        });
-    },
 
-    // 获取关注列表
-    getFollowing: function() {
-        return $.ajax({
-            url: `${API_BASE_URL}/xtqh/iFollow`,
-            type: 'GET',
-            headers: {
-                'Authorization': localStorage.getItem('token')
-            },
-            data: {
-                iFollowName: "string"
-            }
-        });
-    },
+
 
     // 发送私信
     sendPrivateMessage: function(messageData) {

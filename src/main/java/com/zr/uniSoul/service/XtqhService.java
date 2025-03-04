@@ -6,7 +6,7 @@ import com.zr.uniSoul.pojo.vo.ArticleVO;
 
 import java.util.List;
 
-public interface xtqhService {
+public interface XtqhService {
     User login(User user);
 
     Boolean sendCheckCode(String email, String code);
@@ -34,7 +34,6 @@ public interface xtqhService {
      * @return
      */
     List<String> getFollowersByUsername(String username);
-
     List<ArticleVO> getMyArticles(int userId);
     boolean inquireLikeStatus(Long userId, int articleId);
 }

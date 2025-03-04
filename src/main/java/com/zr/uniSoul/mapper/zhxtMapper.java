@@ -48,4 +48,13 @@ public interface zhxtMapper {
 
 
     Long countQueryForKeyWords(PageQueryDTO pageQueryDTO);
+
+    @Select("SELECT COUNT(*) FROM article WHERE author_id = #{userId}")
+    Integer getArticleCount(int userId);
+
+    @Select("SELECT COUNT(*) FROM follow WHERE following_id = #{userId}")
+    Integer getFollowCount(int userId);
+
+    @Select("SELECT COUNT(*) FROM follow WHERE follower_id = #{userId}")
+    Integer getFollowerCount(int userId);
 }

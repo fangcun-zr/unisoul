@@ -7,6 +7,7 @@ import com.zr.uniSoul.pojo.dto.PageQueryDTO;
 import com.zr.uniSoul.pojo.dto.AddCommentsDTO;
 import com.zr.uniSoul.pojo.entity.Article;
 import com.zr.uniSoul.pojo.entity.User;
+import com.zr.uniSoul.pojo.vo.MyDataVO;
 import com.zr.uniSoul.utils.AliOssUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.zr.uniSoul.service.zhxtService;
+import com.zr.uniSoul.service.ZhxtService;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,7 +34,7 @@ import java.util.UUID;
 public class ZhxtController {
 
     @Autowired
-    private zhxtService zhxtService;
+    private ZhxtService zhxtService;
 
     @Autowired
     private AliOssUtil aliOssUtil;
@@ -124,6 +125,22 @@ public class ZhxtController {
         log.info("分页查询：{}", pageQueryDTO);
         PageResult pageResult = zhxtService.pageQuery(pageQueryDTO);
         return R.success(pageResult);
+    }
+
+    /**
+     * 获取我的信息
+     */
+    @GetMapping("getMyData")
+    @ApiOperation("获取我的信息")
+    public R<MyDataVO> getMyInfo(HttpServletRequest request) {
+
+        HttpSession session = request.getSession();
+        String username = (String) session.getAttribute("username");
+        int userId = zhxtService.findIdByUsername(username);
+        MyDataVO myDataVO = zhxtService.getMyData(userId);
+        log.info("获取我的信息接口, 用户id: {}", userId);
+        return R.success(myDataVO);
+
     }
 
 

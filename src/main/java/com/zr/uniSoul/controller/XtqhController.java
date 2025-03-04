@@ -6,7 +6,7 @@ import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.pojo.vo.ArticleLikesVO;
 import com.zr.uniSoul.pojo.vo.ArticleVO;
 import com.zr.uniSoul.pojo.vo.FollowersVO;
-import com.zr.uniSoul.service.xtqhService;
+import com.zr.uniSoul.service.XtqhService;
 import com.zr.uniSoul.utils.AliOssUtil;
 import com.zr.uniSoul.utils.CheckCode;
 import io.swagger.annotations.Api;
@@ -29,7 +29,7 @@ import java.util.UUID;
 public class XtqhController {
 
     @Autowired
-    private xtqhService xtqhService;
+    private XtqhService xtqhService;
 
     @Autowired
     private AliOssUtil aliOssUtil;

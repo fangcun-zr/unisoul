@@ -4,7 +4,7 @@ import com.zr.uniSoul.mapper.xtqhMapper;
 import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.pojo.vo.ArticleLikesVO;
 import com.zr.uniSoul.pojo.vo.ArticleVO;
-import com.zr.uniSoul.service.xtqhService;
+import com.zr.uniSoul.service.XtqhService;
 import com.zr.uniSoul.utils.AliOssUtil;
 import com.zr.uniSoul.utils.MailUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ import java.util.UUID;
 
 @Slf4j
 @Service
-public class xtqhServiceImpl implements xtqhService {
+public class XtqhServiceImpl implements XtqhService {
 
     @Autowired
     private xtqhMapper xtqhmapper;

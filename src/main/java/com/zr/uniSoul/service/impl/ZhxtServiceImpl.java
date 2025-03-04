@@ -9,7 +9,8 @@ import com.zr.uniSoul.pojo.entity.Article;
 import com.zr.uniSoul.pojo.entity.CommentLike;
 import com.zr.uniSoul.pojo.entity.Comments;
 import com.zr.uniSoul.pojo.entity.User;
-import com.zr.uniSoul.service.zhxtService;
+import com.zr.uniSoul.pojo.vo.MyDataVO;
+import com.zr.uniSoul.service.ZhxtService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 
 @Service
 @Slf4j
-public class zhxtServiceImpl implements zhxtService {
+public class ZhxtServiceImpl implements ZhxtService {
 
     @Autowired
     private zhxtMapper zhxtMapper;
@@ -65,7 +66,6 @@ public class zhxtServiceImpl implements zhxtService {
                 return new PageResult(total, page.getResult());
             }
             // 查询带条件的数据
-
             Page<Article> page = zhxtMapper.pageQueryForKeyWords(pageQueryDTO);
             // 手动获取总记录数
             Long total = zhxtMapper.countQueryForKeyWords(pageQueryDTO);
@@ -170,6 +170,16 @@ public class zhxtServiceImpl implements zhxtService {
     @Override
     public int deleteArticle(int articleId) {
         return zhxtMapper.deleteArticle(articleId);
+    }
+
+    @Override
+    public MyDataVO getMyData(int userId) {
+        MyDataVO myDataVO = new MyDataVO();
+        myDataVO.setArticlesCount(zhxtMapper.getArticleCount(userId));
+        myDataVO.setFollowsCount(zhxtMapper.getFollowCount(userId));
+        myDataVO.setFansCount(zhxtMapper.getFollowerCount(userId));
+        return myDataVO;
+
     }
 
 
