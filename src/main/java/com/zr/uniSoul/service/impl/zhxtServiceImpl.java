@@ -54,23 +54,42 @@ public class zhxtServiceImpl implements zhxtService {
 
         // 根据条件选择不同的查询方法
         if (pageQueryDTO.getCategory_id() == null) {
-            // 查询所有数据
-            Page<Article> page = zhxtMapper.pageQueryAll(pageQueryDTO);
+            if(pageQueryDTO.getKeyWords() == null) {
+                // 查询所有数据
+                Page<Article> page = zhxtMapper.pageQueryAll(pageQueryDTO);
 
-            // 手动获取总记录数
-            Long total = zhxtMapper.countQueryAll();
+                // 手动获取总记录数
+                Long total = zhxtMapper.countQueryAll();
 
-            // 返回封装结果
-            return new PageResult(total, page.getResult());
-        } else {
+                // 返回封装结果
+                return new PageResult(total, page.getResult());
+            }
             // 查询带条件的数据
-            Page<Article> page = zhxtMapper.pageQuery(pageQueryDTO);
 
+            Page<Article> page = zhxtMapper.pageQueryForKeyWords(pageQueryDTO);
             // 手动获取总记录数
-            Long total = zhxtMapper.countQuery(pageQueryDTO);
-
+            Long total = zhxtMapper.countQueryForKeyWords(pageQueryDTO);
             // 返回封装结果
             return new PageResult(total, page.getResult());
+
+        } else {
+            if(pageQueryDTO.getKeyWords() == null) {
+                // 查询带所有的的数据
+                Page<Article> page = zhxtMapper.pageQuery(pageQueryDTO);
+
+                // 手动获取总记录数
+                Long total = zhxtMapper.countQuery(pageQueryDTO);
+
+                // 返回封装结果
+                return new PageResult(total, page.getResult());
+            }
+            // 查询带条件的数据
+            Page<Article> page = zhxtMapper.pageQueryForKeyWords(pageQueryDTO);
+            // 手动获取总记录数
+            Long total = zhxtMapper.countQueryForKeyWords(pageQueryDTO);
+            // 返回封装结果
+            return new PageResult(total, page.getResult());
+
         }
     }
 

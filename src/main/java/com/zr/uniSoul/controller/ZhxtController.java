@@ -21,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.UUID;
 
 /**
@@ -120,12 +119,11 @@ public class ZhxtController {
      * @return
      */
     @PostMapping("list")
-    @ApiOperation("文章列表")
+    @ApiOperation("文章分页展示")
     public R<PageResult> list(@RequestBody PageQueryDTO pageQueryDTO) {
         log.info("分页查询：{}", pageQueryDTO);
         PageResult pageResult = zhxtService.pageQuery(pageQueryDTO);
         return R.success(pageResult);
-
     }
 
 
@@ -225,7 +223,6 @@ public class ZhxtController {
             return R.success(authorUser);
         }
         return R.error("文章不存在");
-
     }
     /**
      * 审核文章
@@ -240,7 +237,6 @@ public class ZhxtController {
         }
         return R.error("审核失败");
     }
-
     /**
      * 检查关注状态
      */
@@ -268,6 +264,5 @@ public class ZhxtController {
         }
         log.info("未关注");
         return R.success("未关注");
-
     }
 }

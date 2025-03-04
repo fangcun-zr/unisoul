@@ -5,7 +5,6 @@ import lombok.Data;
 
 @Data
 public class PageQueryDTO {
-
     //页码
     @JsonProperty("page")
     private Integer page;
@@ -18,4 +17,7 @@ public class PageQueryDTO {
     @JsonProperty("category_id")
     private Integer category_id;
 
+    //关键词
+    @JsonProperty("keyWords")
+    private String keyWords;
 }

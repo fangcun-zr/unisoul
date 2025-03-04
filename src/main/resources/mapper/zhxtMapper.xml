@@ -61,4 +61,22 @@
     <select id="getUserById" resultType="com.zr.uniSoul.pojo.entity.User">
      select * from user where id = #{userId}
     </select>
+    <select id="pageQueryForKeyWords" resultMap="article">
+        select id,title,content,cover_image,tags,author_id,status,view_count,like_count,comment_count,create_time,update_time
+        from article
+ <where>
+            <if test="category_id != null">
+         and category_id = #{category_id}
+     </if>
+     <if test="keyWords != null and keyWords != ''">
+         and (title like concat('%', #{keyWords}, '%') or content like concat('%', #{keyWords}, '%'))
+     </if>
+ </where> order by like_count asc, create_time desc
+    </select>
+    <select id="countQueryForKeyWords" resultType="java.lang.Long">
+        SELECT COUNT(*)
+        FROM article <where> <if test='category_id != null'>
+        AND category_id = #{category_id}</if> <if test="keyWords != null and keyWords != ''">
+        AND (title LIKE CONCAT('%', #{keyWords}, '%') OR content LIKE CONCAT('%', #{keyWords}, '%'))</if></where>
+    </select>
 </mapper>

@@ -43,4 +43,9 @@ public interface zhxtMapper {
     int checkFollowStatus(int followId, int followingId);
 
     int deleteArticle(int articleId);
+
+    Page<Article> pageQueryForKeyWords(PageQueryDTO pageQueryDTO);
+
+
+    Long countQueryForKeyWords(PageQueryDTO pageQueryDTO);
 }
