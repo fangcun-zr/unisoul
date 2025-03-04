@@ -44,7 +44,22 @@ $(document).ready(function() {
             $('#age').val(user.age || '');
             $('#n  ame').val(user.name || '');
             // ...渲染其他用户信息
+            loadUserStats();
         }
+    }
+
+    function loadUserStats() {
+        //发送请求获取用户统计信息
+        article.getMyData()
+            .then(response => {
+                    if (response.code === 1 && response.data) {
+                        const userStats = response.data;
+                        $('#articleCount').text(userStats.articlesCount);
+                        $('#followersCount').text(userStats.fansCount);
+                        $('#followingCount').text(userStats.followsCount);
+                    }
+                }
+            );
     }
 
     //加载我的文章列表
