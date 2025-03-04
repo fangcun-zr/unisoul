@@ -164,4 +164,26 @@ public class XtqhServiceImpl implements XtqhService {
             return true;//代表点过赞了
         }
     }
+
+    /**
+     * 收藏文章
+     * @param userId
+     * @param articleId
+     * @return
+     */
+    @Override
+    public int collectArticle(int userId, int articleId) {
+        return xtqhmapper.collectArticle(userId, articleId);
+    }
+
+    /**
+     * 判断是否收藏
+     * @param userId
+     * @param articleId
+     * @return
+     */
+    @Override
+    public int isCollect(int userId, int articleId) {
+        return xtqhmapper.isCollect(userId, articleId);
+    }
 }

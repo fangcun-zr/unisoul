@@ -68,4 +68,10 @@ public interface xtqhMapper {
      * @param articleId
      */
     void deleteLikesArticle(Long userId, Integer articleId);
+
+    @Select("select count(*) from user_collect_articles where article_id = #{articleId} and user_id = #{userId}")
+    int isCollect(int userId, int articleId);
+
+    @Insert("insert into user_collect_articles(user_id,article_id) values(#{userId},#{articleId})")
+    int collectArticle(int userId, int articleId);
 }

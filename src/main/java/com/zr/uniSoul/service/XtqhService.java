@@ -36,4 +36,8 @@ public interface XtqhService {
     List<String> getFollowersByUsername(String username);
     List<ArticleVO> getMyArticles(int userId);
     boolean inquireLikeStatus(Long userId, int articleId);
+
+    int collectArticle(int userId, int articleId);
+
+    int isCollect(int userId, int articleId);
 }

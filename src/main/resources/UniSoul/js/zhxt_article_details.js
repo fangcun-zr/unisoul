@@ -58,6 +58,14 @@ $(document).ready(function() {
                     $('.article-author').text(data.author);
                     $('.article-time').text(new Date(data.createTime).toLocaleDateString());
                     $('.article-content').html(data.content);
+                    //likeCount
+                    $('.like-count').text(data.likeCount);
+
+                    //根据点赞情况渲染点赞按钮的样式
+                        //获取点赞状态
+                    const isLiked = data.isLiked;
+
+
 
                     // 更新交互按钮状态
                     if (data.liked) {
@@ -324,31 +332,36 @@ $(document).ready(function() {
             });
     });
 
-    // 文章点赞
+    // 文章点赞和取消点赞（已点赞将按钮设置为红色，未点赞则是白色）
     $('.article-action .btn-like').click(function() {
         const $btn = $(this);
         const articleId = getArticleIdFromUrl();
 
-        if ($btn.prop('disabled')) return;
-        $btn.prop('disabled', true);
+        //检测点赞状态
 
-        const action = $btn.hasClass('active') ? 'unlike' : 'like';
-        article.action[action](articleId)
-            .then(response => {
-                if (response.code === 200) {
-                    $btn.toggleClass('active');
 
-                    // 添加动画效果
-                    $btn.addClass('animating');
-                    setTimeout(() => $btn.removeClass('animating'), 300);
-                }
-            })
-            .catch(error => {
-                console.error('操作失败:', error);
-            })
-            .finally(() => {
-                $btn.prop('disabled', false);
-            });
+
+
+        // if ($btn.prop('disabled')) return;
+        // $btn.prop('disabled', true);
+        //
+        // const action = $btn.hasClass('active') ? 'unlike' : 'like';
+        // article.action[action](articleId)
+        //     .then(response => {
+        //         if (response.code === 200) {
+        //             $btn.toggleClass('active');
+        //
+        //             // 添加动画效果
+        //             $btn.addClass('animating');
+        //             setTimeout(() => $btn.removeClass('animating'), 300);
+        //         }
+        //     })
+        //     .catch(error => {
+        //         console.error('操作失败:', error);
+        //     })
+        //     .finally(() => {
+        //         $btn.prop('disabled', false);
+        //     });
     });
 
     // 文章收藏

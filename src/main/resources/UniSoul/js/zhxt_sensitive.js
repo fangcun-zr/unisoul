@@ -1,9 +1,9 @@
 $(document).ready(function () {
     // 检查登录状态和管理员权限
-    if (!localStorage.getItem('token')) {
-        window.location.href = 'login.html';
-        return;
-    }
+    // if (!localStorage.getItem('token')) {
+    //     window.location.href = 'login.html';
+    //     return;
+    // }
 
     let currentPage = 1;
     const pageSize = 10;

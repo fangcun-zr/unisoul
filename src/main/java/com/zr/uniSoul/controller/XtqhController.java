@@ -207,6 +207,47 @@ public class XtqhController {
         articleLikesVO  = xtqhService.likes(articleLikesVO);
         return R.success(articleLikesVO);
     }
+    /**
+     * 收藏文章
+     */
+    @GetMapping("/collect")
+    @ApiOperation("收藏文章")
+    public R<String> collect(@RequestParam int articleId, HttpServletRequest request){
+        log.info("收藏文章接口, 收藏: {}", articleId);
+        HttpSession session = request.getSession();
+        Object userIdObj = session.getAttribute("userId");
+        if (userIdObj == null) {
+            return R.error("用户未登录");
+        }
+        int user_Id = Integer.parseInt(userIdObj.toString());
+        int ret = xtqhService.collectArticle(user_Id, articleId);
+        if (ret == 0) {
+            log.info("收藏失败");
+            return R.error("收藏失败");
+        }
+        return R.success("收藏成功");
+    }
+
+    /**
+     * 返回是否收藏
+     */
+    @GetMapping("/isCollect")
+    @ApiOperation("返回是否收藏")
+    public R<Integer> isCollect(@RequestParam int articleId, HttpServletRequest request){
+        log.info("返回是否收藏接口, {}", articleId);
+        HttpSession session = request.getSession();
+        Object userIdObj = session.getAttribute("userId");
+        if (userIdObj == null) {
+            return R.error("用户未登录");
+        }
+        int user_Id = Integer.parseInt(userIdObj.toString());
+        int ret = xtqhService.isCollect(user_Id, articleId);
+        if (ret == 0) {
+            log.info("未收藏");
+            return R.success(ret);
+        }
+        return R.success(ret);
+    }
 
     /**
      * 获取粉丝昵称
