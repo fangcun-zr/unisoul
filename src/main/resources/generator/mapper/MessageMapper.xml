@@ -4,6 +4,17 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="generator.mapper.MessageMapper">
 
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT * FROM message WHERE id = #{id}
+    </select>
+
+    <update id="updateById">
+        UPDATE message
+        SET is_deleted = 1
+        WHERE id = #{id} AND is_deleted = 0
+    </update>
+
+
     <resultMap id="BaseResultMap" type="generator.domain.Message">
             <id property="id" column="id" />
             <result property="sender_id" column="sender_id" />
