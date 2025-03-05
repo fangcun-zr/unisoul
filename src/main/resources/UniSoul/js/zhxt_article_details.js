@@ -101,6 +101,7 @@ $(document).ready(function() {
                                 const data = response.data;
                                 // 更新收藏状态
                                 if (data===1) {
+
                                     //已经收藏，将按钮渲染成黄色
                                     $('.btn-favorite').addClass('active');
                                     //将已收藏的信息存储
@@ -380,7 +381,7 @@ $(document).ready(function() {
         const articleId = getArticleIdFromUrl();
 
         //获取点赞状态
-        var stats = localStorage.getItem('favorited');
+        var stats = localStorage.getItem('liked');
         if (stats == null) {
             stats = {};
         }
@@ -401,21 +402,30 @@ $(document).ready(function() {
                 }
                 else {
                     //点赞失败
+
                     $btn.removeClass('active');
+                    loadArticleDetail();
                 }
             }
         })
 
         //文章收藏和取消收藏
         $('.btn-favorite').click(function() {
+            alert("收藏")
             const $btn = $(this);
             const articleId = getArticleIdFromUrl();
+
+            //获取收藏状态
+            var stats = localStorage.getItem('favorited');
+            if (stats == null) {
+                stats = {};
+            }
             //发送请求至后端
             $.ajax({
                 url: '/xtqh/collect',
                 type: 'GET',
                 data: {
-                    ArticleId: articleId,
+                    articleId: articleId,
                 },
                 success: function(response) {
                     if (response.code === 1 && response.data) {
@@ -427,6 +437,7 @@ $(document).ready(function() {
                     else {
                         //收藏失败
                         $btn.removeClass('active');
+                        loadArticleDetail();
                     }
                 }
             })
@@ -462,27 +473,27 @@ $(document).ready(function() {
     });
 
     // 文章收藏
-    $('.article-action .btn-favorite').click(function() {
-        const $btn = $(this);
-        const articleId = getArticleIdFromUrl();
-
-        if ($btn.prop('disabled')) return;
-        $btn.prop('disabled', true);
-
-        const action = $btn.hasClass('active') ? 'unfavorite' : 'favorite';
-        article.action[action](articleId)
-            .then(response => {
-                if (response.code === 200) {
-                    $btn.toggleClass('active');
-                }
-            })
-            .catch(error => {
-                console.error('操作失败:', error);
-            })
-            .finally(() => {
-                $btn.prop('disabled', false);
-            });
-    });
+    // $('.article-action .btn-favorite').click(function() {
+    //     const $btn = $(this);
+    //     const articleId = getArticleIdFromUrl();
+    //
+    //     if ($btn.prop('disabled')) return;
+    //     $btn.prop('disabled', true);
+    //
+    //     const action = $btn.hasClass('active') ? 'unfavorite' : 'favorite';
+    //     article.action[action](articleId)
+    //         .then(response => {
+    //             if (response.code === 200) {
+    //                 $btn.toggleClass('active');
+    //             }
+    //         })
+    //         .catch(error => {
+    //             console.error('操作失败:', error);
+    //         })
+    //         .finally(() => {
+    //             $btn.prop('disabled', false);
+    //         });
+    // });
 
     // 分页点击事件
     $(document).on('click', '.comment-pagination button:not(.disabled)', function() {

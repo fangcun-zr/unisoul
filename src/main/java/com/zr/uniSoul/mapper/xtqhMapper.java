@@ -74,4 +74,9 @@ public interface xtqhMapper {
 
     @Delete("delete from user_collect_articles where user_id = #{userId} and article_id = #{articleId}")
     int cancelCollect(int userId, int articleId);
+
+    void reduceFavoriteCount(int articleId);
+
+    @Update("update article set favoriteCount = favoriteCount + 1 where id = #{articleId}")
+    void addFavoriteCount(int articleId);
 }

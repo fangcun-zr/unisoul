@@ -38,6 +38,9 @@
     <update id="updateAvatar">
         update user set avatarUrl = #{filePath} where username = #{username}
     </update>
+    <update id="reduceFavoriteCount">
+        update article set favoriteCount = favoriteCount - 1 where id = #{articleId}
+    </update>
     <select id="getFollowersByUsername" resultType="java.lang.String">
         SELECT u.username
         FROM user u

@@ -173,6 +173,7 @@ public class XtqhServiceImpl implements XtqhService {
      */
     @Override
     public int collectArticle(int userId, int articleId) {
+        xtqhmapper.addFavoriteCount(articleId);
         return xtqhmapper.collectArticle(userId, articleId);
     }
 
@@ -189,6 +190,7 @@ public class XtqhServiceImpl implements XtqhService {
 
     @Override
     public int cancelCollect(int userId, int articleId) {
+        xtqhmapper.reduceFavoriteCount(articleId);
         return xtqhmapper.cancelCollect(userId, articleId);
     }
 }
