@@ -587,7 +587,7 @@ $(document).ready(function() {
             url: '/zhxt/check-follow-status?authorId=' + encodeURIComponent(authorId), // 使用查询参数
             method: 'GET',
             success: function (data) {
-                if (data.code === 1) { // 假设返回的 code 为 1 表示已关注
+                if (data.code === 1 && data.data===1) { // 假设返回的 code 为 1 表示已关注
                     followButton.data('status', 'followed');
                     followButton.html('<i class="fas fa-check"></i> 取消关注'); // 更新按钮内容
                 } else {

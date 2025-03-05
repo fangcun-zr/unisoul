@@ -277,9 +277,9 @@ public class ZhxtController {
         int status = zhxtService.checkFollowStatus(authorId, userId);
         if (status == 1) {
             log.info("已关注");
-            return R.success("已关注");
+            return R.success("1");
         }
         log.info("未关注");
-        return R.success("未关注");
+        return R.success("0");
     }
 }
