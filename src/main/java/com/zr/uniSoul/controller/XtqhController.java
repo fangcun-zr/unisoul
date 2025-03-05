@@ -187,6 +187,26 @@ public class XtqhController {
     }
 
     /**
+     * 获取点赞状态
+     */
+    @GetMapping("/getLikesStatus")
+    @ApiOperation("获取点赞状态")
+    public R<Integer> getLikesStatus(HttpServletRequest request,@RequestParam int articleId){
+        log.info("获取点赞状态接口, 文章ID: {}", articleId);
+        HttpSession session = request.getSession();
+        Object userIdObj = session.getAttribute("userId");
+        if (userIdObj == null) {
+            return R.error("用户未登录");
+        }
+        int user_Id = Integer.parseInt(userIdObj.toString());
+        boolean ret = xtqhService.inquireLikeStatus(Long.valueOf(user_Id), articleId);
+        if (ret == true){
+            return R.success(1);
+        }
+        return R.success(0);
+
+    }
+    /**
      * 点赞
      * @param ArticleId
      * @param LikesCount
@@ -212,7 +232,7 @@ public class XtqhController {
      */
     @GetMapping("/collect")
     @ApiOperation("收藏文章")
-    public R<String> collect(@RequestParam int articleId, HttpServletRequest request){
+    public R<Boolean> collect(@RequestParam int articleId, HttpServletRequest request){
         log.info("收藏文章接口, 收藏: {}", articleId);
         HttpSession session = request.getSession();
         Object userIdObj = session.getAttribute("userId");
@@ -220,12 +240,23 @@ public class XtqhController {
             return R.error("用户未登录");
         }
         int user_Id = Integer.parseInt(userIdObj.toString());
-        int ret = xtqhService.collectArticle(user_Id, articleId);
+        //先判断是否收藏，如果已经点赞则取消收藏
+        int ret = 0;
+        ret = xtqhService.isCollect(user_Id, articleId);
+        if(ret == 1){
+            ret = xtqhService.cancelCollect(user_Id, articleId);
+            if (ret == 0) {
+                log.info("取消收藏失败");
+                return R.success(true);
+            }
+            return R.success(false);
+        }
+        ret = xtqhService.collectArticle(user_Id, articleId);
         if (ret == 0) {
             log.info("收藏失败");
-            return R.error("收藏失败");
+            return R.success(false);
         }
-        return R.success("收藏成功");
+        return R.success(true);
     }
 
     /**

@@ -2,6 +2,34 @@ const API_BASE_URL = 'http://localhost:8080';
 // 文章相关的API请求
 const article = {
 
+    /**
+     * 获取点赞状态
+     * @param articleData
+     * @returns {*}
+     */
+    getLikesStatus: function (articleId) {
+        return $.ajax({
+            url: `${API_BASE_URL}/xtqh/getLikesStatus?articleId=${articleId}`,
+            type: 'GET',
+            contentType: 'application/json',
+        }
+        );
+    },
+
+    /**
+     * 获取收藏状态
+     * @param articleData
+     * @returns {*}
+     */
+    getFavoritesStatus: function (articleId) {
+        return $.ajax({
+            url: `${API_BASE_URL}/xtqh/isCollect?articleId=${articleId}`,
+            type: 'GET',
+            contentType: 'application/json',
+        }
+        );
+    },
+
 
 
 

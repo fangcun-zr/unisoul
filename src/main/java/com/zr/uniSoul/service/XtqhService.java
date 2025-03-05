@@ -40,4 +40,12 @@ public interface XtqhService {
     int collectArticle(int userId, int articleId);
 
     int isCollect(int userId, int articleId);
+
+    /**
+     * 取消点赞
+     * @param userId
+     * @param articleId
+     * @return
+     */
+    int cancelCollect(int userId, int articleId);
 }

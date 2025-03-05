@@ -60,20 +60,62 @@ $(document).ready(function() {
                     $('.article-content').html(data.content);
                     //likeCount
                     $('.like-count').text(data.likeCount);
+                    //存储点赞数
+                    localStorage.setItem('likeCount', data.likeCount);
+                    //收藏数
+                    $('.favorite-count').text(data.favoriteCount);
+                    //存储收藏数
+                    localStorage.setItem('favoriteCount', data.favoriteCount);
 
                     //根据点赞情况渲染点赞按钮的样式
-                        //获取点赞状态
-                    const isLiked = data.isLiked;
+                        //发送请求获取点赞状态
+                    article.getLikesStatus(articleId)
+                        .then(response => {
+                            if (response.code === 1) {
+                                const data = response.data;
+                                // 更新点赞状态
+                                if (data===1) {
+                                    //已经点赞，将按钮渲染成红色
+                                    $('.btn-like').addClass('active');
+                                    //将已点赞的信息存储
+                                    localStorage.setItem('liked', 'true');
+                                }
+                                else {
+                                    //未点赞，将按钮渲染成灰色
+                                    $('.btn-like').removeClass('active');
+                                    //将未点赞的信息存储
+                                    localStorage.setItem('liked', 'false');
+                                }
+
+                            }
+                        })
+                        .catch(error => {
+                            console.error('获取点赞状态失败:', error);
+                        });
 
 
+                    // 根据收藏状态渲染收藏按钮的样式
+                    article.getFavoritesStatus(articleId)
+                        .then(response => {
+                            if (response.code === 1) {
+                                const data = response.data;
+                                // 更新收藏状态
+                                if (data===1) {
+                                    //已经收藏，将按钮渲染成黄色
+                                    $('.btn-favorite').addClass('active');
+                                    //将已收藏的信息存储
+                                    localStorage.setItem('favorited', 'true');
+                                }
+                                else {
+                                    //未收藏，将按钮渲染成灰色
+                                    $('.btn-favorite').removeClass('active');
+                                    //将未收藏的信息存储
+                                    localStorage.setItem('favorited', 'false');
+                                }
+                            }
+                        })
 
-                    // 更新交互按钮状态
-                    if (data.liked) {
-                        $('.btn-like').addClass('active');
-                    }
-                    if (data.favorited) {
-                        $('.btn-favorite').addClass('active');
-                    }
+
 
                     // 加载评论列表
                     loadComments(1);
@@ -119,7 +161,7 @@ $(document).ready(function() {
 
         article.comments.getList(articleId, page, commentPageSize)
             .then(response => {
-                if (response.code === 200) {
+                if (response.code === 1) {
                     const commentList = $('.comment-list');
                     if (page === 1) {
                         commentList.empty();
@@ -193,27 +235,27 @@ $(document).ready(function() {
         pagination.html(paginationHtml);
     }
 
-    // 加载评论的点赞状态
-    function loadCommentLikeStatus(commentIds) {
-        if (!commentIds.length) return;
-
-        Promise.all(commentIds.map(id => article.comments.getLikeStatus(id)))
-            .then(responses => {
-                responses.forEach((response, index) => {
-                    if (response.code === 200 && response.data.liked) {
-                        const commentId = commentIds[index];
-                        const $btn = $(`.comment-item[data-id="${commentId}"] .btn-like`);
-                        $btn.addClass('active')
-                            .find('i')
-                            .removeClass('far')
-                            .addClass('fas');
-                    }
-                });
-            })
-            .catch(error => {
-                console.error('加载点赞状态失败:', error);
-            });
-    }
+    // // 加载评论的点赞状态
+    // function loadCommentLikeStatus(commentIds) {
+    //     if (!commentIds.length) return;
+    //
+    //     Promise.all(commentIds.map(id => article.comments.getLikeStatus(id)))
+    //         .then(responses => {
+    //             responses.forEach((response, index) => {
+    //                 if (response.code === 200 && response.data.liked) {
+    //                     const commentId = commentIds[index];
+    //                     const $btn = $(`.comment-item[data-id="${commentId}"] .btn-like`);
+    //                     $btn.addClass('active')
+    //                         .find('i')
+    //                         .removeClass('far')
+    //                         .addClass('fas');
+    //                 }
+    //             });
+    //         })
+    //         .catch(error => {
+    //             console.error('加载点赞状态失败:', error);
+    //         });
+    // }
 
     // 发表评论
     $('#commentForm').submit(function(e) {
@@ -296,48 +338,103 @@ $(document).ready(function() {
             });
     });
 
-    // 点赞评论
-    $(document).on('click', '.btn-like', function() {
-        const $btn = $(this);
-        const commentId = $btn.closest('.comment-item').data('id');
-
-        // 防止重复点击
-        if ($btn.prop('disabled')) return;
-        $btn.prop('disabled', true);
-
-        article.comments.like(commentId)
-            .then(response => {
-                if (response.code === 200) {
-                    const $icon = $btn.find('i');
-                    const $count = $btn.find('.like-count');
-                    const currentCount = parseInt($count.text());
-
-                    // 更新点赞状态和数量
-                    $btn.toggleClass('active');
-                    $icon.toggleClass('far fas');
-
-                    // 添加动画效果
-                    $btn.addClass('animating');
-                    setTimeout(() => $btn.removeClass('animating'), 300);
-
-                    // 更新点赞数
-                    $count.text($btn.hasClass('active') ? currentCount + 1 : currentCount - 1);
-                }
-            })
-            .catch(error => {
-                console.error('点赞失败:', error);
-            })
-            .finally(() => {
-                $btn.prop('disabled', false);
-            });
-    });
+    // // 点赞评论
+    // $(document).on('click', '.btn-like', function() {
+    //     const $btn = $(this);
+    //     const commentId = $btn.closest('.comment-item').data('id');
+    //
+    //     // 防止重复点击
+    //     if ($btn.prop('disabled')) return;
+    //     $btn.prop('disabled', true);
+    //
+    //     article.comments.like(commentId)
+    //         .then(response => {
+    //             if (response.code === 1) {
+    //                 const $icon = $btn.find('i');
+    //                 const $count = $btn.find('.like-count');
+    //                 const currentCount = parseInt($count.text());
+    //
+    //                 // 更新点赞状态和数量
+    //                 $btn.toggleClass('active');
+    //                 $icon.toggleClass('far fas');
+    //
+    //                 // 添加动画效果
+    //                 $btn.addClass('animating');
+    //                 setTimeout(() => $btn.removeClass('animating'), 300);
+    //
+    //                 // 更新点赞数
+    //                 $count.text($btn.hasClass('active') ? currentCount + 1 : currentCount - 1);
+    //             }
+    //         })
+    //         .catch(error => {
+    //             console.error('点赞失败:', error);
+    //         })
+    //         .finally(() => {
+    //             $btn.prop('disabled', false);
+    //         });
+    // });
 
     // 文章点赞和取消点赞（已点赞将按钮设置为红色，未点赞则是白色）
-    $('.article-action .btn-like').click(function() {
+    $('.btn-like').click(function() {
         const $btn = $(this);
         const articleId = getArticleIdFromUrl();
 
-        //检测点赞状态
+        //获取点赞状态
+        var stats = localStorage.getItem('favorited');
+        if (stats == null) {
+            stats = {};
+        }
+        //发送请求至后端
+        $.ajax({
+            url: '/xtqh/likes',
+            type: 'GET',
+            data: {
+                ArticleId: articleId,
+                LikesCount:localStorage.getItem('likeCount'),
+                isLike:stats
+            },
+            success: function(response) {
+                if (response.code === 1 && response.data.isLike) {
+                    //点赞成功，将按钮渲染成红色
+                    $btn.addClass('active');
+                    loadArticleDetail();
+                }
+                else {
+                    //点赞失败
+                    $btn.removeClass('active');
+                }
+            }
+        })
+
+        //文章收藏和取消收藏
+        $('.btn-favorite').click(function() {
+            const $btn = $(this);
+            const articleId = getArticleIdFromUrl();
+            //发送请求至后端
+            $.ajax({
+                url: '/xtqh/collect',
+                type: 'GET',
+                data: {
+                    ArticleId: articleId,
+                },
+                success: function(response) {
+                    if (response.code === 1 && response.data) {
+                        //收藏成功，将按钮渲染成黄色
+                        $btn.addClass('active');
+                        //再次渲染收藏数
+                        loadArticleDetail();
+                    }
+                    else {
+                        //收藏失败
+                        $btn.removeClass('active');
+                    }
+                }
+            })
+        })
+
+
+
+
 
 
 

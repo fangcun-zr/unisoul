@@ -2,10 +2,7 @@ package com.zr.uniSoul.mapper;
 
 import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.pojo.vo.ArticleVO;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -74,4 +71,7 @@ public interface xtqhMapper {
 
     @Insert("insert into user_collect_articles(user_id,article_id) values(#{userId},#{articleId})")
     int collectArticle(int userId, int articleId);
+
+    @Delete("delete from user_collect_articles where user_id = #{userId} and article_id = #{articleId}")
+    int cancelCollect(int userId, int articleId);
 }

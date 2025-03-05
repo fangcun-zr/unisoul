@@ -119,7 +119,7 @@ public class XtqhServiceImpl implements XtqhService {
             articleLikes.setIsLike(true);
             xtqhmapper.likes(articleLikes.getArticleId(), articleLikes.getLikesCount());//修改文章的点赞数量
             xtqhmapper.likesArticle(articleLikes.getUserId(), articleLikes.getArticleId(), LocalDateTime.now());//添加文章点赞和点赞着的关系
-        }else{//已经对文章点过赞了
+        }else{//已经对文章点过赞了,则取消点赞
             articleLikes.setLikesCount(articleLikes.getLikesCount() - 1);
             articleLikes.setIsLike(false);
             xtqhmapper.likes(articleLikes.getArticleId(), articleLikes.getLikesCount());//修改文章的点赞数量
@@ -185,5 +185,10 @@ public class XtqhServiceImpl implements XtqhService {
     @Override
     public int isCollect(int userId, int articleId) {
         return xtqhmapper.isCollect(userId, articleId);
+    }
+
+    @Override
+    public int cancelCollect(int userId, int articleId) {
+        return xtqhmapper.cancelCollect(userId, articleId);
     }
 }
