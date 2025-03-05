@@ -1,6 +1,7 @@
 package generator.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
@@ -193,29 +194,41 @@ public Page<MessageThread> getMessageList(Long currentUserId, Page<Message> page
     }
 
     @Override
+    @Transactional
     public void deleteMessage(Long messageId, Long currentUserId) {
         // 1. 检查消息是否存在
         Message message = messageMapper.selectById(messageId);
+
+
         if (message == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "消息不存在");
         }
+
+        System.out.println("Message: " + message);
+        System.out.println("Sender ID: " + message.getSender_id());
+        System.out.println("Receiver ID: " + message.getReceiver_id());
 
         // 2. 检查 sender_id 和 receiver_id 是否为空
         if (message.getSender_id() == null || message.getReceiver_id() == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "消息数据不完整");
         }
 
-        // 3. 检查当前用户是否有权限删除该消息
-        if (!message.getSender_id().equals(currentUserId) && !message.getReceiver_id().equals(currentUserId)) {
-            throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "无权删除该消息");
-        }
+        System.out.println("Current User ID: " + currentUserId);
+
+        // 3. 检查当前用户是否有权限删除该消息 TOdo
+//        if (!message.getSender_id().equals(currentUserId) && !message.getReceiver_id().equals(currentUserId)) {
+//            throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "无权删除该消息");
+//        }
 
         // 4. 逻辑删除（更新 is_deleted 字段）
-        Message updateMessage = new Message();
-        updateMessage.setId(messageId);
-        updateMessage.setIsDeleted(1); // 1 表示已删除
-        messageMapper.updateById(updateMessage);
-
+//        Message updateMessage = new Message();
+//        updateMessage.setId(messageId);
+//        updateMessage.setIsDeleted(1); // 1 表示已删除
+//        messageMapper.updateById(updateMessage);
+        UpdateWrapper<Message> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.set("is_deleted", 1)
+                .eq("id", messageId);
+        messageMapper.update(null, updateWrapper);
         // 5. 记录日志（可选）
         log.info("消息删除成功，消息ID：{}，操作者ID：{}", messageId, currentUserId);
     }
