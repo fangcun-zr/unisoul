@@ -1,8 +1,6 @@
 package generator.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.util.Date;
@@ -15,7 +13,7 @@ import java.util.Date;
 @Data
 public class Message {
     /**
-     * 
+     * 消息ID
      */
     @TableId(type = IdType.AUTO)
     private Long id;
@@ -23,32 +21,45 @@ public class Message {
     /**
      * 发送者ID
      */
+    @TableField("sender_id") // 显式映射数据库字段
     private Long sender_id;
 
     /**
      * 接收者ID
      */
+    @TableField("receiver_id") // 显式映射数据库字段
     private Long receiver_id;
 
     /**
      * 消息内容
      */
+    @TableField("content")
     private String content;
 
     /**
      * 发送时间
      */
+    @TableField("send_time") // 显式映射数据库字段
     private Date send_time;
 
     /**
      * 0未读 1已读
      */
+    @TableField("read_status") // 显式映射数据库字段
     private Integer read_status;
 
     /**
      * 父消息ID（支持回复）
      */
+    @TableField("parent_id") // 显式映射数据库字段
     private Long parent_id;
+
+    /**
+     * 逻辑删除字段（0未删除 1已删除）
+     */
+    @TableLogic // 标记为逻辑删除字段
+    @TableField("is_deleted") // 显式映射数据库字段
+    private Integer isDeleted;
 
     @Override
     public boolean equals(Object that) {

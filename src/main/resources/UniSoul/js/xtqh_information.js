@@ -44,7 +44,22 @@ $(document).ready(function() {
             $('#age').val(user.age || '');
             $('#n  ame').val(user.name || '');
             // ...渲染其他用户信息
+            loadUserStats();
         }
+    }
+
+    function loadUserStats() {
+        //发送请求获取用户统计信息
+        article.getMyData()
+            .then(response => {
+                    if (response.code === 1 && response.data) {
+                        const userStats = response.data;
+                        $('#articleCount').text(userStats.articlesCount);
+                        $('#followersCount').text(userStats.fansCount);
+                        $('#followingCount').text(userStats.followsCount);
+                    }
+                }
+            );
     }
 
     //加载我的文章列表
@@ -84,7 +99,7 @@ $(document).ready(function() {
             </div>
             <div>
                 <button class="btn btn-sm btn-primary mr-2" onclick="editArticle(${article.id})">编辑</button>
-                <button class="btn btn-sm btn-danger" value="${article.id}" onclick="deleteArticle(${article.id})">删除</button>
+                <button class="btn btn-sm btn-danger" value="${article.id}">删除</button>
             </div>
         </li>
     `);
@@ -96,6 +111,26 @@ $(document).ready(function() {
                 })
         }
     }
+
+    //删除文章按钮绑定单击事件
+    $(document).on('click', '.btn.btn-sm.btn-danger', function() {
+        var articleId = $(this).val();
+        if (confirm('确认要删除该文章吗？删除后无法恢复。')) {
+            article.delete(articleId)
+                .then(response => {
+                    if (response.code === 1) {
+                        alert('删除成功');
+                        // 删除成功后，重新加载文章列表
+                        loadMyArticles();
+                    }
+
+                }, error => {
+                    console.error(error);
+                }
+            );
+        }
+    });
+
 
     // 处理头像上传
     $('#avatarUpload').change(function(e) {

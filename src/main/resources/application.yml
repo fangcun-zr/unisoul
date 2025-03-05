@@ -30,9 +30,13 @@ mybatis-plus:
     db-config:
       # 设置主键类型为ASSIGN_ID，表示主键由MyBatis-Plus自动生成，并使用雪花算法生成ID
       id-type: ASSIGN_ID
+      logic-delete-field: isDeleted  # 逻辑删除字段
+      logic-delete-value: 1          # 删除标记值
+      logic-not-delete-value: 0      # 未删除标记值
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.zr.uniSoul.pojo.entity
+
 unisoul:
   alioss:
     endpoint: oss-cn-chengdu.aliyuncs.com

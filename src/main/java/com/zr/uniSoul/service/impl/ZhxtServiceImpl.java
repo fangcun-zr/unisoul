@@ -9,7 +9,8 @@ import com.zr.uniSoul.pojo.entity.Article;
 import com.zr.uniSoul.pojo.entity.CommentLike;
 import com.zr.uniSoul.pojo.entity.Comments;
 import com.zr.uniSoul.pojo.entity.User;
-import com.zr.uniSoul.service.zhxtService;
+import com.zr.uniSoul.pojo.vo.MyDataVO;
+import com.zr.uniSoul.service.ZhxtService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 
 @Service
 @Slf4j
-public class zhxtServiceImpl implements zhxtService {
+public class ZhxtServiceImpl implements ZhxtService {
 
     @Autowired
     private zhxtMapper zhxtMapper;
@@ -54,23 +55,41 @@ public class zhxtServiceImpl implements zhxtService {
 
         // 根据条件选择不同的查询方法
         if (pageQueryDTO.getCategory_id() == null) {
-            // 查询所有数据
-            Page<Article> page = zhxtMapper.pageQueryAll(pageQueryDTO);
+            if(pageQueryDTO.getKeyWords() == null) {
+                // 查询所有数据
+                Page<Article> page = zhxtMapper.pageQueryAll(pageQueryDTO);
 
-            // 手动获取总记录数
-            Long total = zhxtMapper.countQueryAll();
+                // 手动获取总记录数
+                Long total = zhxtMapper.countQueryAll();
 
-            // 返回封装结果
-            return new PageResult(total, page.getResult());
-        } else {
+                // 返回封装结果
+                return new PageResult(total, page.getResult());
+            }
             // 查询带条件的数据
-            Page<Article> page = zhxtMapper.pageQuery(pageQueryDTO);
-
+            Page<Article> page = zhxtMapper.pageQueryForKeyWords(pageQueryDTO);
             // 手动获取总记录数
-            Long total = zhxtMapper.countQuery(pageQueryDTO);
-
+            Long total = zhxtMapper.countQueryForKeyWords(pageQueryDTO);
             // 返回封装结果
             return new PageResult(total, page.getResult());
+
+        } else {
+            if(pageQueryDTO.getKeyWords() == null) {
+                // 查询带所有的的数据
+                Page<Article> page = zhxtMapper.pageQuery(pageQueryDTO);
+
+                // 手动获取总记录数
+                Long total = zhxtMapper.countQuery(pageQueryDTO);
+
+                // 返回封装结果
+                return new PageResult(total, page.getResult());
+            }
+            // 查询带条件的数据
+            Page<Article> page = zhxtMapper.pageQueryForKeyWords(pageQueryDTO);
+            // 手动获取总记录数
+            Long total = zhxtMapper.countQueryForKeyWords(pageQueryDTO);
+            // 返回封装结果
+            return new PageResult(total, page.getResult());
+
         }
     }
 
@@ -146,6 +165,21 @@ public class zhxtServiceImpl implements zhxtService {
     @Override
     public int checkFollowStatus(int follow_id, int following_id) {
         return zhxtMapper.checkFollowStatus(follow_id, following_id);
+    }
+
+    @Override
+    public int deleteArticle(int articleId) {
+        return zhxtMapper.deleteArticle(articleId);
+    }
+
+    @Override
+    public MyDataVO getMyData(int userId) {
+        MyDataVO myDataVO = new MyDataVO();
+        myDataVO.setArticlesCount(zhxtMapper.getArticleCount(userId));
+        myDataVO.setFollowsCount(zhxtMapper.getFollowCount(userId));
+        myDataVO.setFansCount(zhxtMapper.getFollowerCount(userId));
+        return myDataVO;
+
     }
 
 

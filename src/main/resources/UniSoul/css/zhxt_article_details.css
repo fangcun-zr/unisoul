@@ -237,6 +237,23 @@
     color: var(--primary-color);
 }
 
+/* 定义按钮的默认样式 */
+.btn-like {
+    color: rgb(128, 128, 128);
+    /* 其他样式 */
+}
+/* 定义按钮激活（红色）样式 */
+.btn-like.active {
+    color: red;
+    /* 其他激活状态的样式 */
+}
+.btn-favorite {
+    color: rgb(128, 128, 128);
+}
+.btn-favorite.active {
+    color: rgb(234, 180, 81);
+}
+
 /* 响应式设计 */
 @media (max-width: 992px) {
     .content-container {

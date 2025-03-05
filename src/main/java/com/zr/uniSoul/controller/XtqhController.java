@@ -6,9 +6,9 @@ import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.pojo.vo.ArticleLikesVO;
 import com.zr.uniSoul.pojo.vo.ArticleVO;
 import com.zr.uniSoul.pojo.vo.FollowersVO;
-import com.zr.uniSoul.service.xtqhService;
+import com.zr.uniSoul.service.XtqhService;
 import com.zr.uniSoul.utils.AliOssUtil;
-import com.zr.uniSoul.utils.checkCode;
+import com.zr.uniSoul.utils.CheckCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +29,7 @@ import java.util.UUID;
 public class XtqhController {
 
     @Autowired
-    private xtqhService xtqhService;
+    private XtqhService xtqhService;
 
     @Autowired
     private AliOssUtil aliOssUtil;
@@ -62,7 +62,7 @@ public class XtqhController {
     public R<String> sendCheckCode(HttpServletRequest request, @RequestParam String email){
         log.info("发送验证码");
         //获取验证码
-        String Code = checkCode.generateVerificationCode();
+        String Code = CheckCode.generateVerificationCode();
         //发送验证码
         Boolean flag = xtqhService.sendCheckCode(email,Code);
         if (flag){
@@ -187,6 +187,26 @@ public class XtqhController {
     }
 
     /**
+     * 获取点赞状态
+     */
+    @GetMapping("/getLikesStatus")
+    @ApiOperation("获取点赞状态")
+    public R<Integer> getLikesStatus(HttpServletRequest request,@RequestParam int articleId){
+        log.info("获取点赞状态接口, 文章ID: {}", articleId);
+        HttpSession session = request.getSession();
+        Object userIdObj = session.getAttribute("userId");
+        if (userIdObj == null) {
+            return R.error("用户未登录");
+        }
+        int user_Id = Integer.parseInt(userIdObj.toString());
+        boolean ret = xtqhService.inquireLikeStatus(Long.valueOf(user_Id), articleId);
+        if (ret == true){
+            return R.success(1);
+        }
+        return R.success(0);
+
+    }
+    /**
      * 点赞
      * @param ArticleId
      * @param LikesCount
@@ -206,6 +226,58 @@ public class XtqhController {
         log.info("点赞接口, 点赞: {}", articleLikesVO);
         articleLikesVO  = xtqhService.likes(articleLikesVO);
         return R.success(articleLikesVO);
+    }
+    /**
+     * 收藏文章
+     */
+    @GetMapping("/collect")
+    @ApiOperation("收藏文章")
+    public R<Boolean> collect(@RequestParam int articleId, HttpServletRequest request){
+        log.info("收藏文章接口, 收藏: {}", articleId);
+        HttpSession session = request.getSession();
+        Object userIdObj = session.getAttribute("userId");
+        if (userIdObj == null) {
+            return R.error("用户未登录");
+        }
+        int user_Id = Integer.parseInt(userIdObj.toString());
+        //先判断是否收藏，如果已经点赞则取消收藏
+        int ret = 0;
+        ret = xtqhService.isCollect(user_Id, articleId);
+        if(ret == 1){
+            ret = xtqhService.cancelCollect(user_Id, articleId);
+            if (ret == 0) {
+                log.info("取消收藏失败");
+                return R.success(true);
+            }
+            return R.success(false);
+        }
+        ret = xtqhService.collectArticle(user_Id, articleId);
+        if (ret == 0) {
+            log.info("收藏失败");
+            return R.success(false);
+        }
+        return R.success(true);
+    }
+
+    /**
+     * 返回是否收藏
+     */
+    @GetMapping("/isCollect")
+    @ApiOperation("返回是否收藏")
+    public R<Integer> isCollect(@RequestParam int articleId, HttpServletRequest request){
+        log.info("返回是否收藏接口, {}", articleId);
+        HttpSession session = request.getSession();
+        Object userIdObj = session.getAttribute("userId");
+        if (userIdObj == null) {
+            return R.error("用户未登录");
+        }
+        int user_Id = Integer.parseInt(userIdObj.toString());
+        int ret = xtqhService.isCollect(user_Id, articleId);
+        if (ret == 0) {
+            log.info("未收藏");
+            return R.success(ret);
+        }
+        return R.success(ret);
     }
 
     /**

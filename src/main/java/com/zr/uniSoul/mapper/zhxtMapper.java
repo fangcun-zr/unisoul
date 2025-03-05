@@ -41,4 +41,20 @@ public interface zhxtMapper {
 
     @Select("SELECT COUNT(*) FROM follow WHERE follower_id = #{followId} AND following_id = #{followingId}")
     int checkFollowStatus(int followId, int followingId);
+
+    int deleteArticle(int articleId);
+
+    Page<Article> pageQueryForKeyWords(PageQueryDTO pageQueryDTO);
+
+
+    Long countQueryForKeyWords(PageQueryDTO pageQueryDTO);
+
+    @Select("SELECT COUNT(*) FROM article WHERE author_id = #{userId}")
+    Integer getArticleCount(int userId);
+
+    @Select("SELECT COUNT(*) FROM follow WHERE following_id = #{userId}")
+    Integer getFollowCount(int userId);
+
+    @Select("SELECT COUNT(*) FROM follow WHERE follower_id = #{userId}")
+    Integer getFollowerCount(int userId);
 }

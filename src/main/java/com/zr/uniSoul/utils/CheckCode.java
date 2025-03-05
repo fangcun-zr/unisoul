@@ -2,7 +2,7 @@ package com.zr.uniSoul.utils;
 
 import java.util.Random;
 
-public class checkCode {
+public class CheckCode {
 
     // 定义验证码字符集，包括数字和大小写字母
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

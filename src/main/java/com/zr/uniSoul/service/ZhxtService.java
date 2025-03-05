@@ -6,8 +6,9 @@ import com.zr.uniSoul.pojo.dto.PageQueryDTO;
 import com.zr.uniSoul.pojo.dto.AddCommentsDTO;
 import com.zr.uniSoul.pojo.entity.Article;
 import com.zr.uniSoul.pojo.entity.User;
+import com.zr.uniSoul.pojo.vo.MyDataVO;
 
-public interface zhxtService {
+public interface ZhxtService {
     int findIdByUsername(String username);
 
     Integer publish(Article article);
@@ -27,4 +28,8 @@ public interface zhxtService {
     User getUserByArticleId(String articleId);
 
     int checkFollowStatus(int follow_id, int following_id);
+
+    int deleteArticle(int articleId);
+
+    MyDataVO getMyData(int userId);
 }

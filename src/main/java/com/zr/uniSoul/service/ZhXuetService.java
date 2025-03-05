@@ -1,4 +1,4 @@
 package com.zr.uniSoul.service;
 
-public interface zxwlService {
+public interface ZhXuetService {
 }

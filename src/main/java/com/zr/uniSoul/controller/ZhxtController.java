@@ -7,6 +7,7 @@ import com.zr.uniSoul.pojo.dto.PageQueryDTO;
 import com.zr.uniSoul.pojo.dto.AddCommentsDTO;
 import com.zr.uniSoul.pojo.entity.Article;
 import com.zr.uniSoul.pojo.entity.User;
+import com.zr.uniSoul.pojo.vo.MyDataVO;
 import com.zr.uniSoul.utils.AliOssUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,14 +15,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.zr.uniSoul.service.zhxtService;
+import com.zr.uniSoul.service.ZhxtService;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.UUID;
 
 /**
@@ -34,7 +34,7 @@ import java.util.UUID;
 public class ZhxtController {
 
     @Autowired
-    private zhxtService zhxtService;
+    private ZhxtService zhxtService;
 
     @Autowired
     private AliOssUtil aliOssUtil;
@@ -57,7 +57,6 @@ public class ZhxtController {
             title = new String(title.getBytes("ISO-8859-1"), "UTF-8");
             content = new String(content.getBytes("ISO-8859-1"), "UTF-8");
 
-            // 如果需要对其他字段也进行处理，可以类似操作
             tags = new String(tags.getBytes("ISO-8859-1"), "UTF-8");
             category_id = new String(category_id.getBytes("ISO-8859-1"), "UTF-8");
 
@@ -102,16 +101,45 @@ public class ZhxtController {
     }
 
     /**
+     * 删除文章
+     */
+    @DeleteMapping ("deleteArticle")
+    @ApiOperation("删除文章")
+    public R deleteArticle(@RequestParam int articleId) {
+        log.info("删除文章接口, 文章id: {}", articleId);
+        int ret = zhxtService.deleteArticle(articleId);
+        if (ret == 1) {
+            return R.success("删除成功");
+        }
+        return R.error("删除失败");
+    }
+
+    /**
      * 文章列表
      * @param pageQueryDTO
      * @return
      */
     @PostMapping("list")
-    @ApiOperation("文章列表")
+    @ApiOperation("文章分页展示")
     public R<PageResult> list(@RequestBody PageQueryDTO pageQueryDTO) {
         log.info("分页查询：{}", pageQueryDTO);
         PageResult pageResult = zhxtService.pageQuery(pageQueryDTO);
         return R.success(pageResult);
+    }
+
+    /**
+     * 获取我的信息
+     */
+    @GetMapping("getMyData")
+    @ApiOperation("获取我的信息")
+    public R<MyDataVO> getMyInfo(HttpServletRequest request) {
+
+        HttpSession session = request.getSession();
+        String username = (String) session.getAttribute("username");
+        int userId = zhxtService.findIdByUsername(username);
+        MyDataVO myDataVO = zhxtService.getMyData(userId);
+        log.info("获取我的信息接口, 用户id: {}", userId);
+        return R.success(myDataVO);
 
     }
 
@@ -212,7 +240,6 @@ public class ZhxtController {
             return R.success(authorUser);
         }
         return R.error("文章不存在");
-
     }
     /**
      * 审核文章
@@ -227,7 +254,6 @@ public class ZhxtController {
         }
         return R.error("审核失败");
     }
-
     /**
      * 检查关注状态
      */
@@ -255,6 +281,5 @@ public class ZhxtController {
         }
         log.info("未关注");
         return R.success("未关注");
-
     }
 }

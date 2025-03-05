@@ -2,6 +2,34 @@ const API_BASE_URL = 'http://localhost:8080';
 // 文章相关的API请求
 const article = {
 
+    /**
+     * 获取点赞状态
+     * @param articleData
+     * @returns {*}
+     */
+    getLikesStatus: function (articleId) {
+        return $.ajax({
+            url: `${API_BASE_URL}/xtqh/getLikesStatus?articleId=${articleId}`,
+            type: 'GET',
+            contentType: 'application/json',
+        }
+        );
+    },
+
+    /**
+     * 获取收藏状态
+     * @param articleData
+     * @returns {*}
+     */
+    getFavoritesStatus: function (articleId) {
+        return $.ajax({
+            url: `${API_BASE_URL}/xtqh/isCollect?articleId=${articleId}`,
+            type: 'GET',
+            contentType: 'application/json',
+        }
+        );
+    },
+
 
 
 
@@ -40,11 +68,12 @@ const article = {
     // 删除文章
     delete: function (articleId) {
         return $.ajax({
-            url: `${API_BASE_URL}/article/delete/${articleId}`,
+            url: `${API_BASE_URL}/zhxt/deleteArticle?articleId=${articleId}`,
             type: 'DELETE',
-            headers: {
-                'Authorization': localStorage.getItem('token')
-            }
+
+            // headers: {
+            //     'Authorization': localStorage.getItem('token')
+            // }
         });
     },
 
@@ -63,6 +92,15 @@ const article = {
         });
     },
 
+    //获取我的信息
+    getMyData: function() {
+        return $.ajax({
+            url: `${API_BASE_URL}/zhxt/getMyData`,
+            type: 'GET',
+        }
+        );
+
+    },
 
     // 获取我的文章列表
     getMyArticles: function() {

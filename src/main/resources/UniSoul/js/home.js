@@ -1,6 +1,7 @@
 // const API_BASE_URL = 'http://localhost:8080';
-
 $(document).ready(function() {
+
+
     // 检查登录状态
     // if (!localStorage.getItem('token')) {
     //     window.location.href = 'login.html';
@@ -20,34 +21,23 @@ $(document).ready(function() {
         $('#userSchool').text(user.school || '未设置学校');
         $('.avatar-lg ').attr('src', user.avatarUrl);
         // ...渲染其他用户信息
+        loadUserStats();
     }
 
-    // // 加载用户统计信息
-    // function loadUserStats() {
-    //     // 获取文章数量
-    //     article.getArticleList(1, 5)
-    //         .then(response => {
-    //             if (response.code === 1) {
-    //                 $('#articleCount').text(response.total || 0);
-    //             }
-    //         });
-    //
-    //     // 获取粉丝数量
-    //     xtqh_information.getFollowers()
-    //         .then(response => {
-    //             if (response.code === 1) {
-    //                 $('#followersCount').text(response.total || 0);
-    //             }
-    //         });
-    //
-    //     // 获取关注数量
-    //     xtqh_information.getFollowing()
-    //         .then(response => {
-    //             if (response.code === 1) {
-    //                 $('#followingCount').text(response.total || 0);
-    //             }
-    //         });
-    // }
+    // 加载用户统计信息
+    function loadUserStats() {
+        //发送请求获取用户统计信息
+        article.getMyData()
+            .then(response => {
+                if (response.code === 1 && response.data) {
+                    const userStats = response.data;
+                    $('#articleCount').text(userStats.articlesCount);
+                    $('#followersCount').text(userStats.fansCount);
+                    $('#followingCount').text(userStats.followsCount);
+                }
+            }
+            );
+    }
 // 加载文章列表
     function loadArticles(page = 1, pageSize = 5, category_id = '') {
         article.getArticleList(page, pageSize, category_id)
@@ -65,8 +55,8 @@ $(document).ready(function() {
             <img src="${article.cover_image}" alt="${article.title}" class="cover-image">
             <p class="text-muted mb-2">${article.content.substring(0, 100)}...</p>  <!-- 只显示前100个字符 -->
             <div class="meta">
-                <span><i class="far fa-folder"></i> 分类: ${article.category_id}</span>
-                <span class="ms-3"><i class="far fa-tag"></i> 标签: ${article.tags}</span>
+                <span><i class="far fa-folder"></i> 分类: ${getCategoryNameById(article.category_id)}</span>
+                <span class="ms-3"><i class="far fa-tag"></i> ${getTags(article.tags)}</span>
                 <span class="ms-3"><i class="far fa-eye"></i> 浏览次数: ${article.viewCount || 0}</span>
                 <span class="ms-3"><i class="far fa-thumbs-up"></i> 点赞数: ${article.likeCount || 0}</span>
                 <span class="ms-3"><i class="far fa-comment"></i> 评论数: ${article.commentCount || 0}</span>
@@ -79,7 +69,7 @@ $(document).ready(function() {
                     });
 
 
-                    updatePagination(response.data.total, page, pageSize);
+                    updatePagination(res0ponse.data.total, page, pageSize);
                 } else {
                     console.error('后端返回的数据无效或请求失败');
                 }
@@ -88,11 +78,53 @@ $(document).ready(function() {
                 console.error('加载文章列表失败:', error);
             });
     }
+    // 格式化标签
+    function getTags(tagsString) {
+        try {
+            // 将 JSON 字符串解析为数组
+            const tagsArray = JSON.parse(tagsString);
 
-// 格式化日期
-    function formatDate(dateStr) {
-        if (!dateStr) return '未知时间';
-        return new Date(dateStr).toLocaleString();
+            // 检查是否是一个有效的数组
+            if (!Array.isArray(tagsArray)) {
+                return ''; // 如果不是数组，返回空字符串
+            }
+
+            // 使用数组的 map 方法生成带 # 的标签字符串
+            const formattedTags = tagsArray.map(tag => `#${tag}`).join(' ');
+
+            // 返回格式化后的标签字符串
+            return formattedTags;
+        } catch (error) {
+            // 如果解析失败，返回空字符串或错误提示
+            console.error('Tags 数据格式错误:', error);
+            return '';
+        }
+    }
+    //格式化日期
+    function formatDate(dateArray) {
+        if (Array.isArray(dateArray) && dateArray.length >= 3) {
+            const [year, month, day] = dateArray;
+            // 确保月份和日为两位数
+            const formattedMonth = month.toString().padStart(2, '0');
+            const formattedDay = day.toString().padStart(2, '0');
+            return `${year}-${formattedMonth}-${formattedDay}`;
+        }
+        return ''; // 如果输入不符合要求，返回空字符串或其他默认值
+    }
+
+    //处理分类id
+    function getCategoryNameById(categoryId) {
+        // 定义类别 ID 和名称的映射关系
+        const categoryMap = {
+            1: "心理",
+            2: "学习",
+            3: "生活",
+            4: "就业",
+            // 可以继续添加更多类别
+        };
+
+        // 根据 categoryId 返回对应的名称，如果不存在则返回默认值
+        return categoryMap[categoryId] || "未知类别";
     }
 
 // 更新分页信息

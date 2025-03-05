@@ -4,7 +4,7 @@ import com.zr.uniSoul.mapper.xtqhMapper;
 import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.pojo.vo.ArticleLikesVO;
 import com.zr.uniSoul.pojo.vo.ArticleVO;
-import com.zr.uniSoul.service.xtqhService;
+import com.zr.uniSoul.service.XtqhService;
 import com.zr.uniSoul.utils.AliOssUtil;
 import com.zr.uniSoul.utils.MailUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ import java.util.UUID;
 
 @Slf4j
 @Service
-public class xtqhServiceImpl implements xtqhService {
+public class XtqhServiceImpl implements XtqhService {
 
     @Autowired
     private xtqhMapper xtqhmapper;
@@ -119,7 +119,7 @@ public class xtqhServiceImpl implements xtqhService {
             articleLikes.setIsLike(true);
             xtqhmapper.likes(articleLikes.getArticleId(), articleLikes.getLikesCount());//修改文章的点赞数量
             xtqhmapper.likesArticle(articleLikes.getUserId(), articleLikes.getArticleId(), LocalDateTime.now());//添加文章点赞和点赞着的关系
-        }else{//已经对文章点过赞了
+        }else{//已经对文章点过赞了,则取消点赞
             articleLikes.setLikesCount(articleLikes.getLikesCount() - 1);
             articleLikes.setIsLike(false);
             xtqhmapper.likes(articleLikes.getArticleId(), articleLikes.getLikesCount());//修改文章的点赞数量
@@ -163,5 +163,34 @@ public class xtqhServiceImpl implements xtqhService {
         } else {
             return true;//代表点过赞了
         }
+    }
+
+    /**
+     * 收藏文章
+     * @param userId
+     * @param articleId
+     * @return
+     */
+    @Override
+    public int collectArticle(int userId, int articleId) {
+        xtqhmapper.addFavoriteCount(articleId);
+        return xtqhmapper.collectArticle(userId, articleId);
+    }
+
+    /**
+     * 判断是否收藏
+     * @param userId
+     * @param articleId
+     * @return
+     */
+    @Override
+    public int isCollect(int userId, int articleId) {
+        return xtqhmapper.isCollect(userId, articleId);
+    }
+
+    @Override
+    public int cancelCollect(int userId, int articleId) {
+        xtqhmapper.reduceFavoriteCount(articleId);
+        return xtqhmapper.cancelCollect(userId, articleId);
     }
 }

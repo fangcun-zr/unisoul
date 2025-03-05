@@ -54,6 +54,9 @@ public class Article {
     /** 点赞数，默认为0 */
     private int likeCount;
 
+    /** 收藏数，默认未0*/
+    private int favoriteCount;
+
     /** 评论数，默认为0 */
     private int commentCount;
 

@@ -4,6 +4,17 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="generator.mapper.MessageMapper">
 
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT * FROM message WHERE id = #{id}
+    </select>
+
+    <update id="updateById">
+        UPDATE message
+        SET is_deleted = 1
+        WHERE id = #{id} AND is_deleted = 0
+    </update>
+
+
     <resultMap id="BaseResultMap" type="generator.domain.Message">
             <id property="id" column="id" />
             <result property="sender_id" column="sender_id" />
@@ -34,6 +45,21 @@
         GROUP BY contact_id
         ORDER BY lastMessageTime DESC
     </select>
+
+
+<!--    <select id="selectById" resultType="generator.domain.Message">-->
+<!--        SELECT-->
+<!--            id,-->
+<!--            sender_id,-->
+<!--            receiver_id,-->
+<!--            content,-->
+<!--            send_time,-->
+<!--            read_status,-->
+<!--            parent_id,-->
+<!--            is_deleted-->
+<!--        FROM message-->
+<!--        WHERE id = #{id}-->
+<!--    </select>-->
 
     <sql id="Base_Column_List">
         id,sender_id,receiver_id,content,send_time,read_status,

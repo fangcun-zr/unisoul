@@ -8,6 +8,7 @@ import generator.domain.MessageThread;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,8 @@ public interface MessageMapper extends BaseMapper<Message> {
 //    );
     // Mapper 接口修正
 //    Page<MessageThread> selectThreadBaseInfo(@Param("currentUserId") Long currentUserId);
+    @Update("UPDATE message SET is_deleted = 1 WHERE id = #{id} AND is_deleted = 0")
+    int updateById(@Param("id") Long id);
 
 
     // Mapper 接口
