@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zr.uniSoul.mapper.AssessmentMapper">
+
+<!--    <insert id="startAssessment" useGeneratedKeys="true" keyProperty="session_id">-->
+<!--        INSERT INTO assessment_session (user_id, assessment_id, start_time)-->
+<!--        VALUES (#{userId}, #{assessment_id}, #{start_time})-->
+<!--    </insert>-->
+
+    <select id="getAssessments" resultType="com.zr.uniSoul.pojo.vo.AssessmentVO">
+        SELECT
+        id,
+        category_id,
+        name,
+        introduction,
+        questions_count,
+        created_at,
+        csCount
+        FROM
+        assessment
+        <where>
+            <if test="categoryId != 0">
+                AND category_id = #{categoryId}
+            </if>
+        </where>
+        ORDER BY created_at DESC
+</select>
+</mapper>
