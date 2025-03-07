@@ -411,7 +411,6 @@ $(document).ready(function() {
 
         //文章收藏和取消收藏
         $('.btn-favorite').click(function() {
-            alert("收藏")
             const $btn = $(this);
             const articleId = getArticleIdFromUrl();
 
