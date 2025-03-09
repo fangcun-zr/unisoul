@@ -12,7 +12,7 @@ import java.util.List;
  * 测评服务接口
  */
 public interface AssessmentService {
-    AssessmentVO getAssessments(int categoryId);
+    List<AssessmentVO> getAssessments(int categoryId);
 
     String startAssessment(int id, int userId);
 

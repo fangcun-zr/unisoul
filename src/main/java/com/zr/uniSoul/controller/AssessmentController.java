@@ -36,9 +36,9 @@ public class AssessmentController {
      *   接口地址：https://app.apifox.com/link/project/5787034/apis/api-268581116
      */
     @RequestMapping("/list")
-    public R<AssessmentVO> list(@RequestParam int category_id){
+    public R<List<AssessmentVO>> list(@RequestParam int category_id){
         log.info("获取测评列表category_id:{}",category_id);
-        AssessmentVO ret = assessmentService.getAssessments(category_id);
+        List<AssessmentVO> ret = assessmentService.getAssessments(category_id);
         if (ret != null){
             log.info("获取测评列表成功");
             return R.success(ret);

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI心理咨询 - 心旅坊</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/element-ui@2.15.7/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../css/ai_counselor.css">
+</head>
+<body>
+<!-- 背景装饰 -->
+<div class="background-decoration">
+    <div class="circle c1"></div>
+    <div class="circle c2"></div>
+    <div class="circle c3"></div>
+    <div class="wave-container">
+        <svg viewBox="0 0 1440 320" class="wave">
+            <path fill="#4299e1" fill-opacity="0.2" d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+        </svg>
+    </div>
+    <div class="particles" id="particles-js"></div>
+</div>
+
+<!-- 导航栏 -->
+<nav class="navbar navbar-expand-lg navbar-glass fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="dashboard.html">
+            <img src="../images/logo.png" alt="Logo" class="nav-logo">
+            心旅坊 AI助手
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="home.html">
+                        <i class="fas fa-home"></i> 首页
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="help-center.html">
+                        <i class="fas fa-question-circle"></i> 帮助
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                        <img src="../images/avatar.png" alt="Avatar" class="nav-avatar">
+                        <span class="username">用户名</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="xtqh_information.html">个人信息</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="#" id="logoutBtn">退出登录</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="chat-container">
+    <!-- 左侧会话列表 -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <button class="new-chat-btn">
+                <i class="fas fa-plus"></i>
+                新建会话
+            </button>
+        </div>
+        <div class="chat-history">
+            <!-- 历史会话列表 -->
+        </div>
+        <!-- AI助手选择 -->
+        <div class="ai-selector">
+            <h5>选择AI助手</h5>
+            <div class="ai-options">
+                <div class="ai-option active">
+                    <img src="../images/ai-counselor.png" alt="心理咨询师">
+                    <span>心理咨询师</span>
+                </div>
+                <div class="ai-option">
+                    <img src="../images/ai-friend.png" alt="知心朋友">
+                    <span>知心朋友</span>
+                </div>
+                <div class="ai-option">
+                    <img src="../images/ai-expert.png" alt="专业顾问">
+                    <span>专业顾问</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 右侧主聊天区域 -->
+    <div class="main-content">
+        <!-- 顶部导航 -->
+        <nav class="chat-nav">
+            <div class="nav-left">
+                <button class="toggle-sidebar">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="current-ai">
+                    <img src="../images/ai-counselor.png" alt="当前AI">
+                    <div class="ai-info">
+                        <h2>AI心理咨询师</h2>
+                        <span class="status online">在线</span>
+                    </div>
+                </div>
+            </div>
+            <div class="nav-right">
+                <button class="feature-btn" title="深度分析">
+                    <i class="fas fa-brain"></i>
+                </button>
+                <button class="feature-btn" title="情绪识别">
+                    <i class="fas fa-smile"></i>
+                </button>
+                <button class="feature-btn" title="设置">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+        </nav>
+
+        <!-- 聊天内容区域 -->
+        <div class="chat-content">
+            <!-- 欢迎信息 -->
+            <div class="welcome-section animate__animated animate__fadeIn">
+                <div class="ai-avatar">
+                    <img src="../images/ai-counselor.png" alt="AI头像">
+                </div>
+                <h2>你好，我是心旅坊AI助手</h2>
+                <p>我是一位经过专业训练的AI心理咨询师，随时准备倾听你的心声。</p>
+                <div class="feature-cards">
+                    <div class="feature-card animate__animated animate__fadeInUp">
+                        <i class="fas fa-heart"></i>
+                        <h3>情感支持</h3>
+                        <p>提供温暖的情感支持和理解</p>
+                    </div>
+                    <div class="feature-card animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
+                        <i class="fas fa-comments"></i>
+                        <h3>深度对话</h3>
+                        <p>进行有意义的深度交流</p>
+                    </div>
+                    <div class="feature-card animate__animated animate__fadeInUp" style="animation-delay: 0.4s;">
+                        <i class="fas fa-shield-alt"></i>
+                        <h3>隐私保护</h3>
+                        <p>严格保护您的隐私信息</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 聊天记录 -->
+            <div class="messages-container">
+                <!-- 消息将通过JS动态加载 -->
+            </div>
+        </div>
+
+        <!-- 输入区域 -->
+        <div class="input-section">
+            <div class="input-tools">
+                <button class="tool-btn" title="表情">
+                    <i class="fas fa-smile"></i>
+                </button>
+                <button class="tool-btn" title="图片">
+                    <i class="fas fa-image"></i>
+                </button>
+                <button class="tool-btn" title="文件">
+                    <i class="fas fa-paperclip"></i>
+                </button>
+            </div>
+            <div class="input-container">
+                <textarea id="messageInput" placeholder="输入你想说的..." rows="1"></textarea>
+                <div class="input-actions">
+                    <button class="send-btn" disabled>
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="input-features">
+                <button class="feature-btn" title="语音输入">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <button class="feature-btn" title="深度思考">
+                    <i class="fas fa-brain"></i>
+                </button>
+                <button class="feature-btn" title="联网搜索">
+                    <i class="fas fa-globe"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 右侧信息面板 -->
+    <div class="info-panel">
+        <div class="panel-header">
+            <h3>会话信息</h3>
+            <button class="close-panel">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="panel-content">
+            <div class="session-info">
+                <h4>当前会话</h4>
+                <div class="info-item">
+                    <span>开始时间</span>
+                    <span>2024-01-20 14:30</span>
+                </div>
+                <div class="info-item">
+                    <span>对话数量</span>
+                    <span>23条</span>
+                </div>
+            </div>
+            <div class="emotion-analysis">
+                <h4>情绪分析</h4>
+                <div class="emotion-chart">
+                    <!-- 情绪分析图表将通过JS动态加载 -->
+                </div>
+            </div>
+            <div class="key-points">
+                <h4>关键词</h4>
+                <div class="tags">
+                    <span class="tag">压力</span>
+                    <span class="tag">工作</span>
+                    <span class="tag">家庭</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 设置模态框 -->
+<div class="modal fade" id="settingsModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">设置</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-section">
+                    <h6>AI个性设置</h6>
+                    <div class="setting-item">
+                        <label>回复风格</label>
+                        <select class="form-select">
+                            <option value="professional">专业严谨</option>
+                            <option value="friendly">亲切友好</option>
+                            <option value="encouraging">鼓励支持</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label>回复长度</label>
+                        <div class="form-range-wrapper">
+                            <input type="range" class="form-range" min="1" max="3">
+                            <div class="range-labels">
+                                <span>简短</span>
+                                <span>适中</span>
+                                <span>详细</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h6>界面设置</h6>
+                    <div class="setting-item">
+                        <label>主题色</label>
+                        <div class="color-options">
+                            <button class="color-btn active" data-color="default"></button>
+                            <button class="color-btn" data-color="purple"></button>
+                            <button class="color-btn" data-color="green"></button>
+                            <button class="color-btn" data-color="orange"></button>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <label>字体大小</label>
+                        <div class="btn-group">
+                            <button class="btn btn-outline-primary">小</button>
+                            <button class="btn btn-primary">中</button>
+                            <button class="btn btn-outline-primary">大</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/element-ui@2.15.7/lib/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+<script src="../api/ai_counselor.js"></script>
+<script src="../js/ai_counselor.js"></script>
+</body>
+</html>

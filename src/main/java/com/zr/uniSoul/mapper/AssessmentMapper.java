@@ -13,7 +13,7 @@ import java.util.List;
 @Mapper
 public interface AssessmentMapper {
 
-    AssessmentVO getAssessments(int categoryId);
+    List<AssessmentVO> getAssessments(int categoryId);
 
 
     @Insert("INSERT INTO assessment_session (user_id, assessment_id, start_time,sessionUuid) VALUES (#{userId}, #{assessmentId}, #{startTime},#{sessionUuid})")

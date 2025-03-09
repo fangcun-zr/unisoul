@@ -29,7 +29,7 @@ public class AssessmentServiceImpl implements AssessmentService {
     private AssessmentMapper assessmentMapper;
 
     @Override
-    public AssessmentVO getAssessments(int categoryId) {
+    public List<AssessmentVO> getAssessments(int categoryId) {
         //根据id查询不同分类的测评
         return assessmentMapper.getAssessments(categoryId);
     }

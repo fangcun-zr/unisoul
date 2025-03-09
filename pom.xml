@@ -13,7 +13,7 @@
     <artifactId>UniSoul</artifactId>
     <version>1.0-SNAPSHOT</version>
     <properties>
-        <java.version>14</java.version>
+        <java.version>17</java.version>
     </properties>
     <dependencies>
 
@@ -198,7 +198,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
-            <version>6.1.2</version>
+            <version>5.3.22</version>
         </dependency>
 
     </dependencies>

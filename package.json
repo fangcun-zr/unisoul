@@ -2,6 +2,7 @@
   "name": "UniSoul",
   "version": "1.0.0",
   "dependencies": {
-    "dayjs": "^1.11.13"
+    "dayjs": "^1.11.13",
+    "element-ui": "^2.15.14"
   }
 }
