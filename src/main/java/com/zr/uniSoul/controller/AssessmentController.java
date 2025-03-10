@@ -65,7 +65,6 @@ public class AssessmentController {
             return R.success(sessionUuid);
         }
         return R.error("开始测评失败");
-
     }
     /**
      * 获取测试题目
