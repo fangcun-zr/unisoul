@@ -57,4 +57,6 @@ public interface zhxtMapper {
 
     @Select("SELECT COUNT(*) FROM follow WHERE follower_id = #{userId}")
     Integer getFollowerCount(int userId);
+
+    String getContent(int id);
 }

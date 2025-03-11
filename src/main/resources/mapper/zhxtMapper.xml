@@ -79,4 +79,7 @@
         AND category_id = #{category_id}</if> <if test="keyWords != null and keyWords != ''">
         AND (title LIKE CONCAT('%', #{keyWords}, '%') OR content LIKE CONCAT('%', #{keyWords}, '%'))</if></where>
     </select>
+    <select id="getContent" resultType="java.lang.String">
+        select content from article where id = #{id}
+    </select>
 </mapper>

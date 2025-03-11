@@ -11,6 +11,7 @@ import com.zr.uniSoul.pojo.entity.Comments;
 import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.pojo.vo.MyDataVO;
 import com.zr.uniSoul.service.ZhxtService;
+import com.zr.uniSoul.utils.TextSummarizerUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,8 @@ public class ZhxtServiceImpl implements ZhxtService {
 
     @Autowired
     private zhxtMapper zhxtMapper;
+    @Autowired
+    private TextSummarizerUtil textSummarizerUtil;
     @Override
     public int findIdByUsername(String username) {
         return zhxtMapper.findIdByUsername(username);
@@ -181,9 +184,18 @@ public class ZhxtServiceImpl implements ZhxtService {
         return myDataVO;
 
     }
+
     /**
-     * 预约服务
+     * 返回概括后的文本
+     * @param id
+     * @param ratio
+     * @return
      */
+    @Override
+    public String generateSummary(int id,float ratio) {
+        String content = zhxtMapper.getContent(id);
+        return textSummarizerUtil.summarize(content, ratio);
+    }
 
 
 }

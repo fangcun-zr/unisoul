@@ -32,4 +32,6 @@ public interface ZhxtService {
     int deleteArticle(int articleId);
 
     MyDataVO getMyData(int userId);
+
+    String generateSummary(int id,float ratio);
 }
