@@ -5,6 +5,7 @@ import com.zr.uniSoul.pojo.entity.ConsultMessage;
 import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.pojo.vo.MessageConsultVO;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -38,4 +39,6 @@ public interface MessageConsultService {
      * @param contentId
      */
     void deleteMessage(String senderId,int contentId);
+
+    String getReply(String question, HttpSession session);
 }
