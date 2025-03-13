@@ -218,10 +218,10 @@ public class XtqhController {
         ArticleLikesVO articleLikesVO = new ArticleLikesVO();
         articleLikesVO.setLikesCount(LikesCount);
         articleLikesVO.setArticleId(ArticleId);
-        if(!new Boolean(isLike).booleanValue()) isLike = false;
-        articleLikesVO.setIsLike(isLike);
-        String name = request.getSession().getAttributeNames().nextElement();
         Long userId = (Long)request.getSession().getAttribute("userId");
+        boolean ret = xtqhService.inquireLikeStatus(Long.valueOf(userId), ArticleId);
+        if(ret) isLike = false;
+        articleLikesVO.setIsLike(isLike);
         articleLikesVO.setUserId(userId);
         log.info("点赞接口, 点赞: {}", articleLikesVO);
         articleLikesVO  = xtqhService.likes(articleLikesVO);

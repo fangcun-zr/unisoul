@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zr.uniSoul.mapper.TopicMapper">
+    <select id="getTopicsByTags" resultType="com.zr.uniSoul.pojo.entity.Topic">
+        SELECT t.*
+        FROM topics t
+        INNER JOIN topic_tags tt ON t.id = tt.topic_id
+        INNER JOIN tags tg ON tt.tag_id = tg.id
+        WHERE tg.name IN
+        <foreach item="tag" collection="tags" open="(" separator="," close=")">
+            #{tag}
+        </foreach>
+        AND t.is_deleted = 0
+        AND tt.is_deleted = 0
+        AND tg.is_deleted = 0
+        GROUP BY t.id
+    </select>
+</mapper>

@@ -1,16 +1,23 @@
 server:
   port: 8080
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
 spring:
+
   application:
     name: UniSoul
   datasource:
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost:3306/xinlvfang?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
-      username: root
-      password: 040809
+      url: jdbc:mysql://rm-bp118w7f3e3a201zwco.mysql.rds.aliyuncs.com:3306/xinlvfang?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+      username: fangcun2
+      password: Fangcun123
   main:
     allow-bean-definition-overriding: true
+    allow-circular-references: true
   servlet:
     multipart:
       max-file-size: 20MB
@@ -25,19 +32,26 @@ mybatis-plus:
     db-config:
       # 设置主键类型为ASSIGN_ID，表示主键由MyBatis-Plus自动生成，并使用雪花算法生成ID
       id-type: ASSIGN_ID
+      logic-delete-field: isDeleted  # 逻辑删除字段
+      logic-delete-value: 1          # 删除标记值
+      logic-not-delete-value: 0      # 未删除标记值
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.zr.uniSoul.pojo.entity
+
 unisoul:
   alioss:
     endpoint: oss-cn-chengdu.aliyuncs.com
     accessKeyId: LTAI5tDZHAq7wyyUY6vfSda9
     accessKeySecret: ot8o6jjntLvCEDNoHG9QqvQ9wgSuns
     bucketName: uni-soul
-pagehelper:
-  helper-dialect: mysql
-  reasonable: true
-  support-methods-arguments: true
-  params: count=countSql
 
+logging:
+  level:
+    com.example.mapper: debug
 
+ai:
+  config:
+    deepseek:
+      apiKey: sk-ccf7d94300ab4880bb06e3cc3008f168
+      baseUrl: https://api.deepseek.com/chat/completions

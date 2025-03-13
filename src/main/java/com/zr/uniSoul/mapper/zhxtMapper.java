@@ -9,6 +9,7 @@ import com.zr.uniSoul.pojo.entity.Comments;
 import com.zr.uniSoul.pojo.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.springframework.context.annotation.Lazy;
 
 @Mapper
 public interface zhxtMapper {
@@ -30,7 +31,6 @@ public interface zhxtMapper {
     @Select("SELECT COUNT(*) FROM article")
     Long countQueryAll();
 
-
     Long countQuery(PageQueryDTO pageQueryDTO);
 
     Article getArticleDetailById(int articleId);
@@ -43,9 +43,7 @@ public interface zhxtMapper {
     int checkFollowStatus(int followId, int followingId);
 
     int deleteArticle(int articleId);
-
     Page<Article> pageQueryForKeyWords(PageQueryDTO pageQueryDTO);
-
 
     Long countQueryForKeyWords(PageQueryDTO pageQueryDTO);
 
