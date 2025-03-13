@@ -2,17 +2,65 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.zr.uniSoul.mapper.AdminMapper">
+    <insert id="addAssessment">
+        insert into assessment (category_id,name,introduction,questions_count,created_at)
+        values (#{categoryId},#{name},#{introduction},#{questionCount},now())
+    </insert>
+    <insert id="addQuestions">
+        INSERT INTO question
+        (assessment_id, topic, question_type, sort_order, options)
+        VALUES
+        <foreach collection="questions" item="q" separator=",">
+            (
+            #{assessmentId},
+            #{q.topic},
+            #{q.questionType.jsonValue},
+            #{q.sortOrder},
+            #{q.options}  <!-- 移除了typeHandler -->
+            )
+        </foreach>
+    </insert>
     <update id="bannedUser">
         update user set status = #{status} where id = #{userId}
     </update>
     <update id="setArticle">
         update article set status = #{status} where id = #{articleId}
     </update>
+    <update id="saveAssessment">
+        update assessment set name = #{name}, introduction = #{introduction}, questions_count = #{questionCount} ,category_id = #{categoryId} where id = #{id}
+    </update>
+    <!-- 批量更新已有问题 -->
+    <update id="updateQuestions">
+        UPDATE question
+        SET
+        topic = CASE <foreach collection="questions" item="q">WHEN question_id = #{q.questionId} THEN #{q.topic} </foreach> END,
+        question_type = CASE <foreach collection="questions" item="q">WHEN question_id = #{q.questionId} THEN #{q.questionType} </foreach> END,
+        sort_order = CASE <foreach collection="questions" item="q">WHEN question_id = #{q.questionId} THEN #{q.sortOrder} </foreach> END,
+        options = CASE <foreach collection="questions" item="q">WHEN question_id = #{q.questionId} THEN #{q.options} </foreach> END
+        WHERE assessment_id = #{assessmentId}
+        AND question_id IN (  <!-- 添加IN条件限定question_id范围 -->
+        <foreach collection="questions" item="q" separator=",">
+            #{q.questionId}
+        </foreach>
+        )
+    </update>
+
+    <!-- 批量插入新问题 -->
+    <insert id="insertQuestions">
+        INSERT INTO question (assessment_id, topic, question_type, sort_order, options)
+        VALUES
+        <foreach collection="questions" item="q" separator=",">
+            (#{assessmentId}, #{q.topic}, #{q.questionType}, #{q.sortOrder}, #{q.options})
+        </foreach>
+    </insert>
     <delete id="deleteUser">
        delete from user where id = #{id}
     </delete>
     <delete id="deleteArticleComment">
         delete from article_comment where id = #{id}
+    </delete>
+    <delete id="deleteQuestion">
+        delete from question where question_id = #{id}
     </delete>
 
     <select id="getIsAdmin" resultType="java.lang.Integer">
@@ -21,6 +69,19 @@
     <select id="getAllUsersList" resultType="com.zr.uniSoul.pojo.vo.UserVO">
         select id,created_at,email,username,name,age,gender,school,biography,avatarUrl,status
         from user
+    </select>
+    <select id="getAssessmentId" resultType="java.lang.Integer">
+        select id from assessment where name = #{surveyName}
+    </select>
+    <select id="getAssessment" resultType="com.zr.uniSoul.pojo.vo.AssessmentVO">
+        select id, category_id, name, introduction,questions_count, created_at,csCount
+        from assessment
+        where id = #{id}
+    </select>
+    <select id="getQuestions" resultType="com.zr.uniSoul.pojo.vo.QuestionsVo">
+        select question_id,topic,question_type,options,sort_order
+        from question
+        where assessment_id = #{id}
     </select>
 
 </mapper>

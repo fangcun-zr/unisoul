@@ -1,7 +1,9 @@
 package com.zr.uniSoul.controller;
 
 import com.zr.uniSoul.common.R;
+import com.zr.uniSoul.pojo.dto.AssessmentDTO;
 import com.zr.uniSoul.pojo.dto.BannedDTO;
+import com.zr.uniSoul.pojo.vo.AssessmentVO;
 import com.zr.uniSoul.pojo.vo.UserVO;
 import com.zr.uniSoul.service.AdminService;
 import lombok.extern.slf4j.Slf4j;
@@ -122,4 +124,78 @@ public class AdminController {
             return R.error("操作失败");
         }
     }
+
+    @PostMapping("/addAssessment")
+    public R<String> addAssessment(@RequestBody AssessmentDTO assessmentDTO, HttpServletRequest request) {
+        log.info("添加测评{}",assessmentDTO);
+        if(!judgeAdmin(request)) {
+            return R.error("非管理员账户，没有权限");
+        }
+        int ret = adminService.addAssessment(assessmentDTO);
+        if(ret>0){
+            return R.success("操作成功");
+        }
+        else {
+            return R.error("操作失败");
+        }
+
+    }
+
+    /**
+     * 保存测评
+     * @param assessmentDTO
+     * @param request
+     * @return
+     */
+    @PostMapping("/saveAssessment")
+    public R<String> changeAssessment(@RequestBody AssessmentDTO assessmentDTO, HttpServletRequest request) {
+        log.info("保存测评{}",assessmentDTO);
+        if(!judgeAdmin(request)) {
+            return R.error("非管理员账户，没有权限");
+        }
+        int ret = adminService.saveAssessment(assessmentDTO);
+        if(ret>0){
+            return R.success("操作成功");
+        }
+        else {
+            return R.error("操作失败");
+        }
+    }
+
+    /**
+     * 获取测评 的详情（修改测评）
+     * @param id
+     * @param request
+     * @return
+     */
+    @GetMapping("/changeAssessment")
+    public R<AssessmentVO> changeAssessment(@RequestParam int id, HttpServletRequest request) {
+        log.info("修改测评{}",id);
+        if(!judgeAdmin(request)) {
+            return R.error("非管理员账户，没有权限");
+        }
+       AssessmentVO ret = adminService.changeAssessment(id);
+        if(ret!=null){
+            return R.success(ret);
+        }
+        else {
+            return R.error("操作失败");
+        }
+    }
+
+    @DeleteMapping("/deleteQuestion")
+    public R<String> deleteQuestion(@RequestParam int id,HttpServletRequest request){
+        log.info("删除问题{}",id);
+        if(!judgeAdmin(request)) {
+            return R.error("非管理员账户，没有权限");
+        }
+        int ret = adminService.deleteQuestion(id);
+        if(ret==1){
+            return R.success("操作成功");
+        }
+        else {
+            return R.error("操作失败");
+        }
+    }
+
 }

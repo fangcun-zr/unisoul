@@ -19,4 +19,6 @@ public class AssessmentVO {
     private Integer csCount;
     //该测评问题的数量
     private Integer questionsCount;
+
+    private QuestionsVo[] questionsVo;
 }

@@ -4,6 +4,9 @@ import lombok.Data;
 
 @Data
 public class QuestionsVo {
+
+    //id
+    private Integer questionId ;
     //题干
     private String topic ;
 
@@ -15,6 +18,10 @@ public class QuestionsVo {
 
     //类型
     private String questionType ;
+
+    /**
+     * question_id,topic,question_type,options,sort_order
+     */
 
 
 }

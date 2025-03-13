@@ -1,7 +1,12 @@
 package com.zr.uniSoul.mapper;
 
+import com.zr.uniSoul.pojo.dto.AssessmentDTO;
+import com.zr.uniSoul.pojo.dto.QuestionDTO;
+import com.zr.uniSoul.pojo.vo.AssessmentVO;
+import com.zr.uniSoul.pojo.vo.QuestionsVo;
 import com.zr.uniSoul.pojo.vo.UserVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -19,4 +24,22 @@ public interface AdminMapper {
     int setArticle(int articleId, int status);
 
     int deleteArticleComment(int id);
+
+    int addAssessment(AssessmentDTO assessmentDTO);
+
+    int addQuestions(@Param("questions") QuestionDTO[] questions, @Param("assessmentId") int assessmentId);
+
+    int getAssessmentId(String name);
+
+    int saveAssessment(AssessmentDTO assessmentDTO);
+
+    int updateQuestions(@Param("questions")QuestionDTO[] questions, String assessmentId);
+
+    int insertQuestions(@Param("questions")QuestionDTO[] questions, String assessmentId);
+
+    int deleteQuestion(int id);
+
+    AssessmentVO getAssessment(int id);
+
+    QuestionsVo[] getQuestions(int id);
 }
