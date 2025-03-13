@@ -2,14 +2,21 @@ package com.zr.uniSoul.service.impl;
 
 
 import com.zr.uniSoul.mapper.AdminMapper;
+import com.zr.uniSoul.pojo.dto.AssessmentDTO;
+import com.zr.uniSoul.pojo.dto.QuestionDTO;
+import com.zr.uniSoul.pojo.vo.AssessmentVO;
+import com.zr.uniSoul.pojo.vo.QuestionsVo;
 import com.zr.uniSoul.pojo.vo.UserVO;
 import com.zr.uniSoul.service.AdminService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 后台管理service实现
@@ -98,6 +105,75 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public int deleteArticleComment(int id) {
         return adminMapper.deleteArticleComment(id);
+    }
+
+    @Override
+    public int addAssessment(AssessmentDTO assessmentDTO) {
+        int ret1 = adminMapper.addAssessment(assessmentDTO);
+        int assessmentId = adminMapper.getAssessmentId(assessmentDTO.getName());
+        if (ret1>0){
+            List<QuestionDTO> questionDTOList = assessmentDTO.getQuestions();
+            log.info(questionDTOList.toString());
+            QuestionDTO[] questionArray = questionDTOList.toArray(new QuestionDTO[0]);
+            log.info(Arrays.toString(questionArray));
+            return adminMapper.addQuestions(questionArray ,assessmentId);
+        }
+        return 0;
+    }
+
+    /**
+     * 保存测评
+     * @param assessmentDTO
+     * @return
+     */
+    @Override
+    @Transactional
+    public int saveAssessment(AssessmentDTO assessmentDTO) {
+        //先修改测评表
+        int ret1 = adminMapper.saveAssessment(assessmentDTO);
+        if(ret1==0){
+            return 0;
+        }
+        List<QuestionDTO> questionDTOList = assessmentDTO.getQuestions();
+        List<QuestionDTO> toUpdate = questionDTOList.stream()
+                .filter(q -> q.getQuestionId() != null)
+                .collect(Collectors.toList());
+
+        List<QuestionDTO> toInsert = questionDTOList.stream()
+                .filter(q -> q.getQuestionId() == null)
+                .collect(Collectors.toList());
+
+        int ret2 = 0;
+        int ret3 = 0;
+        if (!toUpdate.isEmpty()) {
+            adminMapper.updateQuestions(toUpdate.toArray(new QuestionDTO[0]), assessmentDTO.getId());
+        }
+        if (!toInsert.isEmpty()) {
+            adminMapper.insertQuestions(toInsert.toArray(new QuestionDTO[0]), assessmentDTO.getId());
+        }
+        //再修改问题表
+        return ret1+ret2+ret3;
+    }
+
+    /**
+     * 删除问题
+     * @param id
+     * @return
+     */
+    @Override
+    public int deleteQuestion(int id) {
+        return adminMapper.deleteQuestion(id);
+
+    }
+
+    @Override
+    public AssessmentVO changeAssessment(int id) {
+        //先封装assessment
+        AssessmentVO assessmentVO = adminMapper.getAssessment(id);
+        //封装问题
+        QuestionsVo[] questionVOList = adminMapper.getQuestions(id);
+        assessmentVO.setQuestionsVo(questionVOList);
+        return assessmentVO;
     }
 
     //TODO 后台管理

@@ -1,5 +1,7 @@
 package com.zr.uniSoul.service;
 
+import com.zr.uniSoul.pojo.dto.AssessmentDTO;
+import com.zr.uniSoul.pojo.vo.AssessmentVO;
 import com.zr.uniSoul.pojo.vo.UserVO;
 
 import java.util.List;
@@ -24,4 +26,23 @@ public interface AdminService {
      * @return
      */
     int deleteArticleComment(int id);
+
+    /**
+     * 添加测评
+     * @param assessmentDTO
+     * @return
+     */
+    int addAssessment(AssessmentDTO assessmentDTO);
+
+    /**
+     * 修改测评
+     * @param assessmentDTO
+     * @return
+     */
+    int saveAssessment(AssessmentDTO assessmentDTO);
+
+    int deleteQuestion(int id);
+
+    AssessmentVO changeAssessment(int id);
+
 }
