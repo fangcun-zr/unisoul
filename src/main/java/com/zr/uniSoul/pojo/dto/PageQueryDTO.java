@@ -20,4 +20,5 @@ public class PageQueryDTO {
     //关键词
     @JsonProperty("keyWords")
     private String keyWords;
+
 }

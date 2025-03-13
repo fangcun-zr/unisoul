@@ -17,6 +17,8 @@ public class Article {
     /** 文章ID */
     private int id;
 
+    /** 隶属的专栏的id */
+    private Integer columnId;
     /** 文章标题 */
     private String title;
 

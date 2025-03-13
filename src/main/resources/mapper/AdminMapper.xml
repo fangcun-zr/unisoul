@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zr.uniSoul.mapper.AdminMapper">
+    <update id="bannedUser">
+        update user set status = #{status} where id = #{userId}
+    </update>
+    <update id="setArticle">
+        update article set status = #{status} where id = #{articleId}
+    </update>
+    <delete id="deleteUser">
+       delete from user where id = #{id}
+    </delete>
+    <delete id="deleteArticleComment">
+        delete from article_comment where id = #{id}
+    </delete>
+
+    <select id="getIsAdmin" resultType="java.lang.Integer">
+        select isadmin from user where id = #{userId}
+    </select>
+    <select id="getAllUsersList" resultType="com.zr.uniSoul.pojo.vo.UserVO">
+        select id,created_at,email,username,name,age,gender,school,biography,avatarUrl,status
+        from user
+    </select>
+
+</mapper>

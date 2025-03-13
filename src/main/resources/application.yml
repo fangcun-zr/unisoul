@@ -1,23 +1,21 @@
 server:
   port: 8080
   servlet:
-    encoding:
-      charset: UTF-8
-      enabled: true
-      force: true
+      encoding:
+        charset: UTF-8
+        enabled: true
+        force: true
 spring:
-
   application:
     name: UniSoul
   datasource:
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://rm-bp118w7f3e3a201zwco.mysql.rds.aliyuncs.com:3306/xinlvfang?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
-      username: fangcun2
-      password: Fangcun123
+      url: jdbc:mysql://localhost:3306/xinlvfang?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+      username: root
+      password: 123456
   main:
     allow-bean-definition-overriding: true
-    allow-circular-references: true
   servlet:
     multipart:
       max-file-size: 20MB
@@ -49,9 +47,3 @@ unisoul:
 logging:
   level:
     com.example.mapper: debug
-
-ai:
-  config:
-    deepseek:
-      apiKey: sk-ccf7d94300ab4880bb06e3cc3008f168
-      baseUrl: https://api.deepseek.com/chat/completions

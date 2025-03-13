@@ -1,7 +1,7 @@
 package com.zr.uniSoul.pojo.vo;
 
 import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
+
 
 import java.time.LocalDateTime;
 
@@ -10,6 +10,9 @@ public class ArticleVO {
     /** 文章ID */
     private int id;
 
+    /**隶属的专栏的id*/
+    private Integer columnId;
+
     /** 文章标题 */
     private String title;
 
@@ -17,13 +20,13 @@ public class ArticleVO {
     private String content;
 
     /** 分类ID (1:心理 2:学习 3:生活 4:就业) */
-    private int category_id;
+    private int categoryId;
 
     /** 子分类ID，可以为空 */
     private Integer subCategoryId;
 
     /** 封面图片URL，可以为空 */
-    private String cover_image;
+    private String coverImage;
 
     /** 标签 (逗号分隔)，可以为空 */
     private String tags;
@@ -45,10 +48,10 @@ public class ArticleVO {
     private int commentCount;
 
     /** 创建时间，默认为当前时间 */
-    private LocalDateTime create_time;
+    private LocalDateTime createTime;
 
     /** 更新时间，默认为当前时间，数据更新时自动更新 */
-    private LocalDateTime update_time;
+    private LocalDateTime updateTime;
 
 
 }

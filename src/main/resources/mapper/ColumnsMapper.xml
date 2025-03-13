@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zr.uniSoul.mapper.ColumnsMapper">
+    <insert id="insertSelective">
+        insert into columns (user_id,title,description,category_id,cover_url,subscribers,created_at)
+        values (#{userId},#{title},#{description},#{categoryId},#{coverUrl},0,now())
+    </insert>
+    <update id="addArticleToColum">
+        UPDATE article
+        SET column_id = #{columnId}
+        WHERE id = #{articleId};
+    </update>
+    <update id="removeArticleFromColumn">
+        UPDATE article
+        SET column_id = NULL
+        WHERE id = #{articleId};
+    </update>
+    <update id="ColumnUpdate">
+        UPDATE columns
+        SET article_count = article_count - 1
+        WHERE id = #{columnId};
+    </update>
+    <update id="ColumnAdd">
+        UPDATE columns
+        SET article_count = article_count + 1
+        WHERE id = #{columnId};
+    </update>
+
+    <select id="pageQuery" resultType="com.zr.uniSoul.pojo.entity.Columns">
+        select * from columns
+        <where>
+            <if test="keyWords != null and keyWords != ''">
+                and title like concat('%',#{keyWords},'%')
+            </if>
+            <if test="category_id != null">
+                and category_id = #{category_id}
+            </if>
+        </where>
+        order by subscribers asc , created_at desc
+    </select>
+    <select id="getMyColumns" resultType="com.zr.uniSoul.pojo.vo.ColumnsVO">
+        select *
+        from columns where user_id = #{userId} order by created_at desc
+    </select>
+
+
+    <resultMap id="article" type="com.zr.uniSoul.pojo.entity.Article">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="category_id" column="category_id"/>
+        <result property="cover_image" column="cover_image"/> <!-- 确保字段名一致 -->
+        <result property="tags" column="tags"/>
+        <result property="author_id" column="author_id"/>
+        <result property="status" column="status"/>
+        <result property="viewCount" column="view_count"/>
+        <result property="likeCount" column="like_count"/>
+        <result property="commentCount" column="comment_count"/>
+        <result property="create_time" column="create_time"/>
+        <result property="update_time" column="update_time"/>
+        <result property="columnId" column="column_id"/>
+    </resultMap>
+
+    <select id="getArticleList" resultMap="article">
+        select id,title,content,cover_image,tags,author_id,status,view_count,like_count,comment_count,create_time,update_time,column_id
+        from article
+        <where>
+            column_id = #{columnsId}
+        </where>
+        order by like_count asc, create_time desc
+    </select>
+    <select id="getMyArticles" resultType="com.zr.uniSoul.pojo.vo.ArticleVO">
+        select * from article where author_id = #{authorId} and column_id is null order by create_time desc
+    </select>
+
+    <!--    <select id="getArticleList" resultType="com.zr.uniSoul.pojo.vo.ArticleVO">-->
+<!--        select * from article where column_id = #{columnsId} order by create_time desc-->
+<!--    </select>-->
+</mapper>

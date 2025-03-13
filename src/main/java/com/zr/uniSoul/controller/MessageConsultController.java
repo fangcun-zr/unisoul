@@ -4,6 +4,8 @@ import com.zr.uniSoul.common.R;
 import com.zr.uniSoul.pojo.entity.ConsultMessage;
 import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.pojo.vo.MessageConsultVO;
+import com.zr.uniSoul.utils.AiConsultUtil;
+import com.zr.uniSoul.utils.DeepSeekUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +15,10 @@ import com.zr.uniSoul.pojo.dto.MessageConsultDTO;
 import com.zr.uniSoul.service.MessageConsultService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 消息控制器，提供API接口用于管理消息。
@@ -101,4 +106,20 @@ public class MessageConsultController {
         messageService.deleteMessage(senderId,contentId);
         return R.success("成功删除");
     }
+
+
+    /**
+     * ai咨询
+     * @param question
+     * @param session
+     * @return
+     */
+    @GetMapping("/chat")
+    public R<String> chat(@RequestParam String question, HttpSession session) {
+
+        String reply = messageService.getReply(question,session);
+        return R.success(reply);
+
+    }
+
 }

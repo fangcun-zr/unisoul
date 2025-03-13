@@ -3,6 +3,7 @@ package com.zr.uniSoul.controller;
 import com.zr.uniSoul.common.PageResult;
 import com.zr.uniSoul.common.R;
 import com.zr.uniSoul.pojo.dto.CommentsPageDTO;
+import com.zr.uniSoul.pojo.dto.GenerateDTO;
 import com.zr.uniSoul.pojo.dto.PageQueryDTO;
 import com.zr.uniSoul.pojo.dto.AddCommentsDTO;
 import com.zr.uniSoul.pojo.entity.Article;
@@ -281,6 +282,22 @@ public class ZhxtController {
         }
         log.info("未关注");
         return R.success("0");
+    }
+
+    /**
+     * 生成文章概括
+     */
+    @PostMapping("generate-summary")
+    @ApiOperation("生成文章概括")
+    public R generateSummary(@RequestBody GenerateDTO generateDTO) {
+        log.info("生成文章概括：文章id={}",generateDTO);
+        float ratio = generateDTO.getRatio()*0.1f;
+        int id = generateDTO.getId();
+        String summary = zhxtService.generateSummary(id,ratio);
+        if (summary != null) {
+            return R.success(summary);
+        }
+        return R.error("文章不存在");
     }
 
 }
