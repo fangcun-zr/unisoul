@@ -15,4 +15,13 @@ public interface AdminService {
     int bannedUser(int userId, int status);
 
     int deleteUser(int id);
+
+    int setArticle(int articleId, int status);
+
+    /**
+     * 删除评论
+     * @param id
+     * @return
+     */
+    int deleteArticleComment(int id);
 }

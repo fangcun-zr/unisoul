@@ -83,4 +83,43 @@ public class AdminController {
             return R.error("操作失败");
         }
     }
+
+    /**
+     * 封禁/解除封禁文章
+     * @param bannedDTO
+     * @param bannedDTO
+     * @param request
+     * @return
+     */
+    @PostMapping("/setArticle")
+    public R<String> setArticle(@RequestBody BannedDTO bannedDTO, HttpServletRequest request) {
+        log.info("对文章进行操作{}",bannedDTO);
+        if(!judgeAdmin(request)){
+            return R.error("非管理员账户，没有权限");
+        }
+        int articleId = bannedDTO.getId();
+        int status = bannedDTO.getStatus();
+        int ret = adminService.setArticle(articleId,status);
+        if(ret==1){
+            return R.success("操作成功");
+        }
+        else {
+            return R.error("操作失败");
+        }
+    }
+
+    @DeleteMapping("/deleteArticleComment")
+    public R<String> deleteArticleComment(@RequestParam int id,HttpServletRequest request){
+        log.info("删除文章评论{}",id);
+        if(!judgeAdmin(request)){
+            return R.error("非管理员账户，没有权限");
+        }
+        int ret = adminService.deleteArticleComment(id);
+        if(ret==1){
+            return R.success("操作成功");
+        }
+        else {
+            return R.error("操作失败");
+        }
+    }
 }

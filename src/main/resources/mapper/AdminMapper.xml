@@ -5,8 +5,14 @@
     <update id="bannedUser">
         update user set status = #{status} where id = #{userId}
     </update>
+    <update id="setArticle">
+        update article set status = #{status} where id = #{articleId}
+    </update>
     <delete id="deleteUser">
        delete from user where id = #{id}
+    </delete>
+    <delete id="deleteArticleComment">
+        delete from article_comment where id = #{id}
     </delete>
 
     <select id="getIsAdmin" resultType="java.lang.Integer">

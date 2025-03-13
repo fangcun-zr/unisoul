@@ -15,4 +15,8 @@ public interface AdminMapper {
     int bannedUser(int userId, int status);
 
     int deleteUser(int id);
+
+    int setArticle(int articleId, int status);
+
+    int deleteArticleComment(int id);
 }

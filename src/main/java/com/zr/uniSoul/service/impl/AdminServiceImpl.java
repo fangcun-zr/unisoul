@@ -73,5 +73,32 @@ public class AdminServiceImpl implements AdminService {
         return adminMapper.deleteUser(id);
     }
 
+    /**
+     * 对文章的封禁状态进行设置
+     * @param articleId
+     * @param status
+     * @return
+     */
+    @Override
+    public int setArticle(int articleId, int status) {
+        if(status==1){
+            status=0;
+        }
+        else {
+            status=1;
+        }
+        return adminMapper.setArticle(articleId,status);
+    }
+
+    /**
+     * 删除评论
+     * @param id
+     * @return
+     */
+    @Override
+    public int deleteArticleComment(int id) {
+        return adminMapper.deleteArticleComment(id);
+    }
+
     //TODO 后台管理
 }
