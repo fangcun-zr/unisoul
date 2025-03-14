@@ -8,8 +8,10 @@ import generator.common.*;
 import generator.constant.CommonConstant;
 import generator.domain.Message;
 import generator.domain.MessageThread;
+import generator.domain.User;
 import generator.domain.dto.MessageDTO;
 import generator.domain.vo.MessageVO;
+import generator.exception.BusinessException;
 import generator.service.MessageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -17,6 +19,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -82,7 +86,14 @@ public class MessageController {
     @GetMapping("/threads")
     public BaseResponse<Page<MessageThread>> getMessageThreads(
             @RequestParam Long userId,
-            @ModelAttribute PageRequest pageRequest) {
+            @ModelAttribute PageRequest pageRequest,
+            HttpServletRequest request) {
+
+        HttpSession session = request.getSession();
+        String username = (String) session.getAttribute("username");
+        String loginUserId = (String) session.getAttribute("userId");
+        System.out.println(username);
+        System.out.println(loginUserId);
 
         // 转换分页参数
         Page<Message> page = new Page<>(pageRequest.getCurrent(), pageRequest.getPageSize());

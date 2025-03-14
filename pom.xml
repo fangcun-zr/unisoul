@@ -162,7 +162,7 @@
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
-<!--        分词库-->
+        <!--        分词库-->
         <dependency>
             <groupId>com.hankcs</groupId>
             <artifactId>hanlp</artifactId>

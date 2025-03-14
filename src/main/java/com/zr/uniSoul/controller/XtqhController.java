@@ -49,6 +49,9 @@ public class XtqhController {
         User loginUser = xtqhService.login(user);
         if (loginUser != null){
             log.info("用户登录成功");
+            log.info(user.getUsername());
+            log.info(String.valueOf(user.getId()));
+
             //将用户的用户名存入session
             request.getSession().setAttribute("username",user.getUsername());
             //将用户的用户id存入session

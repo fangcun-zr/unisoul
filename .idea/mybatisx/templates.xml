@@ -57,7 +57,7 @@
                   <option name="fileName" value="${domain.fileName}Mapper" />
                   <option name="fileNameWithSuffix" value="${domain.fileName}Mapper.xml" />
                   <option name="modulePath" value="$PROJECT_DIR$" />
-                  <option name="packageName" value="mapper" />
+                  <option name="packageName" value="${domain.basePackage}.mapper" />
                 </ModuleInfoGo>
               </list>
             </option>
@@ -69,12 +69,8 @@
             <option name="tableUIInfoList">
               <list>
                 <TableUIInfo>
-                  <option name="className" value="Appointment" />
-                  <option name="tableName" value="appointment" />
-                </TableUIInfo>
-                <TableUIInfo>
-                  <option name="className" value="Doctor" />
-                  <option name="tableName" value="doctor" />
+                  <option name="className" value="Groups" />
+                  <option name="tableName" value="groups" />
                 </TableUIInfo>
               </list>
             </option>

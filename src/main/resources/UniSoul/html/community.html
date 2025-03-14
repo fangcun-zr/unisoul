@@ -3,92 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>知识社区 - 探索无限可能</title>
+    <title>心旅坊 - 社区</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/community.css">
 </head>
 <body>
-<!-- 背景装饰 -->
+<!-- 在 body 标签下添加 -->
 <div class="background-decoration">
     <div class="circle c1"></div>
     <div class="circle c2"></div>
     <div class="circle c3"></div>
-    <div class="wave-container">
-        <svg viewBox="0 0 1440 320" class="wave">
-            <path fill="#4299e1" fill-opacity="0.2" d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
-        </svg>
-    </div>
 </div>
+<!-- 背景装饰 -->
+<div class="background-decor"></div>
 
 <!-- 导航栏 -->
-<nav class="navbar navbar-expand-lg navbar-glass fixed-top">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
     <div class="container">
-        <a class="navbar-brand" href="#">
-            <i class="fas fa-brain"></i>
-            <span>知识社区</span>
+        <a class="navbar-brand" href="home.html">
+            <img src="../image/logo.png" alt="Logo" class="nav-logo">
+            心旅坊
         </a>
-
-        <div class="navbar-collapse">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#">
-                        <i class="fas fa-home">
-
-                        </i> 首页
-                    </a>
+                    <a class="nav-link" href="home.html"><i class="fas fa-home"></i> 首页</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
-<!--                        <i class="fas fa-compass" href="found.html></i> 发现-->
-                        <li class="nav-item">
-                           <a class="nav-link" href="found.html"><i class="fas fa-users"></i> 发现</a>
-                        </li>
-                    </a>
+                    <a class="nav-link" href="zhxt_articles.html"><i class="fas fa-book-reader"></i> 文章</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
-<!--                        <i class="fas fa-book"></i> 专栏-->
-                        <li class="nav-item">
-                            <a class="nav-link" href="column.html"><i class="fas fa-users"></i> 专栏</a>
-                        </li>
-                    </a>
+                    <a class="nav-link active" href="community.html"><i class="fas fa-users"></i> 社区</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="found.html"><i class="fas fa-compass"></i> 发现</a>
                 </li>
             </ul>
-
-            <div class="search-box">
-                <input type="text" class="form-control" placeholder="搜索感兴趣的内容...">
-                <i class="fas fa-search"></i>
-            </div>
-
-            <div class="user-actions">
-                <button class="btn btn-create" id="createPostBtn">
-                    <i class="fas fa-pen"></i>
-                    <span>创作文章</span>
-                </button>
-
-                <div class="notification-center">
-                    <div class="icon-badge" data-bs-toggle="dropdown">
-                        <i class="fas fa-bell"></i>
-                        <span class="badge">3</span>
-                    </div>
-                    <div class="dropdown-menu notification-menu">
-                        <!-- 通知内容 -->
-                    </div>
+            <div class="d-flex align-items-center">
+                <div class="search-box me-3">
+                    <input type="text" class="form-control" placeholder="搜索...">
+                    <button class="btn btn-light"><i class="fas fa-search"></i></button>
                 </div>
-
-                <div class="user-profile dropdown">
-                    <div class="profile-toggle" data-bs-toggle="dropdown">
-                        <img src="../images/avatar.jpg" alt="用户头像" class="avatar">
-                        <span class="username">张三</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#"><i class="fas fa-user"></i> 个人主页</a></li>
-                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog"></i> 设置</a></li>
+                <div class="dropdown">
+                    <a class="nav-link dropdown-toggle text-white" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                        <img src="../image/default-avatar.png" id="userAvatar" alt="Avatar" class="avatar-sm">
+                        <span id="currentUsername">用户名</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="xtqh_information.html"><i class="fas fa-user"></i> 个人信息</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-bell"></i> 消息中心</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item text-danger" href="#"><i class="fas fa-sign-out-alt"></i> 退出</a></li>
+                        <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> 退出登录</a></li>
                     </ul>
                 </div>
             </div>
@@ -96,144 +66,92 @@
     </div>
 </nav>
 
-<!-- 主要内容 -->
-<div class="main-container">
+<!-- 主要内容区 -->
+<div class="main-content">
     <div class="container">
-        <!-- 统计面板 -->
-        <div class="stats-panel">
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-book"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h3 class="stat-value">1,234</h3>
-                            <p class="stat-label">文章总数</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-eye"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h3 class="stat-value">45.6K</h3>
-                            <p class="stat-label">总浏览量</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h3 class="stat-value">789</h3>
-                            <p class="stat-label">关注者</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h3 class="stat-value">4.9</h3>
-                            <p class="stat-label">平均评分</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 内容区域 -->
-        <div class="content-container">
-            <!-- 左侧分类栏 -->
-            <div class="category-sidebar">
-                <div class="category-header">
-                    <h5><i class="fas fa-th-large"></i> 内容分类</h5>
-                </div>
-                <div class="category-list">
-                    <div class="category-item active">
-                        <i class="fas fa-fire"></i>
-                        <span>热门推荐</span>
-                        <span class="count">99+</span>
-                    </div>
-                    <div class="category-item">
-                        <i class="fas fa-code"></i>
-                        <span>技术开发</span>
-                        <span class="count">56</span>
-                    </div>
-                    <!-- 更多分类... -->
-                </div>
-            </div>
-
-            <!-- 中间文章列表 -->
-            <div class="article-container">
-                <!-- 筛选栏 -->
-                <div class="filter-panel">
-                    <div class="filter-tabs">
-                        <button class="filter-tab active">
-                            <i class="fas fa-star"></i> 推荐
-                        </button>
-                        <button class="filter-tab">
-                            <i class="fas fa-clock"></i> 最新
-                        </button>
-                        <button class="filter-tab">
-                            <i class="fas fa-fire"></i> 热门
-                        </button>
-                    </div>
-                    <div class="filter-actions">
-                        <button class="btn btn-filter">
-                            <i class="fas fa-sort"></i> 排序
-                        </button>
-                        <button class="btn btn-filter">
-                            <i class="fas fa-filter"></i> 筛选
-                        </button>
-                    </div>
-                </div>
-
-                <!-- 文章列表 -->
-                <div class="article-list">
-                    <!-- 文章卡片示例 -->
-                    <div class="article-card">
-                        <!-- 文章内容将通过JS动态加载 -->
-                    </div>
-                </div>
-
-                <!-- 加载更多 -->
-                <div class="load-more">
-                    <button class="btn btn-load-more" id="loadMore">
-                        <i class="fas fa-sync-alt"></i> 加载更多
-                    </button>
-                </div>
-            </div>
-
-            <!-- 右侧推荐 -->
-            <div class="recommend-sidebar">
-                <!-- 推荐作者 -->
-                <div class="sidebar-card">
+        <div class="row g-4">
+            <!-- 自由交流社区 -->
+            <div class="col-lg-6">
+                <div class="community-card">
                     <div class="card-header">
-                        <h5><i class="fas fa-user-circle"></i> 推荐作者</h5>
-                        <a href="#" class="refresh-link">
-                            <i class="fas fa-sync-alt"></i> 换一批
-                        </a>
+                        <h3><i class="fas fa-comments me-2"></i>自由交流社区</h3>
+                        <button class="btn btn-primary join-community-btn" data-community-id="1">加入讨论</button>
                     </div>
-                    <div class="author-list">
-                        <!-- 作者列表将通过JS动态加载 -->
+                    <div class="card-body">
+                        <p class="lead mb-4">在这里，你可以畅所欲言，分享你的想法和经历，与来自各地的朋友交流。</p>
+                        <div class="community-stats mb-4">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <div class="stat-item">
+                                        <div class="number" id="online-users">0</div>
+                                        <div class="label">在线用户</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="stat-item">
+                                        <div class="number" id="today-posts">0</div>
+                                        <div class="label">今日帖子</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="stat-item">
+                                        <div class="number" id="today-replies">0</div>
+                                        <div class="label">今日回复</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hot-topics">
+                            <h5 class="mb-3">热门话题</h5>
+                            <ul class="list-group" id="hot-topics-list">
+                                <li class="list-group-item">如何应对学习压力？</li>
+                                <li class="list-group-item">分享你的解压小技巧</li>
+                                <li class="list-group-item">校园生活趣事分享</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- 热门文章 -->
-                <div class="sidebar-card">
+            <!-- 互助交流社区 -->
+            <div class="col-lg-6">
+                <div class="community-card">
                     <div class="card-header">
-                        <h5><i class="fas fa-fire"></i> 热门文章</h5>
+                        <h3><i class="fas fa-hands-helping me-2"></i>互助交流社区</h3>
+                        <button class="btn btn-primary join-community-btn" data-community-id="2">加入小组</button>
                     </div>
-                    <div class="hot-article-list">
-                        <!-- 热门文章将通过JS动态加载 -->
+                    <div class="card-body">
+                        <p class="lead mb-4">在这里，你可以找到志同道合的朋友，加入特定主题的交流小组，互相支持，共同成长。</p>
+                        <div class="community-stats mb-4">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <div class="stat-item">
+                                        <div class="number" id="total-groups">0</div>
+                                        <div class="label">互助小组</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="stat-item">
+                                        <div class="number" id="today-interactions">0</div>
+                                        <div class="label">今日交流</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="stat-item">
+                                        <div class="number" id="successful-help">0</div>
+                                        <div class="label">互助成功</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="recommended-groups">
+                            <h5 class="mb-3">推荐小组</h5>
+                            <ul class="list-group" id="recommended-groups-list">
+                                <li class="list-group-item">心理健康互助小组</li>
+                                <li class="list-group-item">学习压力应对小组</li>
+                                <li class="list-group-item">职业规划交流小组</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -241,16 +159,16 @@
     </div>
 </div>
 
-<!-- 创作文章模态框 -->
-<div class="modal fade" id="createPostModal" tabindex="-1">
-    <!-- 模态框内容将通过JS动态加载 -->
-</div>
+<!-- 底部版权信息 -->
+<footer class="footer mt-auto py-3 bg-light">
+    <div class="container text-center">
+        <span class="text-muted">© 2024 心旅坊. All rights reserved.</span>
+    </div>
+</footer>
 
-<!-- 脚本引入 -->
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
-<script src="../api/api.js" type="module"></script>
-<script src="../js/main.js" type="module"></script>
+<script src="../api/community.js"></script>
+<script src="../js/community.js"></script>
 </body>
 </html>
