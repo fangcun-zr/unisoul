@@ -69,8 +69,8 @@
             <option name="tableUIInfoList">
               <list>
                 <TableUIInfo>
-                  <option name="className" value="Groups" />
-                  <option name="tableName" value="groups" />
+                  <option name="className" value="HotTopics" />
+                  <option name="tableName" value="hot_topics" />
                 </TableUIInfo>
               </list>
             </option>
