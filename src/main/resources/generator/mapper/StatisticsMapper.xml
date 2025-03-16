@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="generator.mapper.StatisticsMapper">
+
+    <resultMap id="BaseResultMap" type="generator.domain.Statistics">
+            <id property="id" column="id" />
+            <result property="online_users" column="online_users" />
+            <result property="today_posts" column="today_posts" />
+            <result property="today_replies" column="today_replies" />
+            <result property="total_groups" column="total_groups" />
+            <result property="today_interactions" column="today_interactions" />
+            <result property="successful_help" column="successful_help" />
+            <result property="create_time" column="create_time" />
+            <result property="update_time" column="update_time" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,online_users,today_posts,today_replies,total_groups,today_interactions,
+        successful_help,create_time,update_time
+    </sql>
+</mapper>
