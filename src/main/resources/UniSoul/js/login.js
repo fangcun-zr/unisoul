@@ -67,8 +67,13 @@ $(document).ready(function () {
                     // 将用户信息保存到localStorage
                     localStorage.setItem('userDetails', JSON.stringify(response.data));
 
-                    // 登录成功后跳转到首页
-                    window.location.href = 'home.html';
+                    if(response.data.isAdmin === 1){
+                        window.location.href = 'adminIndex.html';
+                    }else {
+                        // 登录成功后跳转到首页
+                        window.location.href = 'home.html';
+                    }
+
                 } else {
                     showError('username', response.msg || '登录失败');
                 }
