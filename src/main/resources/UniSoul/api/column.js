@@ -1,5 +1,5 @@
 // API基础配置
-const BASE_URL = 'http://localhost:8080/api';
+const BASE_URL = 'http://localhost:8080/';
 const TOKEN_KEY = 'auth_token';
 
 // 工具函数
@@ -22,14 +22,20 @@ const getHeaders = () => {
 // 专栏相关API
 const columnApi = {
     // 获取专栏列表
-    getColumns: async (params = {}) => {
-        const { page = 1, size = 10, category = 'all', sort = 'latest' } = params;
+    getColumns: async (params) => { // 改为接收单个params对象
+        const { page = 1, pageSize = 10, categoryId } = params; // 从params解构
         try {
             const response = await fetch(
-                `${BASE_URL}/columns?page=${page}&size=${size}&category=${category}&sort=${sort}`,
+                `${BASE_URL}columns/getColumList`,
                 {
-                    method: 'GET',
-                    headers: getHeaders()
+                    method: 'POST',
+                    headers: getHeaders(),
+                    body: JSON.stringify({
+                        page: page,
+                        pageSize: pageSize,
+                        category_id: categoryId, // 使用解构出的categoryId
+                        isFeatured: 0,
+                    })
                 }
             );
             return handleResponse(response);
@@ -40,15 +46,25 @@ const columnApi = {
     },
 
     // 获取精选专栏
-    getFeaturedColumns: async () => {
+    getFeaturedColumns: async (params = {}) => {
+        const { page = 1, size = 10, categoryId} = params;
         try {
-            const response = await fetch(`${BASE_URL}/columns/featured`, {
-                method: 'GET',
-                headers: getHeaders()
-            });
+            const response = await fetch(
+                `${BASE_URL}columns/getColumList`,
+                {
+                    method: 'POST', // 改为 POST 方法
+                    headers: getHeaders(),
+                    body: JSON.stringify({ // 添加请求体
+                        page:page,
+                        pageSize: size,
+                        category_id: categoryId,
+                        isFeatured: 1
+                    })
+                }
+            );
             return handleResponse(response);
-        } catch (error) {
-            console.error('获取精选专栏失败:', error);
+        }catch (error) {
+            console.error('获取专栏列表失败:', error);
             throw error;
         }
     },
@@ -56,7 +72,7 @@ const columnApi = {
     // 创建专栏
     createColumn: async (formData) => {
         try {
-            const response = await fetch(`${BASE_URL}/columns`, {
+            const response = await fetch(`${BASE_URL}/columns/create`, {
                 method: 'POST',
                 headers: {
                     'Authorization': getHeaders().Authorization

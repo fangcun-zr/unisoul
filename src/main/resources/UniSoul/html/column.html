@@ -42,8 +42,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="column.html">
-                        <i class="fas fa-columns"></i> 专栏
+                    <a class="nav-link active" href="my_columns.html">
+                        <i class="fas fa-columns"></i>我的专栏
                     </a>
                 </li>
                 <li class="nav-item">
@@ -82,41 +82,17 @@
 
     <!-- 专栏分类 -->
     <div class="category-tabs">
-        <button class="category-tab active" data-category="all">全部专栏</button>
-        <button class="category-tab" data-category="psychology">心理成长</button>
-        <button class="category-tab" data-category="relationship">情感关系</button>
-        <button class="category-tab" data-category="career">职业发展</button>
-        <button class="category-tab" data-category="life">生活方式</button>
+        <button class="category-tab active" data-category-id="0">全部专栏</button>
+        <button class="category-tab" data-category-id="1">心理成长</button>
+        <button class="category-tab" data-category-id="2">情感关系</button>
+        <button class="category-tab" data-category-id="3">职业发展</button>
+        <button class="category-tab" data-category-id="4">生活方式</button>
     </div>
 
     <!-- 专栏列表 -->
     <div class="column-grid">
         <!-- 精选专栏 -->
         <div class="featured-column">
-            <div class="column-card featured">
-                <div class="card-image">
-                    <img src="../image/featured-column.jpg" alt="精选专栏">
-                    <div class="featured-badge">
-                        <i class="fas fa-crown"></i> 精选
-                    </div>
-                </div>
-                <div class="card-content">
-                    <div class="author-info">
-                        <img src="../image/expert-avatar.jpg" alt="作者头像" class="author-avatar">
-                        <div class="author-details">
-                            <h4>张心理</h4>
-                            <p>心理咨询师 | 情感专家</p>
-                        </div>
-                    </div>
-                    <h3>走进心理学的奇妙世界</h3>
-                    <p>探索人性的深度，理解情感的真谛，一起开启心理成长之旅。</p>
-                    <div class="column-stats">
-                        <span><i class="fas fa-book-reader"></i> 12 篇文章</span>
-                        <span><i class="fas fa-user-friends"></i> 2.3k 订阅</span>
-                        <span><i class="fas fa-star"></i> 4.9 评分</span>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <!-- 普通专栏列表 -->
@@ -153,11 +129,11 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">专栏分类</label>
-                        <select class="form-select" name="category" required>
-                            <option value="psychology">心理成长</option>
-                            <option value="relationship">情感关系</option>
-                            <option value="career">职业发展</option>
-                            <option value="life">生活方式</option>
+                        <select class="form-select" name="categoryId" required>
+                            <option value="1">心理成长</option>
+                            <option value="2">情感关系</option>
+                            <option value="3">职业发展</option>
+                            <option value="4">生活方式</option>
                         </select>
                     </div>
                     <div class="mb-3">
@@ -188,7 +164,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="../api/column.js"></script>
-<script src="../js/column.js"></script>
+<script type="module" src="../api/column.js"></script>
+<script type="module" src="../js/column.js"></script>
 </body>
 </html>

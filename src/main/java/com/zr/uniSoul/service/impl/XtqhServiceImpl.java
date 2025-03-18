@@ -96,6 +96,7 @@ public class XtqhServiceImpl implements XtqhService {
 
     @Override
     public int follow(int user_id, String following_name) {
+
         Integer following_id = xtqhmapper.findIdByUsername(following_name);
         log.info("following_id:{}",following_id);
         if (following_id == null){

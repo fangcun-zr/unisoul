@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的专栏 - UniSoul</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/element-ui@2.15.13/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../css/my_columns.css">
+</head>
+<body>
+<!-- 背景装饰 -->
+<div class="background-decoration">
+    <div class="circle c1"></div>
+    <div class="circle c2"></div>
+    <div class="circle c3"></div>
+    <div class="wave-container">
+        <svg viewBox="0 0 1440 320" class="wave">
+            <path fill="#FFB88C" fill-opacity="0.2" d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+        </svg>
+    </div>
+</div>
+
+<!-- 导航栏 -->
+<nav class="navbar navbar-expand-lg navbar-glass fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="/">
+            <img src="../image/logo.png" alt="UniSoul Logo" class="nav-logo">
+            UniSoul
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="home.html"><i class="fas fa-home"></i> 首页</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="column.html">
+                        <i class="fas fa-columns"></i> 所有专栏
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                        <img src="../image/avatar.png" alt="用户头像" class="nav-avatar">
+                        <span class="username">用户名</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end animate__animated animate__fadeIn">
+                        <li><a class="dropdown-item" href="/profile">
+                            <i class="fas fa-user"></i> 个人中心
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="#" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i> 退出登录
+                        </a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- 主要内容 -->
+<main class="main-content">
+    <div class="container">
+        <!-- 页面标题 -->
+        <div class="page-header animate__animated animate__fadeIn">
+            <h1><i class="fas fa-columns"></i> 我的专栏</h1>
+            <button class="btn btn-gradient" id="createColumnBtn">
+                <i class="fas fa-plus"></i> 创建专栏
+                <span class="btn-effect"></span>
+            </button>
+        </div>
+
+        <!-- 专栏统计卡片 -->
+        <div class="stats-section row animate__animated animate__fadeInUp">
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-book-reader"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 class="stat-value">0</h3>
+                        <p class="stat-label">总专栏数</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 class="stat-value">0</h3>
+                        <p class="stat-label">文章总数</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 class="stat-value">0</h3>
+                        <p class="stat-label">总阅读量</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 class="stat-value">0</h3>
+                        <p class="stat-label">总收藏数</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 专栏列表 -->
+        <div class="columns-section">
+            <div class="section-header">
+                <div class="view-controls">
+                    <button class="btn btn-glass active" data-view="grid">
+                        <i class="fas fa-th-large"></i>
+                    </button>
+                    <button class="btn btn-glass" data-view="list">
+                        <i class="fas fa-list"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="columns-grid animate__animated animate__fadeIn">
+                <!-- 专栏卡片模板 -->
+                <div class="column-card" style="display: none;">
+                    <div class="column-cover">
+                        <img src="" alt="">
+                        <div class="column-actions">
+                            <button class="btn btn-light btn-sm edit-column" title="编辑专栏">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-light btn-sm manage-articles" title="管理文章">
+                                <i class="fas fa-list"></i>
+                            </button>
+                            <button class="btn btn-danger btn-sm delete-column" title="删除专栏">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="column-info">
+                        <h3 class="column-title"></h3>
+                        <p class="column-description"></p>
+                        <div class="column-stats">
+                            <span><i class="fas fa-book-reader"></i> <span class="article-count">0</span> 篇文章</span>
+                            <span><i class="fas fa-eye"></i> <span class="view-count">0</span> 次阅读</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 分页 -->
+            <nav class="pagination-container">
+                <ul class="pagination justify-content-center"></ul>
+            </nav>
+        </div>
+    </div>
+</main>
+
+<!-- 创建专栏模态框 -->
+<div class="modal fade" id="createColumnModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content glass-modal">
+            <div class="modal-header">
+                <h5 class="modal-title">创建专栏</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createColumnForm">
+                    <div class="mb-3">
+                        <label class="form-label">专栏标题</label>
+                        <input type="text" class="form-control glass-input" name="title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">专栏描述</label>
+                        <textarea class="form-control glass-input" name="description" rows="4" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">封面图片</label>
+                        <input type="file" class="form-control glass-input" name="cover" accept="image/*" required>
+                        <div class="cover-preview mt-2"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-glass" data-bs-dismiss="modal">取消</button>
+                <button type="submit" form="createColumnForm" class="btn btn-gradient">
+                    创建
+                    <span class="btn-effect"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 编辑专栏模态框 -->
+<div class="modal fade" id="editColumnModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content glass-modal">
+            <div class="modal-header">
+                <h5 class="modal-title">编辑专栏</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editColumnForm">
+                    <input type="hidden" name="columnId">
+                    <div class="mb-3">
+                        <label class="form-label">专栏标题</label>
+                        <input type="text" class="form-control glass-input" name="title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">专栏描述</label>
+                        <textarea class="form-control glass-input" name="description" rows="4" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">更新封面</label>
+                        <input type="file" class="form-control glass-input" name="cover" accept="image/*">
+                        <div class="cover-preview mt-2"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-glass" data-bs-dismiss="modal">取消</button>
+                <button type="submit" form="editColumnForm" class="btn btn-gradient">
+                    保存修改
+                    <span class="btn-effect"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 管理文章模态框 -->
+<div class="modal fade" id="manageArticlesModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content glass-modal">
+            <div class="modal-header">
+                <h5 class="modal-title">管理文章</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="articles-toolbar mb-3">
+                    <button class="btn btn-gradient btn-sm" id="addArticleBtn">
+                        <i class="fas fa-plus"></i> 添加文章
+                        <span class="btn-effect"></span>
+                    </button>
+                    <div class="drag-hint">
+                        <i class="fas fa-arrows-alt"></i> 拖动可调整文章顺序
+                    </div>
+                </div>
+                <div class="articles-list">
+                    <!-- 文章项目模板 -->
+                    <div class="article-item" style="display: none;">
+                        <div class="article-info">
+                            <span class="article-title"></span>
+                            <span class="article-date"></span>
+                        </div>
+                        <div class="article-actions">
+                            <button class="btn btn-sm btn-glass edit-article" title="编辑文章">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger delete-article" title="删除文章">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 确认删除专栏模态框 -->
+<div class="modal fade" id="deleteColumnModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content glass-modal">
+            <div class="modal-header">
+                <h5 class="modal-title">确认删除</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>确定要删除这个专栏吗？删除后将无法恢复，专栏内的所有文章也会被删除。</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-glass" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteColumnBtn">
+                    确认删除
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 确认删除文章模态框 -->
+<div class="modal fade" id="deleteArticleModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content glass-modal">
+            <div class="modal-header">
+                <h5 class="modal-title">确认删除</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>确定要删除这篇文章吗？删除后将无法恢复。</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-glass" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteArticleBtn">
+                    确认删除
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 加载遮罩 -->
+<div class="loading-overlay">
+    <div class="spinner-ripple">
+        <div></div>
+        <div></div>
+    </div>
+</div>
+
+<!-- Toast提示 -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="toast" class="toast" role="alert">
+        <div class="toast-body"></div>
+    </div>
+</div>
+
+<!-- 脚本引用 -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/element-ui@2.15.13/lib/index.js"></script>
+<script src="../api/my_columns.js" type="module"></script>
+<script src="../js/my_columns.js" type="module"></script>
+<!--<script src="../api/column.js" type="module"></script>-->
+</body>
+</html>

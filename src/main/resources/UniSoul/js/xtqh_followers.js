@@ -78,7 +78,7 @@ $(document).ready(function() {
 
         user.setFanNickname(fanData)
             .then(response => {
-                if (response.code === 200) {
+                if (response.code === 1) {
                     $('#nicknameModal').modal('hide');
                     loadFans(); // 重新加载粉丝列表
                 } else {

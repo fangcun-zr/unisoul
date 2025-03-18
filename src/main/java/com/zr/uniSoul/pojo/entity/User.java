@@ -43,6 +43,9 @@ public class User implements Serializable {
     //简介
     private String biography;
 
+    //判断是不是管理员
+    private int isAdmin;
+
     public void setAge(String age) {
         if (age != null) {
             this.age = Integer.parseInt(age);

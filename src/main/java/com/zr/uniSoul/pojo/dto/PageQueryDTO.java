@@ -21,4 +21,8 @@ public class PageQueryDTO {
     @JsonProperty("keyWords")
     private String keyWords;
 
+    //是不是精选内容
+    @JsonProperty("isFeatured")
+    private Integer isFeatured;
+
 }

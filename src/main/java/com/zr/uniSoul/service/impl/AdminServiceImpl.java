@@ -176,5 +176,21 @@ public class AdminServiceImpl implements AdminService {
         return assessmentVO;
     }
 
+    /**
+     * 删除测评
+     * @param id
+     * @return
+     */
+    @Override
+    public int deleteAssessment(int id) {
+        //        -- 先删除与 assessment 关联的 assessment_session 记录
+        //        DELETE FROM assessment_session WHERE assessment_id = #{id};
+        adminMapper.deleteAssessmentSession(id);
+
+        //删除问题
+        adminMapper.deleteQuestions(id);
+        return adminMapper.deleteAssessment(id);
+    }
+
     //TODO 后台管理
 }

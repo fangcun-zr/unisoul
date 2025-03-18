@@ -5,6 +5,7 @@ import com.zr.uniSoul.common.PageResult;
 import com.zr.uniSoul.pojo.dto.CommentsPageDTO;
 import com.zr.uniSoul.pojo.dto.PageQueryDTO;
 import com.zr.uniSoul.pojo.dto.AddCommentsDTO;
+import com.zr.uniSoul.pojo.dto.ReviewDTO;
 import com.zr.uniSoul.pojo.entity.Article;
 import com.zr.uniSoul.pojo.entity.CommentLike;
 import com.zr.uniSoul.pojo.entity.Comments;
@@ -148,9 +149,8 @@ public class ZhxtServiceImpl implements ZhxtService {
     }
 
     @Override
-    public int checkArticle(Article article) {
-        //:TODO: 审核文章业务逻辑
-        return 0;
+    public int checkArticle(ReviewDTO reviewDTO) {
+        return zhxtMapper.checkArticle(reviewDTO);
     }
 
     @Override

@@ -1,12 +1,16 @@
 import columnApi from '../api/column.js';
 
 class ColumnPage {
+
+
     constructor() {
         this.currentPage = 1;
-        this.currentCategory = 'all';
+        this.currentCategory = 0; // 初始值改为'0'与默认分类一致
         this.isLoading = false;
         this.init();
     }
+
+
 
     async init() {
         try {
@@ -21,20 +25,43 @@ class ColumnPage {
         }
     }
 
-    // 加载精选专栏
-    async loadFeaturedColumn() {
+    async loadFeaturedColumn(reset = false) {
+        const params = {
+            page: reset ? 1 : this.currentPage,
+            categoryId: this.currentCategory // 统一参数名
+        };
         try {
-            const featured = await columnApi.getFeaturedColumns();
-            if (featured.length > 0) {
-                const featuredColumn = featured[0];
+            const response = await columnApi.getFeaturedColumns(params);
+
+            // 添加响应数据结构校验
+            if (!response?.data?.records) {
+                console.error('响应数据结构异常:', response);
+                return;
+            }
+
+            // 修改判断逻辑：检查数组长度
+            if (response.data.records.length > 0) {
+                const featuredColumn = response.data.records[0];
                 this.renderFeaturedColumn(featuredColumn);
+            } else {
+                console.log('当前分类下无精选专栏');
+                document.querySelector('.featured-column').innerHTML = '暂无精选内容';
             }
         } catch (error) {
             console.error('加载精选专栏失败:', error);
+            // 建议添加用户提示
+            const container = document.querySelector('.featured-column');
+            if (container) {
+                container.innerHTML = '<div class="error">加载失败，请稍后重试</div>';
+            }
         }
     }
 
-    // 加载普通专栏列表
+    /**
+     * 加载普通专栏
+     * @param reset
+     * @returns {Promise<void>}
+     */
     async loadColumns(reset = false) {
         if (this.isLoading) return;
 
@@ -42,25 +69,46 @@ class ColumnPage {
             this.isLoading = true;
             this.toggleLoadingState(true);
 
+
             const params = {
                 page: reset ? 1 : this.currentPage,
-                category: this.currentCategory
+                categoryId: this.currentCategory // 参数名改为categoryId
             };
 
+
+
             const response = await columnApi.getColumns(params);
+            //
+            // const params = {
+            //     page: reset ? 1 : this.currentPage,
+            //     category: this.currentCategory
+            // };
+            //
+            // const response = await columnApi.getColumns(params);
+
+            // 错误处理（根据你的API设计）
+            if (response.code !== 1) {
+                throw new Error(response.msg || '请求失败');
+            }
 
             if (reset) {
                 this.clearColumns();
             }
 
-            this.renderColumns(response.data);
+            // 传递正确的数据
+            this.renderColumns(response.data.records);
 
-            if (response.hasMore) {
-                this.currentPage++;
-                this.showLoadMoreButton();
-            } else {
-                this.hideLoadMoreButton();
-            }
+            // // 计算是否还有更多数据
+            // const total = response.data.total;
+            // const currentTotal = (reset ? 0 : (this.currentPage - 1) * size) + response.data.records.length;
+            // const hasMore = currentTotal < total;
+            //
+            // if (hasMore) {
+            //     this.currentPage++;
+            //     this.showLoadMoreButton();
+            // } else {
+            //     this.hideLoadMoreButton();
+            // }
         } catch (error) {
             console.error('加载专栏列表失败:', error);
             this.showToast('加载专栏失败，请稍后重试', 'error');
@@ -72,60 +120,70 @@ class ColumnPage {
 
     // 渲染精选专栏
     renderFeaturedColumn(column) {
+        // 添加可选链操作符防止未找到元素导致后续错误
         const featuredContainer = document.querySelector('.featured-column');
+        if (!featuredContainer) {
+            console.error('未找到.featured-column元素');
+            return;
+        }
+
+        // 建议增加数据校验
+        if (!column) {
+            featuredContainer.innerHTML = '暂无精选专栏';
+            return;
+        }
+
+        // 使用createElement替代innerHTML提升安全性（可选）
         featuredContainer.innerHTML = `
-            <div class="column-card featured animate-fade-up">
-                <div class="card-image">
-                    <img src="${column.coverImage}" alt="${column.title}">
-                    <div class="featured-badge">
-                        <i class="fas fa-crown"></i> 精选
-                    </div>
-                </div>
-                <div class="card-content">
-                    <div class="author-info">
-                        <img src="${column.author.avatar}" alt="${column.author.name}" class="author-avatar">
-                        <div class="author-details">
-                            <h4>${column.author.name}</h4>
-                            <p>${column.author.title}</p>
-                        </div>
-                    </div>
-                    <h3>${column.title}</h3>
-                    <p>${column.description}</p>
-                    <div class="column-stats">
-                        <span><i class="fas fa-book-reader"></i> ${column.articleCount} 篇文章</span>
-                        <span><i class="fas fa-user-friends"></i> ${column.subscriberCount} 订阅</span>
-                        <span><i class="fas fa-star"></i> ${column.rating} 评分</span>
-                    </div>
-                </div>
-            </div>
-        `;
+<a class="column-card featured animate-fade-up" 
+   href="column_detail.html?id=${column.id}" 
+   style="display: block; text-decoration: none; color: inherit;">
+    <div class="card-image">
+        <img src="${column.coverUrl || 'default-cover.jpg'}" 
+             alt="${column.title || '未命名专栏'}">
+        <div class="featured-badge">
+            <i class="fas fa-crown"></i> 精选
+        </div>
+    </div>
+    <div class="card-content">
+        <h3>${column.title || '未命名专栏'}</h3>
+        <p>${column.description || '暂无描述'}</p>
+        <div class="column-stats">
+            <span><i class="fas fa-book-reader"></i> ${column.articleCount ?? 0} 篇文章</span>
+            <span><i class="fas fa-user-friends"></i> ${column.subscribers ?? 0} 订阅</span>
+            <span><i class="fas fa-star"></i> ${column.rating ?? '暂无'} 评分</span>
+        </div>
+    </div>
+</a>
+    `;
     }
+
 
     // 渲染普通专栏列表
     renderColumns(columns) {
+
+        if (!Array.isArray(columns)) {
+            console.error('接收到非数组数据:', columns);
+            return;
+        }
         const columnsContainer = document.querySelector('.regular-columns');
         const columnsHtml = columns.map(column => `
-            <div class="column-card hover-scale animate-fade-up">
-                <div class="card-image">
-                    <img src="${column.coverImage}" alt="${column.title}">
-                </div>
-                <div class="card-content">
-                    <div class="author-info">
-                        <img src="${column.author.avatar}" alt="${column.author.name}" class="author-avatar">
-                        <div class="author-details">
-                            <h4>${column.author.name}</h4>
-                            <p>${column.author.title}</p>
-                        </div>
-                    </div>
-                    <h3>${column.title}</h3>
-                    <p>${column.description}</p>
-                    <div class="column-stats">
-                        <span><i class="fas fa-book-reader"></i> ${column.articleCount} 篇文章</span>
-                        <span><i class="fas fa-user-friends"></i> ${column.subscriberCount} 订阅</span>
-                    </div>
-                </div>
+    <a href="column_detail.html?id=${column.id}" class="column-link">
+    <div class="column-card hover-scale animate-fade-up">
+        <div class="card-image">
+            <img src="${column.coverUrl}" alt="${column.title}">
+        </div>
+        <div class="card-content">
+            <h3>${column.title}</h3>
+            <p>${column.description}</p>
+            <div class="column-stats">
+                <span><i class="fas fa-book-reader"></i> ${column.articleCount} 篇文章</span>
+                <span><i class="fas fa-user-friends"></i> ${column.subscribers} 订阅</span>
             </div>
-        `).join('');
+        </div>
+    </div>
+</a>
+`).join('');
 
         if (this.currentPage === 1) {
             columnsContainer.innerHTML = columnsHtml;
@@ -136,10 +194,13 @@ class ColumnPage {
 
     // 初始化事件监听
     initEventListeners() {
-        // 分类切换
-        document.querySelectorAll('.category-tab').forEach(tab => {
-            tab.addEventListener('click', (e) => {
-                const category = e.target.dataset.category;
+        // 分类切换使用事件委托
+        document.querySelectorAll('.category-tabs').forEach(container => {
+            container.addEventListener('click', (e) => {
+                const tab = e.target.closest('.category-tab');
+                if (!tab) return;
+
+                const category = tab.dataset.categoryId;
                 this.handleCategoryChange(category);
             });
         });
@@ -160,19 +221,32 @@ class ColumnPage {
         });
     }
 
-    // 处理分类切换
+    // 修改分类切换处理方法
+    // 修改分类切换事件处理
     handleCategoryChange(category) {
-        if (category === this.currentCategory) return;
+        // 添加参数类型转换（确保与后端类型匹配）
+        const categoryId = String(category); // 转换为字符串类型
+        if (categoryId === this.currentCategory) return;
 
-        // 更新UI
+        // 更新UI选择逻辑
         document.querySelectorAll('.category-tab').forEach(tab => {
-            tab.classList.toggle('active', tab.dataset.category === category);
+            const tabCategory = tab.dataset.categoryId;
+            tab.classList.toggle('active', tabCategory === categoryId);
         });
 
-        this.currentCategory = category;
+        this.currentCategory = categoryId;
         this.currentPage = 1;
-        this.loadColumns(true);
+
+        // 添加加载状态
+        this.toggleLoadingState(true);
+        Promise.all([
+            this.loadFeaturedColumn(true),
+            this.loadColumns(true)
+        ]).finally(() => {
+            this.toggleLoadingState(false);
+        });
     }
+
 
     // 创建专栏表单处理
     async handleCreateColumn() {

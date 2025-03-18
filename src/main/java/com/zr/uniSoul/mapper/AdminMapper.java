@@ -42,4 +42,10 @@ public interface AdminMapper {
     AssessmentVO getAssessment(int id);
 
     QuestionsVo[] getQuestions(int id);
+
+    int deleteAssessment(int id);
+
+    void deleteAssessmentSession(int id);
+
+    void deleteQuestions(int id);
 }

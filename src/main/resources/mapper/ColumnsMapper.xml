@@ -30,10 +30,13 @@
     <select id="pageQuery" resultType="com.zr.uniSoul.pojo.entity.Columns">
         select * from columns
         <where>
+            <if test="isFeatured != null">
+                and isFeatured = #{isFeatured}
+            </if>
             <if test="keyWords != null and keyWords != ''">
                 and title like concat('%',#{keyWords},'%')
             </if>
-            <if test="category_id != null">
+            <if test="category_id != 0">
                 and category_id = #{category_id}
             </if>
         </where>
