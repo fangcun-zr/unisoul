@@ -88,9 +88,6 @@ const article = {
         return $.ajax({
             url: `${API_BASE_URL}/xtqh/follow?username=${username}`,
             type: 'GET',
-            headers: {
-                'Authorization': localStorage.getItem('token')
-            },
             contentType: 'application/json'
         });
     },
@@ -152,9 +149,6 @@ const article = {
         return $.ajax({
             url: `${API_BASE_URL}/article/update/${articleId}`,
             type: 'PUT',
-            headers: {
-                'Authorization': localStorage.getItem('token')
-            },
             contentType: 'application/json',
             data: JSON.stringify(articleData)
         });
@@ -173,8 +167,7 @@ const article = {
     },
 
     // 获取文章列表(分页)
-
-    getArticleList: function(page = 1, pageSize = 5, category_id = '') {
+    getArticleList: function(page = 1, pageSize = 10, category_id = null, keyWords = '') {
         return $.ajax({
             url: `${API_BASE_URL}/zhxt/list`,
             type: 'POST',
@@ -182,7 +175,8 @@ const article = {
             data: JSON.stringify({
                 page: page,
                 pageSize: pageSize,
-                category_id: category_id
+                category_id: category_id,
+                keyWords: keyWords
             })
         });
     },
@@ -231,10 +225,7 @@ const article = {
     getCategories: function() {
         return $.ajax({
             url: `${API_BASE_URL}/article/list`,
-            type: 'GET',
-            headers: {
-                'Authorization': localStorage.getItem('token')
-            }
+            type: 'GET'
         });
     },
 
@@ -244,10 +235,7 @@ const article = {
         unlike: function(articleId) {
             return $.ajax({
                 url: `${API_BASE_URL}/article/unlike/${articleId}`,
-                type: 'POST',
-                headers: {
-                    'Authorization': localStorage.getItem('token')
-                }
+                type: 'POST'
             });
         },
 
@@ -255,10 +243,7 @@ const article = {
         unfavorite: function(articleId) {
             return $.ajax({
                 url: `${API_BASE_URL}/article/unfavorite/${articleId}`,
-                type: 'POST',
-                headers: {
-                    'Authorization': localStorage.getItem('token')
-                }
+                type: 'POST'
             });
         },
 
@@ -266,10 +251,7 @@ const article = {
         share: function(articleId) {
             return $.ajax({
                 url: `${API_BASE_URL}/article/share/${articleId}`,
-                type: 'POST',
-                headers: {
-                    'Authorization': localStorage.getItem('token')
-                }
+                type: 'POST'
             });
         },
 
@@ -278,9 +260,6 @@ const article = {
             return $.ajax({
                 url: `${API_BASE_URL}/article/likes/${articleId}`,
                 type: 'GET',
-                headers: {
-                    'Authorization': localStorage.getItem('token')
-                },
                 data: {
                     page: page,
                     limit: limit
@@ -293,9 +272,6 @@ const article = {
             return $.ajax({
                 url: `${API_BASE_URL}/article/favorites/${articleId}`,
                 type: 'GET',
-                headers: {
-                    'Authorization': localStorage.getItem('token')
-                },
                 data: {
                     page: page,
                     limit: limit
@@ -360,9 +336,6 @@ const article = {
             return $.ajax({
                 url: `${API_BASE_URL}/article/comment/like/status`,
                 type: 'GET',
-                headers: {
-                    'Authorization': localStorage.getItem('token')
-                },
                 data: {
                     comment_id: commentId
                 }
@@ -373,10 +346,7 @@ const article = {
         delete: function(commentId) {
             return $.ajax({
                 url: `${API_BASE_URL}/article/comment/delete/${commentId}`,
-                type: 'DELETE',
-                headers: {
-                    'Authorization': localStorage.getItem('token')
-                }
+                type: 'DELETE'
             });
         },
 
@@ -385,9 +355,6 @@ const article = {
             return $.ajax({
                 url: `${API_BASE_URL}/article/comment/my/list`,
                 type: 'GET',
-                headers: {
-                    'Authorization': localStorage.getItem('token')
-                },
                 data: {
                     page: page,
                     limit: limit
