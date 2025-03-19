@@ -75,21 +75,30 @@ class ColumnPage {
                 categoryId: this.currentCategory // 参数名改为categoryId
             };
 
-
-
+            console.log('请求专栏列表，参数:', params);
             const response = await columnApi.getColumns(params);
-            //
-            // const params = {
-            //     page: reset ? 1 : this.currentPage,
-            //     category: this.currentCategory
-            // };
-            //
-            // const response = await columnApi.getColumns(params);
+            console.log('专栏列表API返回数据:', response);
 
             // 错误处理（根据你的API设计）
             if (response.code !== 1) {
                 throw new Error(response.msg || '请求失败');
             }
+
+            // 验证返回的数据包含records数组
+            if (!response.data || !Array.isArray(response.data.records)) {
+                console.error('API返回数据格式异常，缺少records数组:', response.data);
+                throw new Error('API返回数据格式异常');
+            }
+
+            // 检查专栏ID的有效性
+            const records = response.data.records;
+            const validRecords = records.filter(record => !!record.id);
+
+            if (validRecords.length < records.length) {
+                console.warn(`检测到${records.length - validRecords.length}条数据缺少有效ID`);
+            }
+
+            console.log(`成功加载${validRecords.length}条有效专栏数据`);
 
             if (reset) {
                 this.clearColumns();
@@ -133,6 +142,15 @@ class ColumnPage {
             return;
         }
 
+        // 添加ID有效性检查
+        if (!column.id) {
+            console.error('精选专栏缺少有效ID:', column);
+            featuredContainer.innerHTML = '专栏数据异常';
+            return;
+        }
+
+        console.log('渲染精选专栏，ID =', column.id);
+
         // 使用createElement替代innerHTML提升安全性（可选）
         featuredContainer.innerHTML = `
 <a class="column-card featured animate-fade-up" 
@@ -161,29 +179,55 @@ class ColumnPage {
 
     // 渲染普通专栏列表
     renderColumns(columns) {
-
         if (!Array.isArray(columns)) {
             console.error('接收到非数组数据:', columns);
             return;
         }
+
         const columnsContainer = document.querySelector('.regular-columns');
-        const columnsHtml = columns.map(column => `
+        if (!columnsContainer) {
+            console.error('未找到.regular-columns元素');
+            return;
+        }
+
+        // 过滤掉不带有效ID的专栏
+        const validColumns = columns.filter(column => {
+            if (!column.id) {
+                console.error('专栏缺少有效ID:', column);
+                return false;
+            }
+            return true;
+        });
+
+        if (validColumns.length === 0) {
+            if (this.currentPage === 1) {
+                columnsContainer.innerHTML = '<div class="empty-message">暂无专栏</div>';
+            }
+            return;
+        }
+
+        console.log('渲染普通专栏列表，数量 =', validColumns.length);
+
+        const columnsHtml = validColumns.map(column => {
+            console.log('渲染普通专栏，ID =', column.id);
+            return `
     <a href="column_detail.html?id=${column.id}" class="column-link">
     <div class="column-card hover-scale animate-fade-up">
         <div class="card-image">
-            <img src="${column.coverUrl}" alt="${column.title}">
+            <img src="${column.coverUrl || '../image/default-cover.jpg'}" alt="${column.title || '未命名专栏'}">
         </div>
         <div class="card-content">
-            <h3>${column.title}</h3>
-            <p>${column.description}</p>
+            <h3>${column.title || '未命名专栏'}</h3>
+            <p>${column.description || '暂无描述'}</p>
             <div class="column-stats">
-                <span><i class="fas fa-book-reader"></i> ${column.articleCount} 篇文章</span>
-                <span><i class="fas fa-user-friends"></i> ${column.subscribers} 订阅</span>
+                <span><i class="fas fa-book-reader"></i> ${column.articleCount || 0} 篇文章</span>
+                <span><i class="fas fa-user-friends"></i> ${column.subscribers || 0} 订阅</span>
             </div>
         </div>
     </div>
 </a>
-`).join('');
+`;
+        }).join('');
 
         if (this.currentPage === 1) {
             columnsContainer.innerHTML = columnsHtml;

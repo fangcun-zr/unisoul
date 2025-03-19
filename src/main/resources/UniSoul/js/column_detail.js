@@ -1,484 +1,676 @@
-import columnDetailApi from '../api/column_detail.js';
+// 移除导入语句，直接使用fetch
+// import { getColumnDetail, getColumnArticles, subscribeColumn, unsubscribeColumn } from '../api/column_detail.js';
 
 class ColumnDetailPage {
     constructor() {
-        this.columnId = new URLSearchParams(window.location.search).get('id');
+        this.columnId = this.getColumnIdFromUrl();
         this.currentPage = 1;
-        this.pageSize = 10;
+        this.currentSort = 'newest';
+        this.hasMoreArticles = true;
         this.isLoading = false;
-        this.isOwner = false;
-        this.articleStats = new Map();
+        this.isSubscribed = false;
+        this.baseURL = 'http://localhost:8080';
+        this.authorInfo = null;
+
+        if (!this.columnId) {
+            console.error('无法初始化页面: columnId无效');
+            this.showError('未找到专栏ID，请重新进入');
+            return;
+        }
+
+        console.log('初始化专栏详情页，专栏ID =', this.columnId);
         this.init();
     }
 
     async init() {
         try {
+            if (!this.columnId) {
+                console.error('init方法中检测到columnId无效');
+                return; // 避免在无效ID时发送API请求
+            }
+
+            // 增加获取作者信息的调用
             await Promise.all([
                 this.loadColumnDetail(),
-                this.loadColumnArticles(),
-                this.initEventListeners()
+                this.loadColumnArticles(true),
+                this.loadColumnAuthor()
             ]);
+
+            this.initEventListeners();
         } catch (error) {
-            console.error('初始化失败:', error);
-            this.showToast('页面初始化失败，请刷新重试', 'error');
+            console.error('初始化页面失败:', error);
+            this.showError('加载专栏信息失败，请刷新重试');
         }
     }
 
+    // 从URL获取专栏ID
+    getColumnIdFromUrl() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
+
+        console.log('从URL获取专栏ID:', id);
+
+        if (!id) {
+            console.error('URL中缺少专栏ID参数');
+            this.showError('未找到专栏ID，请返回列表页重新选择专栏');
+            return null;
+        }
+
+        // 验证ID是否为有效数字
+        const numericId = parseInt(id, 10);
+        if (isNaN(numericId)) {
+            console.error('URL中的专栏ID不是有效数字:', id);
+            this.showError('专栏ID格式错误，请返回列表页重新选择专栏');
+            return null;
+        }
+
+        return numericId;
+    }
+
+    // 获取专栏作者信息
+    async loadColumnAuthor() {
+        try {
+            // 使用API文档中的获取专栏作者信息接口
+            const response = await fetch(`${this.baseURL}/columns/getColumAuthor?column_id=${this.columnId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': this.getToken()
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('获取专栏作者信息失败');
+            }
+
+            const data = await response.json();
+            if (data.code !== 1) {
+                throw new Error(data.msg || '获取专栏作者信息失败');
+            }
+
+            this.authorInfo = data.data;
+            this.renderAuthorInfo(this.authorInfo);
+            return data.data;
+        } catch (error) {
+            console.error('加载专栏作者信息失败:', error);
+            this.showError('获取作者信息失败，请重试');
+            throw error;
+        }
+    }
+
+    // 渲染作者信息
+    renderAuthorInfo(author) {
+        if (!author) return;
+
+        // 作者信息
+        const authorAvatarElement = document.getElementById('authorAvatar');
+        if (authorAvatarElement) {
+            authorAvatarElement.src = author.avatarUrl || '../image/avatar.png';
+            authorAvatarElement.alt = author.name || '作者头像';
+        }
+
+        const authorNameElement = document.getElementById('authorName');
+        if (authorNameElement) {
+            authorNameElement.textContent = author.name || '匿名作者';
+        }
+
+        const authorTitleElement = document.getElementById('authorTitle');
+        if (authorTitleElement) {
+            // 可以组合作者信息中的学校、简介等字段作为作者头衔
+            let title = '';
+            if (author.school) {
+                title += author.school;
+            }
+            if (author.biography) {
+                title += title ? ' · ' + author.biography : author.biography;
+            }
+            authorTitleElement.textContent = title || '暂无简介';
+        }
+    }
+
+    // 加载专栏详情
     async loadColumnDetail() {
         try {
-            const column = await columnDetailApi.getColumnDetail(this.columnId);
-            this.isOwner = column.isAuthor;
-            this.renderColumnDetail(column);
+            // 使用新的API接口获取专栏详情
+            const response = await fetch(`${this.baseURL}/columns/GetColumnDetail?columnId=${this.columnId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': this.getToken()
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('获取专栏详情失败');
+            }
+
+            const data = await response.json();
+            if (data.code !== 1) {
+                throw new Error(data.msg || '获取专栏详情失败');
+            }
+
+            this.renderColumnDetail(data.data);
+            return data.data;
         } catch (error) {
             console.error('加载专栏详情失败:', error);
-            this.showToast('加载专栏详情失败', 'error');
+            this.showError('获取专栏信息失败，请重试');
+            throw error;
         }
     }
 
+    // 加载专栏文章列表
     async loadColumnArticles(reset = false) {
-        if (this.isLoading) return;
+        if (this.isLoading || (!this.hasMoreArticles && !reset)) return;
 
         try {
             this.isLoading = true;
             this.toggleLoadingState(true);
 
-            const response = await columnDetailApi.getColumnArticles(
-                this.columnId,
-                reset ? 1 : this.currentPage,
-                this.pageSize
-            );
+            const page = reset ? 1 : this.currentPage;
+            const pageSize = 10;
+
+            // 仍然使用原有的接口获取专栏文章列表
+            const response = await fetch(`${this.baseURL}/columns/getThisArticles?id=${this.columnId}&page=${page}&size=${pageSize}&sort=${this.currentSort}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': this.getToken()
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('获取专栏文章列表失败');
+            }
+
+            const data = await response.json();
+            if (data.code !== 1) {
+                throw new Error(data.msg || '获取专栏文章列表失败');
+            }
+
+            const articles = data.data || [];
+
+            // 根据排序选项对文章进行排序
+            const sortedArticles = this.sortArticles(articles, this.currentSort);
 
             if (reset) {
-                this.clearArticles();
-                this.currentPage = 1;
+                this.clearArticleList();
             }
 
-            this.renderArticles(response.data);
+            this.renderArticleList(sortedArticles);
 
-            if (response.hasMore) {
+            // 更新加载更多按钮状态
+            // 假设如果返回的文章数小于请求的pageSize，就没有更多文章了
+            this.hasMoreArticles = articles.length >= pageSize;
+            this.updateLoadMoreButton();
+
+            if (!reset) {
                 this.currentPage++;
-                this.showLoadMoreButton();
-            } else {
-                this.hideLoadMoreButton();
             }
+
+            return articles;
         } catch (error) {
-            console.error('加载文章列表失败:', error);
-            this.showToast('加载文章列表失败', 'error');
+            console.error('加载专栏文章列表失败:', error);
+            this.showArticleListError('加载文章失败，请重试');
+            throw error;
         } finally {
             this.isLoading = false;
             this.toggleLoadingState(false);
         }
     }
 
+    // 根据选项对文章进行排序
+    sortArticles(articles, sortOption) {
+        if (!Array.isArray(articles)) return [];
+
+        const clonedArticles = [...articles];
+
+        switch (sortOption) {
+            case 'newest':
+                // 按发布时间降序排序
+                return clonedArticles.sort((a, b) => {
+                    const dateA = this.parseDate(a.create_time);
+                    const dateB = this.parseDate(b.create_time);
+                    return dateB - dateA;
+                });
+            case 'oldest':
+                // 按发布时间升序排序
+                return clonedArticles.sort((a, b) => {
+                    const dateA = this.parseDate(a.create_time);
+                    const dateB = this.parseDate(b.create_time);
+                    return dateA - dateB;
+                });
+            case 'popular':
+                // 按阅读量降序排序
+                return clonedArticles.sort((a, b) => (b.viewCount || 0) - (a.viewCount || 0));
+            default:
+                return clonedArticles;
+        }
+    }
+
+    // 解析日期
+    parseDate(dateData) {
+        if (!dateData) return new Date(0);
+
+        if (Array.isArray(dateData) && dateData.length >= 3) {
+            const [year, month, day] = dateData;
+            return new Date(year, month - 1, day);
+        }
+
+        return new Date(dateData);
+    }
+
+    // 渲染专栏详情
     renderColumnDetail(column) {
-        const detailContainer = document.querySelector('.column-detail');
-        detailContainer.innerHTML = `
-            <div class="column-header">
-                <div class="cover-image">
-                    <img src="${column.coverImage}" alt="${column.title}">
-                </div>
-                <div class="column-info">
-                    <h1>${column.title}</h1>
-                    <p class="description">${column.description}</p>
-                    <div class="author-info">
-                        <img src="${column.author.avatar}" alt="${column.author.name}" class="author-avatar">
-                        <div class="author-details">
-                            <h4>${column.author.name}</h4>
-                            <p>${column.author.title}</p>
-                        </div>
-                    </div>
-                    <div class="column-stats">
-                        <span><i class="fas fa-book-reader"></i> ${column.articleCount} 篇文章</span>
-                        <span><i class="fas fa-user-friends"></i> ${column.subscriberCount} 订阅</span>
-                        <span><i class="fas fa-star"></i> ${column.rating} 评分</span>
-                        <span><i class="fas fa-eye"></i> ${column.totalViews || 0} 总阅读</span>
-                    </div>
-                    ${this.renderColumnActions(column)}
-                </div>
-            </div>
-        `;
-    }
-
-    renderColumnActions(column) {
-        if (this.isOwner) {
-            return `
-                <div class="column-actions">
-                    <button class="btn btn-primary" id="editColumnBtn">
-                        <i class="fas fa-edit"></i> 编辑专栏
-                    </button>
-                    <button class="btn btn-success" id="addArticleBtn">
-                        <i class="fas fa-plus"></i> 添加文章
-                    </button>
-                    <button class="btn btn-danger" id="deleteColumnBtn">
-                        <i class="fas fa-trash"></i> 删除专栏
-                    </button>
-                </div>
-            `;
-        } else {
-            return `
-                <div class="column-actions">
-                    <button class="btn btn-primary" id="subscribeBtn">
-                        <i class="fas fa-star"></i> ${column.isSubscribed ? '取消订阅' : '订阅专栏'}
-                    </button>
-                </div>
-            `;
-        }
-    }
-
-    renderArticles(articles) {
-        const articlesContainer = document.querySelector('.article-list');
-        const articlesHtml = articles.map(article => `
-            <div class="article-item" data-article-id="${article.id}">
-                ${this.isOwner ? '<i class="fas fa-grip-vertical drag-handle"></i>' : ''}
-                <div class="article-content">
-                    <h3>${article.title}</h3>
-                    <p>${article.summary}</p>
-                    <div class="article-meta">
-                        <span><i class="far fa-clock"></i> ${article.createTime}</span>
-                        <span><i class="far fa-eye"></i> ${article.viewCount}</span>
-                        <span><i class="far fa-thumbs-up"></i> ${article.likeCount}</span>
-                        <span><i class="far fa-star"></i> ${article.favoriteCount}</span>
-                        <span><i class="far fa-comment"></i> ${article.commentCount}</span>
-                    </div>
-                </div>
-                ${this.isOwner ? `
-                    <div class="article-actions">
-                        ${this.renderArticleStatusToggle(article)}
-                        <button class="btn btn-danger btn-sm remove-article" data-article-id="${article.id}">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                ` : ''}
-            </div>
-        `).join('');
-
-        if (this.currentPage === 1) {
-            articlesContainer.innerHTML = articlesHtml;
-        } else {
-            articlesContainer.insertAdjacentHTML('beforeend', articlesHtml);
+        if (!column) {
+            this.showError('未找到专栏信息');
+            return;
         }
 
-        if (this.isOwner) {
-            this.initSortableList();
+        // 更新页面标题
+        document.title = `${column.title || '专栏详情'} - 学途心绘坊`;
+
+        // 专栏基本信息
+        const coverElement = document.getElementById('columnCover');
+        if (coverElement) {
+            coverElement.src = column.coverUrl || '../image/default-cover.jpg';
+            coverElement.alt = column.title || '专栏封面';
         }
 
-        articles.forEach(article => {
-            this.loadArticleStats(article.id);
-        });
-    }
-
-    renderArticleStatusToggle(article) {
-        return `
-            <button class="btn btn-sm article-status-toggle ${article.status === 'published' ? 'btn-success' : 'btn-secondary'}"
-                    data-status="${article.status === 'published' ? 'draft' : 'published'}">
-                <i class="fas ${article.status === 'published' ? 'fa-eye' : 'fa-eye-slash'}"></i>
-                ${article.status === 'published' ? '已发布' : '草稿'}
-            </button>
-        `;
-    }
-
-    showEditColumnModal() {
-        const column = {
-            title: document.querySelector('.column-info h1').textContent,
-            description: document.querySelector('.column-info .description').textContent,
-            coverImage: document.querySelector('.cover-image img').src
-        };
-
-        const modalContent = `
-            <form id="editColumnForm" class="column-form">
-                <div class="form-group">
-                    <label for="columnTitle">专栏标题</label>
-                    <input type="text" id="columnTitle" value="${column.title}" required>
-                </div>
-                <div class="form-group">
-                    <label for="columnDescription">专栏描述</label>
-                    <textarea id="columnDescription" required>${column.description}</textarea>
-                </div>
-                <div class="form-group">
-                    <label for="columnCover">封面图片</label>
-                    <input type="file" id="columnCover" accept="image/*">
-                    <img src="${column.coverImage}" class="preview-image" alt="当前封面">
-                </div>
-                <button type="submit" class="btn btn-primary">保存修改</button>
-            </form>
-        `;
-
-        this.showModal('编辑专栏', modalContent);
-        this.initEditColumnEvents();
-    }
-
-    async showAddArticleModal() {
-        try {
-            const articles = await columnDetailApi.getMyAvailableArticles();
-            const modalContent = this.renderAvailableArticles(articles);
-            this.showModal('添加文章', modalContent);
-            this.initAddArticleEvents();
-        } catch (error) {
-            this.showToast('获取可添加文章失败', 'error');
+        const titleElement = document.getElementById('columnTitle');
+        if (titleElement) {
+            titleElement.textContent = column.title || '未命名专栏';
         }
+
+        const categoryElement = document.getElementById('columnCategory');
+        if (categoryElement) {
+            // 根据分类ID获取分类名称
+            const categoryNames = {
+                1: '心理成长',
+                2: '情感关系',
+                3: '职业发展',
+                4: '生活方式'
+            };
+            categoryElement.textContent = categoryNames[column.categoryId] || '未分类';
+        }
+
+        const ratingElement = document.getElementById('columnRating');
+        if (ratingElement) {
+            ratingElement.textContent = column.rating?.toFixed(1) || '暂无评分';
+        }
+
+        const articleCountElement = document.getElementById('articleCount');
+        if (articleCountElement) {
+            articleCountElement.textContent = column.articleCount || 0;
+        }
+
+        const subscriberCountElement = document.getElementById('subscriberCount');
+        if (subscriberCountElement) {
+            subscriberCountElement.textContent = column.subscribers || 0;
+        }
+
+        const createTimeElement = document.getElementById('createTime');
+        if (createTimeElement) {
+            // 处理日期时间格式，仅保留日期部分
+            const createdAt = column.createdAt ? column.createdAt.split(' ')[0] : '';
+            createTimeElement.textContent = createdAt || '未知日期';
+        }
+
+        const descriptionElement = document.getElementById('columnDescription');
+        if (descriptionElement) {
+            descriptionElement.textContent = column.description || '暂无描述';
+        }
+
+        // 不再在这里渲染作者信息，而是在loadColumnAuthor方法中处理
+
+        // 更新订阅按钮状态 - 由于新API可能不返回isSubscribed字段，默认设为false
+        this.updateSubscribeButton(column.isSubscribed || false);
     }
 
-    renderAvailableArticles(articles) {
-        return `
-            <div class="available-articles">
-                ${articles.map(article => `
-                    <div class="article-item" data-id="${article.id}">
-                        <div class="article-info">
-                            <h4>${article.title}</h4>
-                            <p>${article.summary || ''}</p>
-                            <div class="article-meta">
-                                <span><i class="far fa-eye"></i> ${article.viewCount}</span>
-                                <span><i class="far fa-thumbs-up"></i> ${article.likeCount}</span>
-                                <span><i class="far fa-comment"></i> ${article.commentCount}</span>
-                            </div>
-                        </div>
-                        <button class="btn btn-primary btn-sm add-to-column" data-id="${article.id}">
-                            添加到专栏
-                        </button>
-                    </div>
-                `).join('')}
-            </div>
-        `;
-    }
+    // 渲染文章列表
+    renderArticleList(articles) {
+        const articleListElement = document.getElementById('articleList');
+        if (!articleListElement) return;
 
-    showModal(title, content) {
-        const modal = document.createElement('div');
-        modal.className = 'modal';
-        modal.innerHTML = `
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>${title}</h3>
-                    <button class="close-modal">&times;</button>
-                </div>
-                <div class="modal-body">${content}</div>
-            </div>
-        `;
-        document.body.appendChild(modal);
+        // 移除加载中提示
+        const loadingElement = articleListElement.querySelector('.loading-spinner');
+        if (loadingElement) {
+            loadingElement.remove();
+        }
 
-        modal.querySelector('.close-modal').addEventListener('click', () => {
-            modal.remove();
-        });
-    }
+        if (!Array.isArray(articles) || articles.length === 0) {
+            articleListElement.innerHTML = '<div class="empty-message"><i class="fas fa-file-alt"></i><p>暂无文章</p></div>';
+            return;
+        }
 
-    initEditColumnEvents() {
-        const form = document.getElementById('editColumnForm');
-        const coverInput = document.getElementById('columnCover');
-        const previewImage = document.querySelector('.preview-image');
-
-        coverInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => previewImage.src = e.target.result;
-                reader.readAsDataURL(file);
-            }
-        });
-
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            await this.handleEditColumn(new FormData(form));
-        });
-    }
-
-    initAddArticleEvents() {
-        document.querySelectorAll('.add-to-column').forEach(btn => {
-            btn.addEventListener('click', async (e) => {
-                const articleId = e.target.dataset.id;
-                try {
-                    await columnDetailApi.addArticleToColumn(this.columnId, articleId);
-                    this.showToast('文章添加成功', 'success');
-                    document.querySelector('.modal').remove();
-                    this.loadColumnArticles(true);
-                } catch (error) {
-                    this.showToast('添加文章失败', 'error');
+        const articlesHtml = articles.map(article => {
+            // 处理标签
+            let tags = [];
+            try {
+                if (typeof article.tags === 'string') {
+                    if (article.tags.startsWith('[')) {
+                        tags = JSON.parse(article.tags);
+                    } else {
+                        tags = [article.tags];
+                    }
                 }
-            });
-        });
-    }
-
-    initEventListeners() {
-        document.getElementById('loadMoreBtn')?.addEventListener('click', () => {
-            this.loadColumnArticles();
-        });
-
-        document.getElementById('subscribeBtn')?.addEventListener('click', () => {
-            this.handleSubscribe();
-        });
-
-        if (this.isOwner) {
-            document.getElementById('editColumnBtn')?.addEventListener('click', () => {
-                this.showEditColumnModal();
-            });
-
-            document.getElementById('addArticleBtn')?.addEventListener('click', () => {
-                this.showAddArticleModal();
-            });
-
-            document.getElementById('deleteColumnBtn')?.addEventListener('click', () => {
-                this.handleDeleteColumn();
-            });
-
-            document.querySelectorAll('.remove-article').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const articleId = e.target.closest('.remove-article').dataset.articleId;
-                    this.handleRemoveArticle(articleId);
-                });
-            });
-
-            document.querySelectorAll('.article-status-toggle').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const articleId = e.target.closest('.article-item').dataset.articleId;
-                    const newStatus = e.target.dataset.status;
-                    this.updateArticleStatus(articleId, newStatus);
-                });
-            });
-        }
-    }
-
-    initSortableList() {
-        const articleList = document.querySelector('.article-list');
-        if (!articleList) return;
-
-        new Sortable(articleList, {
-            animation: 150,
-            handle: '.drag-handle',
-            onEnd: async (evt) => {
-                const articleIds = Array.from(articleList.children).map(
-                    item => item.dataset.articleId
-                );
-                await this.updateArticlesOrder(articleIds);
+            } catch (e) {
+                if (article.tags) {
+                    tags = [article.tags];
+                }
             }
-        });
-    }
 
-    async handleSubscribe() {
-        try {
-            const btn = document.getElementById('subscribeBtn');
-            const isSubscribed = btn.textContent.includes('取消订阅');
+            // 限制标签数量，最多显示3个
+            const displayTags = tags.slice(0, 3);
+            let tagsHtml = displayTags.length > 0
+                ? displayTags.map(tag => `<span class="article-tag">${tag}</span>`).join('')
+                : '<span class="article-tag muted">无标签</span>';
 
-            if (isSubscribed) {
-                await columnDetailApi.unsubscribeColumn(this.columnId);
-                btn.innerHTML = '<i class="fas fa-star"></i> 订阅专栏';
-                this.showToast('已取消订阅', 'success');
-            } else {
-                await columnDetailApi.subscribeColumn(this.columnId);
-                btn.innerHTML = '<i class="fas fa-star"></i> 取消订阅';
-                this.showToast('订阅成功', 'success');
+            // 如果标签数量超过3个，显示+N标签
+            if (tags.length > 3) {
+                tagsHtml += `<span class="article-tag">+${tags.length - 3}</span>`;
             }
-        } catch (error) {
-            this.showToast('操作失败，请重试', 'error');
-        }
-    }
 
-    async handleEditColumn(formData) {
-        try {
-            await columnDetailApi.updateColumn(this.columnId, formData);
-            this.showToast('专栏更新成功', 'success');
-            document.querySelector('.modal').remove();
-            await this.loadColumnDetail();
-        } catch (error) {
-            this.showToast('更新专栏失败', 'error');
-        }
-    }
+            // 处理日期
+            const formattedDate = this.formatDate(article.create_time);
 
-    async handleDeleteColumn() {
-        if (!confirm('确定要删除这个专栏吗？此操作不可恢复。')) {
-            return;
-        }
+            // 处理文章标题，限制长度
+            const maxTitleLength = 60;
+            let title = article.title || '未命名文章';
+            if (title.length > maxTitleLength) {
+                title = title.substring(0, maxTitleLength) + '...';
+            }
 
-        try {
-            await columnDetailApi.deleteColumn(this.columnId);
-            this.showToast('专栏已删除', 'success');
-            setTimeout(() => {
-                window.location.href = '/columns';
-            }, 1500);
-        } catch (error) {
-            this.showToast('删除失败，请重试', 'error');
-        }
-    }
+            // 处理文章摘要
+            let summary = '';
+            if (article.content) {
+                // 移除HTML标签并截取前150个字符作为摘要
+                summary = article.content.replace(/<[^>]*>/g, '').substring(0, 150);
+                if (article.content.length > 150) {
+                    summary += '...';
+                }
+            }
 
-    // ... 前面的代码保持不变 ...
+            return `
+            <div class="article-item animate-fade-up">
+                <div class="article-header">
+                    <h3 class="article-title">
+                        <a href="zhxt_article_details.html?id=${article.id}" title="${article.title || '未命名文章'}">${title}</a>
+                    </h3>
+                    <div class="article-meta">
+                        <span><i class="far fa-calendar"></i> ${formattedDate}</span>
+                    </div>
+                </div>
+                <p class="article-summary">${summary || '暂无内容'}</p>
+                <div class="article-footer">
+                    <div class="article-tags">
+                        ${tagsHtml}
+                    </div>
+                    <div class="article-stats">
+                        <span><i class="far fa-eye"></i> ${article.viewCount || 0}</span>
+                        <span><i class="far fa-thumbs-up"></i> ${article.likeCount || 0}</span>
+                        <span><i class="far fa-comment"></i> ${article.commentCount || 0}</span>
+                    </div>
+                </div>
+            </div>
+            `;
+        }).join('');
 
-    async handleRemoveArticle(articleId) {
-        if (!confirm('确定要从专栏中移除这篇文章吗？')) {
-            return;
-        }
-
-        try {
-            await columnDetailApi.removeArticleFromColumn(this.columnId, articleId);
-            this.showToast('文章已移除', 'success');
-            this.loadColumnArticles(true);
-        } catch (error) {
-            this.showToast('移除失败，请重试', 'error');
-        }
-    }
-
-    async updateArticlesOrder(articleIds) {
-        try {
-            await columnDetailApi.updateArticlesOrder(this.columnId, articleIds);
-            this.showToast('文章排序已更新', 'success');
-        } catch (error) {
-            this.showToast('更新排序失败', 'error');
-            this.loadColumnArticles(true);
-        }
-    }
-
-    showToast(message, type = 'info') {
-        const toast = document.createElement('div');
-        toast.className = `toast toast-${type}`;
-        toast.textContent = message;
-        document.body.appendChild(toast);
+        // 添加延迟显示动画效果
+        const animationDelay = this.currentPage === 1 ? 0 : 300;
 
         setTimeout(() => {
-            toast.remove();
-        }, 3000);
+            if (this.currentPage === 1) {
+                articleListElement.innerHTML = articlesHtml;
+            } else {
+                articleListElement.insertAdjacentHTML('beforeend', articlesHtml);
+            }
+
+            // 让卡片依次显示动画
+            const newArticleItems = articleListElement.querySelectorAll('.article-item:not(.animated)');
+            newArticleItems.forEach((item, index) => {
+                item.style.animationDelay = `${index * 0.1}s`;
+                item.classList.add('animated');
+            });
+        }, animationDelay);
     }
 
-    clearArticles() {
-        document.querySelector('.article-list').innerHTML = '';
+    // 格式化日期
+    formatDate(dateData) {
+        if (!dateData) return '未知日期';
+
+        let date;
+        if (Array.isArray(dateData) && dateData.length >= 3) {
+            const [year, month, day] = dateData;
+            date = new Date(year, month - 1, day);
+        } else {
+            date = new Date(dateData);
+        }
+
+        if (isNaN(date.getTime())) return '未知日期';
+
+        return date.toLocaleDateString('zh-CN', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        });
     }
 
-    showLoadMoreButton() {
-        document.getElementById('loadMoreBtn').style.display = 'inline-block';
-    }
+    // 初始化事件监听
+    initEventListeners() {
+        // 排序选择改变事件
+        const sortSelect = document.getElementById('sortSelect');
+        if (sortSelect) {
+            sortSelect.addEventListener('change', () => {
+                this.currentSort = sortSelect.value;
+                this.currentPage = 1;
+                this.loadColumnArticles(true);
+            });
+        }
 
-    hideLoadMoreButton() {
-        document.getElementById('loadMoreBtn').style.display = 'none';
-    }
+        // 加载更多按钮点击事件
+        const loadMoreBtn = document.getElementById('loadMoreBtn');
+        if (loadMoreBtn) {
+            loadMoreBtn.addEventListener('click', () => {
+                this.loadColumnArticles();
+            });
+        }
 
-    toggleLoadingState(isLoading) {
-        const loadingSpinner = document.querySelector('.loading-spinner');
-        if (loadingSpinner) {
-            loadingSpinner.style.display = isLoading ? 'block' : 'none';
+        // 订阅按钮点击事件
+        const subscribeBtn = document.getElementById('subscribeBtn');
+        if (subscribeBtn) {
+            subscribeBtn.addEventListener('click', () => {
+                this.toggleSubscription();
+            });
         }
     }
 
-    // 清理事件监听器
-    removeEventListeners() {
-        const elements = [
-            'loadMoreBtn',
-            'subscribeBtn',
-            'editColumnBtn',
-            'addArticleBtn',
-            'deleteColumnBtn'
-        ];
+    // 切换订阅状态
+    async toggleSubscription() {
+        const subscribeBtn = document.getElementById('subscribeBtn');
+        if (!subscribeBtn) return;
 
-        elements.forEach(id => {
-            const element = document.getElementById(id);
-            if (element) {
-                element.replaceWith(element.cloneNode(true));
+        try {
+            subscribeBtn.disabled = true;
+
+            if (this.isSubscribed) {
+                // 取消订阅
+                await this.unsubscribeColumn(this.columnId);
+                this.isSubscribed = false;
+                this.showToast('已取消订阅');
+            } else {
+                // 订阅
+                await this.subscribeColumn(this.columnId);
+                this.isSubscribed = true;
+                this.showToast('已成功订阅');
             }
+
+            this.updateSubscribeButton(this.isSubscribed);
+        } catch (error) {
+            console.error('切换订阅状态失败:', error);
+            this.showToast('操作失败，请稍后重试', 'error');
+        } finally {
+            subscribeBtn.disabled = false;
+        }
+    }
+
+    // 订阅专栏
+    async subscribeColumn(columnId) {
+        try {
+            const response = await fetch(`${this.baseURL}/columns/subscribe?id=${columnId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': this.getToken()
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('订阅专栏失败');
+            }
+
+            const data = await response.json();
+            if (data.code !== 1) {
+                throw new Error(data.msg || '订阅专栏失败');
+            }
+
+            return data.data;
+        } catch (error) {
+            console.error('订阅专栏失败:', error);
+            throw error;
+        }
+    }
+
+    // 取消订阅专栏
+    async unsubscribeColumn(columnId) {
+        try {
+            const response = await fetch(`${this.baseURL}/columns/unsubscribe?id=${columnId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': this.getToken()
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('取消订阅专栏失败');
+            }
+
+            const data = await response.json();
+            if (data.code !== 1) {
+                throw new Error(data.msg || '取消订阅专栏失败');
+            }
+
+            return data.data;
+        } catch (error) {
+            console.error('取消订阅专栏失败:', error);
+            throw error;
+        }
+    }
+
+    // 更新订阅按钮状态
+    updateSubscribeButton(isSubscribed) {
+        this.isSubscribed = isSubscribed;
+
+        const subscribeBtn = document.getElementById('subscribeBtn');
+        if (!subscribeBtn) return;
+
+        if (isSubscribed) {
+            subscribeBtn.innerHTML = '<i class="fas fa-check"></i> 已订阅';
+            subscribeBtn.classList.add('subscribed');
+        } else {
+            subscribeBtn.innerHTML = '<i class="fas fa-plus"></i> 订阅专栏';
+            subscribeBtn.classList.remove('subscribed');
+        }
+
+        // 添加按钮点击的视觉反馈
+        subscribeBtn.addEventListener('mousedown', function() {
+            this.style.transform = 'scale(0.95)';
         });
 
-        document.querySelectorAll('.remove-article, .article-status-toggle').forEach(btn => {
-            btn.replaceWith(btn.cloneNode(true));
+        subscribeBtn.addEventListener('mouseup', function() {
+            this.style.transform = '';
+        });
+
+        subscribeBtn.addEventListener('mouseleave', function() {
+            this.style.transform = '';
         });
     }
 
-    // 销毁实例
-    destroy() {
-        this.removeEventListeners();
-        this.articleStats.clear();
+    // 更新加载更多按钮状态
+    updateLoadMoreButton() {
+        const loadMoreBtn = document.getElementById('loadMoreBtn');
+        if (!loadMoreBtn) return;
+
+        if (this.hasMoreArticles) {
+            loadMoreBtn.style.display = 'block';
+        } else {
+            loadMoreBtn.style.display = 'none';
+        }
+    }
+
+    // 切换加载状态
+    toggleLoadingState(isLoading) {
+        const loadMoreBtn = document.getElementById('loadMoreBtn');
+        if (!loadMoreBtn) return;
+
+        if (isLoading) {
+            loadMoreBtn.disabled = true;
+            loadMoreBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> 加载中...';
+        } else {
+            loadMoreBtn.disabled = false;
+            loadMoreBtn.innerHTML = '<i class="fas fa-sync-alt"></i> 加载更多';
+        }
+    }
+
+    // 清空文章列表
+    clearArticleList() {
+        const articleListElement = document.getElementById('articleList');
+        if (articleListElement) {
+            articleListElement.innerHTML = '';
+        }
+    }
+
+    // 显示文章列表错误
+    showArticleListError(message) {
+        const articleListElement = document.getElementById('articleList');
+        if (!articleListElement) return;
+
+        const errorHtml = `
+        <div class="error-message">
+            <i class="fas fa-exclamation-circle"></i>
+            <p>${message}</p>
+        </div>
+        `;
+
+        articleListElement.innerHTML = errorHtml;
+    }
+
+    // 显示错误
+    showError(message) {
+        // 可以根据实际情况实现
+        this.showToast(message, 'error');
+    }
+
+    // 显示Toast提示
+    showToast(message, type = 'success') {
+        const toast = document.getElementById('toast');
+        if (!toast) return;
+
+        const toastBody = toast.querySelector('.toast-body');
+        if (!toastBody) return;
+
+        toast.classList.remove('bg-success', 'bg-danger');
+        toast.classList.add(type === 'success' ? 'bg-success' : 'bg-danger');
+
+        toastBody.textContent = message;
+
+        const bsToast = new bootstrap.Toast(toast);
+        bsToast.show();
+    }
+
+    // 获取Token
+    getToken() {
+        return localStorage.getItem('auth_token') || '';
     }
 }
 
@@ -486,5 +678,3 @@ class ColumnDetailPage {
 document.addEventListener('DOMContentLoaded', () => {
     new ColumnDetailPage();
 });
-
-export default ColumnDetailPage;
