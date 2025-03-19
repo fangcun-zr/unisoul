@@ -18,7 +18,7 @@ public interface XtqhService {
     int editUserInfo(User user);
 
 
-    int follow(int myUsername, String role_name);
+    int follow(int user_Id, String role_name);
     /**
      * 点赞情况
      * @param articleLikes

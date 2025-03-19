@@ -168,7 +168,7 @@ public class XtqhController {
     @ApiOperation("关注")
     public R<String> follow(@RequestParam("username") String username, HttpServletRequest request) {
         log.info("关注接口, 关注: {}", username);
-
+        log.info(username);
         if (username == null || username.isEmpty()) {
             return R.error("用户名不能为空");
         }

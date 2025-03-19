@@ -95,18 +95,18 @@ public class XtqhServiceImpl implements XtqhService {
     }
 
     @Override
-    public int follow(int user_id, String following_name) {
+    public int follow(int following_id, String follower_name) {
 
-        Integer following_id = xtqhmapper.findIdByUsername(following_name);
-        log.info("following_id:{}",following_id);
-        if (following_id == null){
+        Integer follower_id = xtqhmapper.findIdByUsername(follower_name);
+        log.info("关注者following_id:{},被关注者follower_id:{}",following_id,follower_id);
+        if (follower_id == null){
             return 0;
         }
         //先判断是否存在，如果已经存在则不插入数据
-        if (xtqhmapper.findFollow(user_id,following_id) >0){
+        if (xtqhmapper.findFollow(follower_id,following_id) >0){
             return 0;
         }
-        return xtqhmapper.follow(user_id,following_id);
+        return xtqhmapper.follow(follower_id,following_id);
     }
     /**
      * 点赞

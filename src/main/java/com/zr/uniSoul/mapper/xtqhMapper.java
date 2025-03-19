@@ -18,12 +18,12 @@ public interface xtqhMapper {
 
     int update(User user);
 
-    int follow(int user_id, int role_id);
+    int follow(int follower_id, int following_id);
 
     Integer findIdByUsername(String role_name);
 
-    @Select("select count(*) from follow where follower_id = #{userId} and following_id = #{followingId}")
-    int findFollow(int userId, Integer followingId);
+    @Select("select count(*) from follow where follower_id = #{follower_id} and following_id = #{followingId}")
+    int findFollow(int follower_id, Integer followingId);
     /**
      * 文章点赞，修改文章的点赞数量
      * @Param("article_id") int article_id

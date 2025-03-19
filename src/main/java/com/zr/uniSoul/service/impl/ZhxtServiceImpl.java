@@ -10,6 +10,7 @@ import com.zr.uniSoul.pojo.entity.Article;
 import com.zr.uniSoul.pojo.entity.CommentLike;
 import com.zr.uniSoul.pojo.entity.Comments;
 import com.zr.uniSoul.pojo.entity.User;
+import com.zr.uniSoul.pojo.vo.CommentsVO;
 import com.zr.uniSoul.pojo.vo.MyDataVO;
 import com.zr.uniSoul.service.ZhxtService;
 import com.zr.uniSoul.utils.TextSummarizerUtil;
@@ -21,6 +22,7 @@ import com.github.pagehelper.Page;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -113,7 +115,29 @@ public class ZhxtServiceImpl implements ZhxtService {
             // throw new CustomException("No comments found");
         }
 
-        return new PageResult(page.getTotal(), page.getResult());
+        //手动封装返回的数据，包含评论者信息
+        List<Comments> comments = page.getResult();
+        List<User> users = new ArrayList<>();
+        for (Comments comment : comments) {
+            users.add(zhxtMapper.getUserById(comment.getUserId()));
+        }
+        List<CommentsVO> result = new ArrayList<>();
+        for (Comments comment : comments) {
+            result.add(CommentsVO.builder()
+                    .id(comment.getId())
+                    .content(comment.getContent())
+                    .createTime(comment.getCreateTime())
+                    .userId(comment.getUserId())
+                    .avatarUrl(users.get(comments.indexOf(comment)).getAvatarUrl())
+                    .name(users.get(comments.indexOf(comment)).getName())
+                    .build());
+
+        }
+
+
+
+
+        return new PageResult(page.getTotal(), result);
     }
 
     /**
@@ -167,6 +191,7 @@ public class ZhxtServiceImpl implements ZhxtService {
 
     @Override
     public int checkFollowStatus(int follow_id, int following_id) {
+        log.info("被关注者followerId:{},关注者following_id{}",follow_id,following_id);
         return zhxtMapper.checkFollowStatus(follow_id, following_id);
     }
 
