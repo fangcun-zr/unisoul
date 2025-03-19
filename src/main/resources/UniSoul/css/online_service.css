@@ -912,3 +912,53 @@ body {
         gap: 0.5rem;
     }
 }
+
+/* 添加思考中动画的样式 */
+.ai-message.thinking {
+    padding: 0.8rem 1rem;
+    background: rgba(106, 17, 203, 0.05);
+    border-radius: 15px;
+    margin-bottom: 0.5rem;
+    position: relative;
+    max-width: 80%;
+}
+
+.thinking-dots {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    height: 20px;
+    padding: 0 5px;
+}
+
+.thinking-dots .dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: rgba(106, 17, 203, 0.6);
+    animation: thinking 1.4s infinite ease-in-out;
+}
+
+.thinking-dots .dot1 {
+    animation-delay: 0s;
+}
+
+.thinking-dots .dot2 {
+    animation-delay: 0.2s;
+}
+
+.thinking-dots .dot3 {
+    animation-delay: 0.4s;
+}
+
+@keyframes thinking {
+    0%, 80%, 100% {
+        transform: scale(0.6);
+        opacity: 0.6;
+    }
+    40% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}

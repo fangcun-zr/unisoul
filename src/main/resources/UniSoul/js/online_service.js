@@ -297,12 +297,28 @@ $(document).ready(function() {
         // 清空输入框
         $('.ai-message-input').val('');
 
-        // 显示加载动画
-        $('.loading-spinner').show();
+        // 添加"思考中"状态消息
+        const thinkingMessageId = 'ai-thinking-' + Date.now();
+        const thinkingHtml = `
+            <div class="ai-message thinking" id="${thinkingMessageId}">
+                <div class="thinking-dots">
+                    <span class="dot dot1"></span>
+                    <span class="dot dot2"></span>
+                    <span class="dot dot3"></span>
+                </div>
+                <span class="message-time">思考中...</span>
+            </div>
+        `;
+        $('#aiChatMessages').append(thinkingHtml);
+
+        // 滚动到底部
+        $('#aiChatMessages').scrollTop($('#aiChatMessages')[0].scrollHeight);
 
         // 调用AI接口
         ConsultAPI.chatWithAI(question).then(response => {
-            $('.loading-spinner').hide();
+            // 移除思考中的消息
+            $(`#${thinkingMessageId}`).remove();
+
             console.log('AI响应:', response);
 
             // 显示AI回复
@@ -317,7 +333,8 @@ $(document).ready(function() {
             // 滚动到底部
             $('#aiChatMessages').scrollTop($('#aiChatMessages')[0].scrollHeight);
         }).catch(error => {
-            $('.loading-spinner').hide();
+            // 移除思考中的消息
+            $(`#${thinkingMessageId}`).remove();
 
             // 显示错误消息
             const errorMessageHtml = `
