@@ -3,6 +3,7 @@ package com.zr.uniSoul.service;
 import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.pojo.vo.ArticleLikesVO;
 import com.zr.uniSoul.pojo.vo.ArticleVO;
+import com.zr.uniSoul.pojo.vo.UserVO;
 
 import java.util.List;
 
@@ -48,4 +49,32 @@ public interface XtqhService {
      * @return
      */
     int cancelCollect(int userId, int articleId);
+
+    /**
+     * 获取粉丝列表
+     * @param userId
+     * @return
+     */
+    List<UserVO> getFollowersList(Integer userId);
+
+    /**
+     * 获取关注列表
+     * @param userId
+     * @return
+     */
+    List<UserVO> getFollowList(Integer userId);
+
+    /**
+     * 获取收藏列表
+     * @param id
+     * @return
+     */
+    List<ArticleVO> getMyArticleCollect(int id);
+
+    /**
+     * 获取我的个人信息
+     * @param i
+     * @return
+     */
+    UserVO getinformation(int i);
 }

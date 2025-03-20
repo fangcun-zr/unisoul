@@ -2,6 +2,7 @@ package com.zr.uniSoul.mapper;
 
 import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.pojo.vo.ArticleVO;
+import com.zr.uniSoul.pojo.vo.UserVO;
 import org.apache.ibatis.annotations.*;
 
 import java.time.LocalDateTime;
@@ -79,4 +80,12 @@ public interface xtqhMapper {
 
     @Update("update article set favoriteCount = favoriteCount + 1 where id = #{articleId}")
     void addFavoriteCount(int articleId);
+
+    List<UserVO> getFollowersList(Integer userId);
+
+    List<UserVO> getFollowingsList(Integer userId);
+
+    List<ArticleVO> getMyArticleCollect(int id);
+
+    UserVO getinformation(int id);
 }

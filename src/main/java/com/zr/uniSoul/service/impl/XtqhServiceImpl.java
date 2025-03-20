@@ -4,6 +4,7 @@ import com.zr.uniSoul.mapper.xtqhMapper;
 import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.pojo.vo.ArticleLikesVO;
 import com.zr.uniSoul.pojo.vo.ArticleVO;
+import com.zr.uniSoul.pojo.vo.UserVO;
 import com.zr.uniSoul.service.XtqhService;
 import com.zr.uniSoul.utils.AliOssUtil;
 import com.zr.uniSoul.utils.MailUtils;
@@ -193,5 +194,45 @@ public class XtqhServiceImpl implements XtqhService {
     public int cancelCollect(int userId, int articleId) {
         xtqhmapper.reduceFavoriteCount(articleId);
         return xtqhmapper.cancelCollect(userId, articleId);
+    }
+
+    /**
+     * 获取粉丝列表
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<UserVO> getFollowersList(Integer userId) {
+        return xtqhmapper.getFollowersList(userId);
+    }
+
+    /**
+     * 获取关注列表
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<UserVO> getFollowList(Integer userId) {
+       return xtqhmapper.getFollowingsList(userId);
+    }
+
+    /**
+     * 获取文章收藏列表
+     * @param id
+     * @return
+     */
+    @Override
+    public List<ArticleVO> getMyArticleCollect(int id) {
+        return xtqhmapper.getMyArticleCollect(id);
+    }
+
+    /**
+     * 获取我的个人信息
+     * @param id
+     * @return
+     */
+    @Override
+    public UserVO getinformation(int id) {
+        return xtqhmapper.getinformation(id);
     }
 }
