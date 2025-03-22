@@ -4,88 +4,90 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 /**
- * 
+ * 患者预约信息表
  * @TableName appointment
  */
 @TableName(value ="appointment")
 @Data
 public class Appointment {
     /**
-     * 编号
+     * 唯一标识ID
      */
+    @TableId(type = IdType.AUTO)
     private Integer id;
 
     /**
-     * 病人名字
+     * 患者姓名
      */
+    @TableField("patient_name")
     private String patientName;
 
     /**
-     * 医生编号
+     * 联系电话
      */
-    private Integer doctorId;
+    @TableField("patient_phone")
+    private String patientPhone;
 
     /**
-     * 日期
+     * 医生姓名
      */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @TableField("doctor_name")
+    private String doctorName;
+
+    /**
+     * 预约日期
+     */
+    @TableField("appointment_date")
     private Date appointmentDate;
 
     /**
-     * 时间
+     * 预约时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date appointmentTime;
+    @TableField("appointment_time")
+    @JsonFormat(pattern = "HH:mm:ss")
+    private LocalTime appointmentTime;
 
-    @Override
-    public boolean equals(Object that) {
-        if (this == that) {
-            return true;
-        }
-        if (that == null) {
-            return false;
-        }
-        if (getClass() != that.getClass()) {
-            return false;
-        }
-        Appointment other = (Appointment) that;
-        return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getPatientName() == null ? other.getPatientName() == null : this.getPatientName().equals(other.getPatientName()))
-            && (this.getDoctorId() == null ? other.getDoctorId() == null : this.getDoctorId().equals(other.getDoctorId()))
-            && (this.getAppointmentDate() == null ? other.getAppointmentDate() == null : this.getAppointmentDate().equals(other.getAppointmentDate()))
-            && (this.getAppointmentTime() == null ? other.getAppointmentTime() == null : this.getAppointmentTime().equals(other.getAppointmentTime()));
-    }
+    /**
+     * 咨询类型（如内科/外科/儿科等）
+     */
+    @TableField("consultation_type")
+    private String consultationType;
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
-        result = prime * result + ((getPatientName() == null) ? 0 : getPatientName().hashCode());
-        result = prime * result + ((getDoctorId() == null) ? 0 : getDoctorId().hashCode());
-        result = prime * result + ((getAppointmentDate() == null) ? 0 : getAppointmentDate().hashCode());
-        result = prime * result + ((getAppointmentTime() == null) ? 0 : getAppointmentTime().hashCode());
-        return result;
-    }
+    /**
+     * 病情描述（可为空）
+     */
+    @TableField("condition_description")
+    private String conditionDescription;
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", patientName=").append(patientName);
-        sb.append(", doctorId=").append(doctorId);
-        sb.append(", appointmentDate=").append(appointmentDate);
-        sb.append(", appointmentTime=").append(appointmentTime);
-        sb.append("]");
-        return sb.toString();
-    }
+    /**
+     * 预约创建时间
+     */
+    @TableField("created_at")
+    private Date createdAt;
+
+    /**
+     * 最后更新时间
+     */
+    @TableField("updated_at")
+    private Date updatedAt;
+
+    /**
+     * 预约状态（NEW/CONFIRMED/COMPLETED/CANCELLED）
+     */
+    private String status;
+
+
+
+
 }
