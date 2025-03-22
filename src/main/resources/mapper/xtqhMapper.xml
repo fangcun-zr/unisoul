@@ -41,6 +41,9 @@
     <update id="reduceFavoriteCount">
         update article set favoriteCount = favoriteCount - 1 where id = #{articleId}
     </update>
+    <update id="changePassWord">
+        update user set password = #{password} where username = #{username}
+    </update>
     <select id="getFollowersByUsername" resultType="java.lang.String">
         SELECT u.username
         FROM user u
@@ -64,5 +67,8 @@
     </select>
     <select id="getinformation" resultType="com.zr.uniSoul.pojo.vo.UserVO">
         select * from user where id = #{id}
+    </select>
+    <select id="findEmainlByUsername" resultType="java.lang.String">
+        select email from user where username = #{username}
     </select>
 </mapper>

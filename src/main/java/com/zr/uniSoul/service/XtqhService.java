@@ -1,5 +1,7 @@
 package com.zr.uniSoul.service;
 
+import com.zr.uniSoul.common.R;
+import com.zr.uniSoul.pojo.dto.UserDTO;
 import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.pojo.vo.ArticleLikesVO;
 import com.zr.uniSoul.pojo.vo.ArticleVO;
@@ -77,4 +79,19 @@ public interface XtqhService {
      * @return
      */
     UserVO getinformation(int i);
+
+    /**
+     * 找回密码接口
+     * @param user
+     * @return
+     */
+    String findPassword(UserDTO user);
+
+    /**
+     * 修改密码
+     * @param username
+     * @param password
+     * @return
+     */
+    int changePassWord(String username, String password);
 }

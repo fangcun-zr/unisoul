@@ -88,4 +88,8 @@ public interface xtqhMapper {
     List<ArticleVO> getMyArticleCollect(int id);
 
     UserVO getinformation(int id);
+
+    String findEmainlByUsername(String username);
+
+    int changePassWord(String username, String password);
 }

@@ -393,4 +393,34 @@ Object userIdObj = session.getAttribute("userId");
         }
         return R.success(xtqhService.getinformation(Integer.parseInt(userId)));
     }
+    /**
+     * 找回密码
+     */
+    @PostMapping("/findPassword")
+    @ApiOperation("找回密码")
+    public R<Object> findPassword(@RequestBody UserDTO user) {
+        log.info("找回密码接口,username:{},email:{}", user.getUsername(), user.getEmail());
+        String ret =  xtqhService.findPassword(user);
+        R r = new R();
+        if(ret != null){
+            r.setMsg("发送验证码成功");
+            return r.success(ret);
+        }
+
+        return R.error("发送失败，用户名与邮箱不匹配，请检查");
+    }
+
+
+    /**
+     * 修改密码
+     */
+    @PostMapping("/changePassWord")
+    public R changePassWord(@RequestBody UserDTO user) {
+        log.info("user:{}", user);
+        int ret = xtqhService.changePassWord(user.getUsername(),user.getPassword());
+        if (ret == 1) {
+            return R.success("修改密码成功");
+        }
+        return R.error("修改密码失败");
+    }
 }
