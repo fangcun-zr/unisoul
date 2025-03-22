@@ -1,13 +1,27 @@
 server:
   port: 8080
   servlet:
-    encoding:
-      charset: UTF-8
-      enabled: true
-      force: true
+      encoding:
+        charset: UTF-8
+        enabled: true
+        force: true
 spring:
+  redis:
+    host: localhost       # Redis服务器地址（生产环境替换为实际IP/域名）
+    port: 6379            # Redis端口（默认6379）
+    password: yourpass    # 密码（没有密码则删除此行）
+    database: 0           # 数据库索引（0-15）
+    timeout: 5000         # 连接超时时间（毫秒）
 
+    # Lettuce连接池配置（生产环境建议优化）
+    lettuce:
+      pool:
+        max-active: 20    # 最大连接数（默认8）
+        max-idle: 10      # 最大空闲连接（默认8）
+        min-idle: 5       # 最小空闲连接（默认0）
+        max-wait: 3000    # 获取连接最大等待时间（毫秒，默认-1无限等待）
   jackson:
+    property-naming-strategy: SNAKE_CASE
     parser:
       ALLOW_UNQUOTED_CONTROL_CHARS: true
   application:
@@ -15,9 +29,9 @@ spring:
   datasource:
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://rm-bp118w7f3e3a201zwco.mysql.rds.aliyuncs.com:3306/xinlvfang?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
-      username: fangcun2
-      password: Fangcun123
+      url:  jdbc:mysql://localhost:3306/xinlvfang?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+      username: root
+      password: Abc18384023303
   main:
     allow-bean-definition-overriding: true
     allow-circular-references: true
@@ -26,6 +40,10 @@ spring:
       max-file-size: 20MB
       max-request-size: 40MB
 mybatis-plus:
+  mapper-locations:
+    - classpath:mapper/*.xml
+    - classpath*:com/yourpackage/mapper/**/*.xml
+  type-aliases-package: generator.domain
   configuration:
     # 在映射实体或者属性时，将数据库中表名和字段名中的下划线去掉，按照驼峰命名法映射
     map-underscore-to-camel-case: true
@@ -57,3 +75,4 @@ ai:
     deepseek:
       apiKey: sk-ccf7d94300ab4880bb06e3cc3008f168
       baseUrl: https://api.deepseek.com/chat/completions
+

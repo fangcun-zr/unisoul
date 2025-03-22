@@ -1,13 +1,16 @@
 package generator.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import generator.domain.Doctor;
-import com.baomidou.mybatisplus.extension.service.IService;
+import generator.exception.BusinessException;
+import org.springframework.web.multipart.MultipartFile;
 
-/**
-* @author ztb
-* @description 针对表【doctor】的数据库操作Service
-* @createDate 2025-03-05 23:49:29
-*/
-public interface DoctorService extends IService<Doctor> {
+public interface DoctorService {
+    boolean registerDoctor(Doctor doctor,
+                           MultipartFile photo,
+                           MultipartFile certificate) throws BusinessException;
 
+    Page<Doctor> listDoctors(int current, int pageSize);
+    Doctor getDoctorWithSchedule(Integer id);
+    Boolean sendCheckCode(String email, String code);
 }
