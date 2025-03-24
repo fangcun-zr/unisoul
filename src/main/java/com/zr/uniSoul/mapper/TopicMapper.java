@@ -1,10 +1,15 @@
 package com.zr.uniSoul.mapper;
 
+import com.github.pagehelper.Page;
+import com.zr.uniSoul.pojo.dto.CommentsPageDTO;
+import com.zr.uniSoul.pojo.dto.PageQueryDTO;
 import com.zr.uniSoul.pojo.dto.TopicDTO;
+import com.zr.uniSoul.pojo.entity.Comments;
 import com.zr.uniSoul.pojo.entity.Replies;
 import com.zr.uniSoul.pojo.entity.Tags;
 import com.zr.uniSoul.pojo.entity.Topic;
 import com.zr.uniSoul.pojo.vo.TopicLikesVO;
+import com.zr.uniSoul.pojo.vo.TopicVO;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -45,7 +50,7 @@ public interface TopicMapper {
     /**
      * 获取所有话题
      */
-    @Select("SELECT * FROM topics ORDER BY views DESC")
+    @Select("SELECT * FROM topics ORDER BY views DESC LIMIT 30")
     List<TopicDTO> getAllTopic();
 
     /**
@@ -75,7 +80,7 @@ public interface TopicMapper {
      * 获取回复
      * @param topicId
      */
-    @Select("SELECT * FROM replies WHERE topic_id = #{topicId}")
+    @Select("SELECT * FROM replies WHERE topic_id = #{topicId} ORDER BY create_time DESC")
     List<Replies> getReplies(Long topicId);
 
     /**
@@ -208,4 +213,68 @@ public interface TopicMapper {
      */
     @Select("SELECT * FROM topics ORDER BY create_time DESC LIMIT 10")
     List<Topic> newTopics();
+
+    /**
+     * 话题分页
+     * @param pageQueryDTO
+     * @return
+     */
+    Page<TopicVO> pageQuery(PageQueryDTO pageQueryDTO);
+
+    /**
+     * 获取话题的回复数量
+     * @param id
+     * @return
+     */
+    @Select("SELECT COUNT(*) FROM replies WHERE topic_id = #{id}")
+    long getRepliesCount(long id);
+
+    /**
+     * 获取用户是否点赞
+     * @param username
+     * @param repliesId
+     * @return
+     */
+    @Select("SELECT is_like FROM likes_state_topic_replies WHERE username = #{username} AND replies_id = #{repliesId}")
+    Boolean inquireLikeRepliesStatus(String username, long repliesId);
+
+    /**
+     * 添加点赞状态
+     * @param username
+     * @param repliesId
+     * @param isLike
+     */
+    @Insert("INSERT INTO likes_state_topic_replies (username, replies_id, is_like) VALUES (#{username}, #{repliesId}, #{isLike})ON DUPLICATE KEY UPDATE is_like = #{isLike}")
+    void likeReplies(String username, long repliesId, boolean isLike);
+
+    /**
+     * 更改话题回复的点赞量
+     * @param repliesId
+     * @param likeCount
+     */
+    @Update("UPDATE replies SET replies.likeCount = #{likeCount} WHERE id = #{repliesId}")
+    void setTopicRepliesLikeCount(long repliesId, long likeCount);
+
+    /**
+     * 获取指定的回复
+     * @param repliesId
+     * @return
+     */
+    @Select("SELECT * FROM replies WHERE id = #{repliesId}")
+    Replies getRepliesById(Long repliesId);
+
+    /**
+     * 增加浏览量
+     * @param topicId
+     */
+    @Update("UPDATE topics SET views = views + 1 WHERE id = #{topicId}")
+    void addViews(Long topicId);
+
+    /**
+     * 获取头像资源
+     * @param username
+     * @return
+     */
+    @Select("SELECT avatarUrl FROM user WHERE username = #{username}")
+    String getAvatarUrl(String username);
 }

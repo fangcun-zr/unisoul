@@ -9,4 +9,8 @@ public class Replies {
     private String username;
     private String content;
     private boolean anonymous;
+    private boolean isLike;
+    private long likeCount;
+    private String createTime;
+    private String avatarUrl;
 }

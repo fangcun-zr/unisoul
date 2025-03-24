@@ -18,7 +18,9 @@ public class Topic implements Serializable {
     private String content;
     private boolean anonymous;
     private long likes;
+    private boolean isLike;
     private long views;
+    private String avatarUrl;
     private String username;
     private List<String> tags;
     private List<Replies> replies;

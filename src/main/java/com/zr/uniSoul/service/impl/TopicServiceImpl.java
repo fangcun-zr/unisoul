@@ -1,22 +1,22 @@
 package com.zr.uniSoul.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.zr.uniSoul.common.PageResult;
 import com.zr.uniSoul.mapper.TopicMapper;
+import com.zr.uniSoul.pojo.dto.PageQueryDTO;
 import com.zr.uniSoul.pojo.dto.TopicDTO;
-import com.zr.uniSoul.pojo.entity.Replies;
-import com.zr.uniSoul.pojo.entity.Tags;
-import com.zr.uniSoul.pojo.entity.Topic;
+import com.zr.uniSoul.pojo.entity.*;
+import com.zr.uniSoul.pojo.vo.RepliesLikesVO;
 import com.zr.uniSoul.pojo.vo.TopicLikesVO;
 import com.zr.uniSoul.pojo.vo.TopicVO;
 import com.zr.uniSoul.service.TopicService;
-import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -85,7 +85,20 @@ public class TopicServiceImpl implements TopicService {
      */
     @Override
     public List<Replies> getReplies(Long topicId) {
-        return topicMapper.getReplies(topicId);
+        List<Replies> replies = topicMapper.getReplies(topicId);
+        replies.forEach(reply -> {
+            Boolean b = topicMapper.inquireLikeRepliesStatus(reply.getUsername(), reply.getId());
+            if(b==null){
+                b = false;
+            }
+            reply.setLike(b);
+            if(reply.isAnonymous()){
+                reply.setUsername("anonymousUser");
+            }else {
+                reply.setAvatarUrl(topicMapper.getAvatarUrl(reply.getUsername()));
+            }
+        });
+        return replies;
     }
 
     /**
@@ -102,10 +115,14 @@ public class TopicServiceImpl implements TopicService {
         if(b==null){
             isLike = false;//如果数据库中没有该用户点赞记录，则默认为未点赞
         }
-        topicMapper.like(username, topicId, isLike);
         if(isLike == true){
             likeCount--;
-        }else likeCount++;
+            isLike = false;
+        }else {
+            likeCount++;
+            isLike = true;
+        }
+        topicMapper.like(username, topicId, isLike);
         topicMapper.setTopicLikeCount(topicId,likeCount);
         TopicLikesVO like = new TopicLikesVO();
         like.setUsername(username);
@@ -153,12 +170,13 @@ public class TopicServiceImpl implements TopicService {
     }
 
     /**
-     * 根据用户名获取用户的话题
+     * 获取话题详情
      * @param topicId
      * @return
      */
     @Override
     public Topic getTopicInformation(Long topicId) {
+        topicMapper.addViews(topicId);
         TopicDTO topicDTO = topicMapper.getTopicInformation(topicId);
         Topic topic = new Topic();
         BeanUtils.copyProperties(topicDTO,topic);
@@ -167,6 +185,16 @@ public class TopicServiceImpl implements TopicService {
         topic.setTags(tagsName);
         List<Replies> repliesList = topicMapper.getReplies(topicId);
         topic.setReplies(repliesList);
+        Boolean b = topicMapper.inquireLikeStatus(topic.getUsername(), topicId);
+        if(topic.isAnonymous()){
+            topic.setAvatarUrl("anonymousPicture");
+        }else {
+            topic.setAvatarUrl(topicMapper.getAvatarUrl(topic.getUsername()));
+        }
+        if(b == null){
+            b = false;
+        }
+        topic.setLike(b);
         return topic;
     }
 
@@ -208,22 +236,44 @@ public class TopicServiceImpl implements TopicService {
 
     /**
      * 根据标签获取话题
+     *
+     * @param username
      * @param tags
      * @return
      */
     @Override
-    public List<Topic> getTopicsByTags(List<String> tags) {
-        return  topicMapper.getTopicsByTags(tags);
+    public List<Topic> getTopicsByTags(String username, List<String> tags) {
+        List<Topic> topicsByTags = topicMapper.getTopicsByTags(tags);
+        topicsByTags.forEach(topic -> {
+            Boolean b = topicMapper.inquireLikeStatus(username, topic.getId());
+            if(b == null){
+                b = false;
+            }
+            topic.setLike(b);
+            topic.setAvatarUrl(topicMapper.getAvatarUrl(topic.getUsername()));
+        });
+        return topicsByTags;
     }
 
     /**
      * 关键字查询
+     *
+     * @param username
      * @param keyWord
      * @return
      */
     @Override
-    public List<Topic> searchKeyWord(String keyWord) {
-        return topicMapper.searchKeyWord(keyWord);
+    public List<Topic> searchKeyWord(String username, String keyWord) {
+        List<Topic> topics = topicMapper.searchKeyWord(keyWord);
+        topics.forEach(topic -> {
+            Boolean b = topicMapper.inquireLikeStatus(username, topic.getId());
+            if(b == null){
+                b = false;
+            }
+            topic.setLike(b);
+            topic.setAvatarUrl(topicMapper.getAvatarUrl(topic.getUsername()));
+        });
+        return topics;
     }
 
     /**
@@ -233,5 +283,88 @@ public class TopicServiceImpl implements TopicService {
     @Override
     public List<Topic> newTopics() {
         return topicMapper.newTopics();
+    }
+    /**
+     * 话题分页展示已登录
+     * @param username
+     * @param pageQueryDTO
+     * @return
+     */
+    @Override
+    public PageResult pageQuery(String username , PageQueryDTO pageQueryDTO) {
+        PageHelper.startPage(pageQueryDTO.getPage(), pageQueryDTO.getPageSize());
+        Page<TopicVO> page = topicMapper.pageQuery(pageQueryDTO);
+        page.forEach(topicVO -> {
+            List<Tags> tags = topicMapper.getTags(topicVO.getId());
+            List<String> tagsName = tags.stream().map(Tags::getName).collect(Collectors.toList());
+            topicVO.setTags(tagsName);
+            Boolean b = topicMapper.inquireLikeStatus(username, topicVO.getId());
+            if(b == null){
+                b = false;
+            }
+            topicVO.setLike(b);
+            topicVO.setRepliesCount(topicMapper.getRepliesCount(topicVO.getId()));
+            if(topicVO.isAnonymous()){
+                topicVO.setAvatarUrl("anonymousPicture");
+            }else {
+                topicVO.setAvatarUrl(topicMapper.getAvatarUrl(topicVO.getUsername()));
+            }
+        });
+        if (page == null) {
+            // 返回一个空的PageResult或者抛出自定义异常
+            return new PageResult(0, new ArrayList<>()); // 假设PageResult的构造函数接受total和result列表作为参数
+            // 或者
+            // throw new CustomException("No comments found");
+        }
+
+        return new PageResult(page.getTotal(), page.getResult());
+    }
+
+    /**
+     * 点赞话题回复
+     * @param username
+     * @param repliesId
+     * @param likeCount
+     * @param isLike
+     * @return
+     */
+    @Override
+    public RepliesLikesVO likeReplies(String username, long repliesId, long likeCount, boolean isLike) {
+        Boolean b = topicMapper.inquireLikeRepliesStatus(username, repliesId);
+        System.out.println("b="+b);
+        if(b == null){
+            b = false;
+        }
+        if(b){
+            likeCount--;
+            isLike = false;
+        }else {
+            likeCount++;
+            isLike = true;
+        }
+        topicMapper.likeReplies(username, repliesId, isLike);
+        topicMapper.setTopicRepliesLikeCount(repliesId,likeCount);
+        RepliesLikesVO repliesLikesVO = new RepliesLikesVO();
+        repliesLikesVO.setLikeCount(likeCount);
+        repliesLikesVO.setLike(isLike);
+        repliesLikesVO.setRepliesId(repliesId);
+        return repliesLikesVO;
+    }
+
+    /**
+     * 通过评论的Id获取评论
+     * @param username
+     * @param repliesId
+     * @return
+     */
+    @Override
+    public Replies getRepliesById(String username , Long repliesId) {
+        Replies repliesById = topicMapper.getRepliesById(repliesId);
+        Boolean b = topicMapper.inquireLikeRepliesStatus(username, repliesId);
+        if(b == null){
+            b = false;
+        }
+        repliesById.setLike(b);
+        return repliesById;
     }
 }
