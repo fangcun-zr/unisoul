@@ -4,6 +4,7 @@ import com.zr.uniSoul.common.PageResult;
 import com.zr.uniSoul.pojo.dto.CommentsPageDTO;
 import com.zr.uniSoul.pojo.dto.PageQueryDTO;
 import com.zr.uniSoul.pojo.dto.AddCommentsDTO;
+import com.zr.uniSoul.pojo.dto.ReviewDTO;
 import com.zr.uniSoul.pojo.entity.Article;
 import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.pojo.vo.MyDataVO;
@@ -21,7 +22,7 @@ public interface ZhxtService {
 
     int likeComments(String articleCommentId, int userId);
 
-    int checkArticle(Article article);
+    int checkArticle(ReviewDTO reviewDTO);
 
     Article getArticleDetail(String id);
 

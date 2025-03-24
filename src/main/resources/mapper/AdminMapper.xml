@@ -62,6 +62,21 @@
     <delete id="deleteQuestion">
         delete from question where question_id = #{id}
     </delete>
+    <delete id="deleteAssessment">
+
+
+        -- 再删除 assessment 记录
+        DELETE FROM assessment WHERE id = #{id};
+
+    </delete>
+    <delete id="deleteAssessmentSession">
+        -- 先删除与 assessment 关联的 assessment_session 记录
+        DELETE FROM assessment_session WHERE assessment_id = #{id};
+    </delete>
+    <delete id="deleteQuestions">
+        -- 最后删除 question 记录
+        DELETE FROM question WHERE assessment_id = #{id};
+    </delete>
 
     <select id="getIsAdmin" resultType="java.lang.Integer">
         select isadmin from user where id = #{userId}

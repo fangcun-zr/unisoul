@@ -198,4 +198,25 @@ public class AdminController {
         }
     }
 
+    /**
+     * 删除测评
+     * @param id
+     * @param request
+     * @return
+     */
+    @DeleteMapping("/deleteAssessment")
+    public R<String> deleteAssessment(@RequestParam int id,HttpServletRequest request){
+        log.info("删除测评{}",id);
+        if(!judgeAdmin(request)) {
+            return R.error("非管理员账户，没有权限");
+        }
+        int ret = adminService.deleteAssessment(id);
+        if(ret==1){
+            return R.success("操作成功");
+        }
+        else {
+            return R.error("操作失败");
+        }
+    }
+
 }

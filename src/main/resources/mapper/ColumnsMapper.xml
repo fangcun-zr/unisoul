@@ -26,14 +26,43 @@
         SET article_count = article_count + 1
         WHERE id = #{columnId};
     </update>
+    <delete id="deleteByPrimaryKey">
+        delete from columns where id = #{columnId}
+    </delete>
+    <update id="deleteArticleFromColumn">
+        UPDATE article
+        SET column_id = NULL
+        WHERE column_id = #{columnId};
+    </update>
+    <update id="updateByPrimaryKeySelective">
+        update columns
+        <set>
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="categoryId != null">
+                category_id = #{categoryId},
+            </if>
+            <if test="coverUrl != null">
+                cover_url = #{coverUrl},
+            </if>
+        </set>
+        where id = #{columnId}
+    </update>
 
     <select id="pageQuery" resultType="com.zr.uniSoul.pojo.entity.Columns">
         select * from columns
         <where>
+            <if test="isFeatured != null">
+                and isFeatured = #{isFeatured}
+            </if>
             <if test="keyWords != null and keyWords != ''">
                 and title like concat('%',#{keyWords},'%')
             </if>
-            <if test="category_id != null">
+            <if test="category_id != 0">
                 and category_id = #{category_id}
             </if>
         </where>
@@ -72,6 +101,12 @@
     </select>
     <select id="getMyArticles" resultType="com.zr.uniSoul.pojo.vo.ArticleVO">
         select * from article where author_id = #{authorId} and column_id is null order by create_time desc
+    </select>
+    <select id="getAuthorInfo" resultType="com.zr.uniSoul.pojo.vo.UserVO">
+        select id,name,avatarUrl from user where id = (select user_id from columns where id = #{columnId})
+    </select>
+    <select id="selectByPrimaryKey" resultType="com.zr.uniSoul.pojo.entity.Columns">
+        select * from columns where id = #{id}
     </select>
 
     <!--    <select id="getArticleList" resultType="com.zr.uniSoul.pojo.vo.ArticleVO">-->

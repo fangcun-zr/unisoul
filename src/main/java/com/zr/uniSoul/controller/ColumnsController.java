@@ -4,8 +4,10 @@ import com.zr.uniSoul.common.PageResult;
 import com.zr.uniSoul.common.R;
 import com.zr.uniSoul.pojo.dto.ArticleToColumDTO;
 import com.zr.uniSoul.pojo.dto.PageQueryDTO;
+import com.zr.uniSoul.pojo.entity.Columns;
 import com.zr.uniSoul.pojo.vo.ArticleVO;
 import com.zr.uniSoul.pojo.vo.ColumnsVO;
+import com.zr.uniSoul.pojo.vo.UserVO;
 import com.zr.uniSoul.service.ColumnsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -56,6 +58,7 @@ public class ColumnsController {
             // 处理其他情况或抛出异常
         }
         List<ColumnsVO> columns = columsService.getMyColumns(userId);
+        log.info("获取我的专栏列表成功");
         return R.success(columns);
 
     }
@@ -87,6 +90,7 @@ public class ColumnsController {
             log.info("获取我的文章列表失败");
             return R.error("获取我的文章列表失败");
         }
+        log.info("获取我的文章列表成功");
         return R.success(articleVOList);
     }
 
@@ -132,6 +136,22 @@ public class ColumnsController {
         return R.error("创建专栏失败");
 
     }
+    /**
+     * 修改专栏信息
+     */
+    @PostMapping("/updateColumn")
+    public R<Object> updateColum(@RequestParam Integer columnId,
+                                 @RequestParam String title,
+                                 @RequestParam String description,
+                                 @RequestParam Integer categoryId,
+                                 @RequestPart MultipartFile cover) {
+        log.info("修改专栏信息 columnId:{},title:{},description:{},categoryId:{},cover:{}", columnId, title, description, categoryId, cover);
+        Integer result = columsService.updateColum(columnId,title, description, categoryId, cover);
+        if(result == 1){
+            return R.success(result);
+        }
+        return R.error("修改专栏信息失败");
+    }
 
     /**
      * 将该文章从该专栏中移除
@@ -144,5 +164,44 @@ public class ColumnsController {
             return R.success(result);
         }
         return R.error("移除文章失败");
+    }
+
+    /**
+     * 获取专栏作者信息
+     */
+    @GetMapping("/getColumAuthor")
+    public R<UserVO> getAuthorInfo(@RequestParam Integer column_id) {
+        log.info("获取专栏作者信息 column_id:{}", column_id);
+        UserVO userVO = columsService.getAuthorInfo(column_id);
+        if(userVO == null){
+            return R.error("获取专栏作者信息失败");
+        }
+        return R.success(userVO);
+
+    }
+    /**
+     * 获取专栏详情信息
+     */
+   @GetMapping("/GetColumnDetail")
+    public R<Columns> getColumnDetail(@RequestParam Integer columnId) {
+       log.info("获取专栏详情信息 columnId:{}", columnId);
+       Columns columns = columsService.getColumnDetail(columnId);
+       if(columns == null){
+           return R.error("获取专栏详情信息失败");
+       }
+       return R.success(columns);
+   }
+
+    /**
+     * 删除专栏
+     */
+    @DeleteMapping("/deleteColumn")
+    public R<Object> deleteColumn(@RequestParam(value = "column_id") Integer columnId) {
+        log.info("删除专栏 columnId:{}", columnId);
+        Integer result = columsService.deleteColumn(columnId);
+        if(result == 1){
+            return R.success(result);
+        }
+        return R.error("删除专栏失败");
     }
 }

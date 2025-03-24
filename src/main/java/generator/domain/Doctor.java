@@ -4,68 +4,113 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import java.util.Date;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /**
- * 
+ * 医疗人员信息表
  * @TableName doctor
  */
 @TableName(value ="doctor")
 @Data
 public class Doctor {
     /**
-     * 编号
+     * 唯一标识ID
      */
     @TableId(type = IdType.AUTO)
     private Integer id;
 
     /**
-     * 名字
+     * 姓名
      */
-    private String name;
+    @TableField("full_name")
+    @JsonProperty("full_name")
+    private String fullName;
 
     /**
-     * 
+     * 性别（中文枚举）
      */
-    private String specialization;
 
-    @Override
-    public boolean equals(Object that) {
-        if (this == that) {
-            return true;
-        }
-        if (that == null) {
-            return false;
-        }
-        if (getClass() != that.getClass()) {
-            return false;
-        }
-        Doctor other = (Doctor) that;
-        return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
-            && (this.getSpecialization() == null ? other.getSpecialization() == null : this.getSpecialization().equals(other.getSpecialization()));
-    }
+    private Object gender;
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
-        result = prime * result + ((getName() == null) ? 0 : getName().hashCode());
-        result = prime * result + ((getSpecialization() == null) ? 0 : getSpecialization().hashCode());
-        return result;
-    }
+    /**
+     * 手机号（唯一约束）
+     */
+    @TableField("phone_number")
+    @JsonProperty("phone_number")
+    private String phoneNumber;
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", name=").append(name);
-        sb.append(", specialization=").append(specialization);
-        sb.append("]");
-        return sb.toString();
-    }
+    /**
+     * 邮箱（唯一约束）
+     */
+    private String email;
+
+    /**
+     * 出生日期
+     */
+    @TableField("birth_date")
+    @JsonProperty("birth_date")
+    private Date birthDate;
+
+    /**
+     * 所属科室
+     */
+    private String department;
+
+    /**
+     * 专业方向
+     */
+    private String specialty;
+
+    /**
+     * 执业证号（唯一约束）
+     */
+    @TableField("license_number")
+    @JsonProperty("license_number")
+    private String licenseNumber;
+
+    /**
+     * 从业年限（0-255年）se_number
+     */
+    @TableField("years_of_experience")
+    @JsonProperty("years_of_experience")
+    private Integer yearsOfExperience;
+
+    /**
+     * 个人简介（支持长文本）
+     */
+    private String introduction;
+
+    /**
+     * 创建时间
+     */
+    @TableField("created_at")
+    @JsonProperty("created_at")
+    private Date createdAt;
+
+    /**
+     * 最后更新时间
+     */
+    @TableField("updated_at")
+    @JsonProperty("updated_at")
+    private Date updatedAt;
+
+    /**
+     * 个人照片（大二进制对象）
+     */
+    private byte[] photo;
+
+    /**
+     * 资格证书（大二进制对象）
+     */
+    private byte[] certificate;
+
+    /**
+     * 新增非持久化字段 - 近期排班信息
+     */
+    @TableField(exist = false)  // 标注该字段不存在于数据库表中
+    private List<Appointment> recentSchedule;
 }

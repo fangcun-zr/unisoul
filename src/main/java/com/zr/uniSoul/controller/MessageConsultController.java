@@ -117,6 +117,7 @@ public class MessageConsultController {
     @GetMapping("/chat")
     public R<String> chat(@RequestParam String question, HttpSession session) {
 
+        log.info("ai咨询：{}",question);
         String reply = messageService.getReply(question,session);
         return R.success(reply);
 

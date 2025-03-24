@@ -2,10 +2,7 @@ package com.zr.uniSoul.controller;
 
 import com.zr.uniSoul.common.PageResult;
 import com.zr.uniSoul.common.R;
-import com.zr.uniSoul.pojo.dto.CommentsPageDTO;
-import com.zr.uniSoul.pojo.dto.GenerateDTO;
-import com.zr.uniSoul.pojo.dto.PageQueryDTO;
-import com.zr.uniSoul.pojo.dto.AddCommentsDTO;
+import com.zr.uniSoul.pojo.dto.*;
 import com.zr.uniSoul.pojo.entity.Article;
 import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.pojo.vo.MyDataVO;
@@ -149,7 +146,7 @@ public class ZhxtController {
     /**
      * 获取文章评论
      */
-    @GetMapping("comments")
+    @PostMapping("comments")
     @ApiOperation("获取文章评论")
     public R<PageResult> getComments(@RequestBody CommentsPageDTO commentsPageDTO) {
         log.info("文章评论分页展示：{}", commentsPageDTO);
@@ -245,11 +242,11 @@ public class ZhxtController {
     /**
      * 审核文章
      */
-    @PostMapping("check")
+    @PostMapping("review")
     @ApiOperation("审核文章")
-    public R checkArticle(@RequestBody Article article, HttpServletRequest request) {
-        log.info("审核文章：{}", article);
-        int ret = zhxtService.checkArticle(article);
+    public R checkArticle(@RequestBody ReviewDTO reviewDTO) {
+        log.info("审核文章：{}", reviewDTO);
+        int ret = zhxtService.checkArticle(reviewDTO);
         if (ret == 1) {
             return R.success("审核成功");
         }
@@ -299,5 +296,7 @@ public class ZhxtController {
         }
         return R.error("文章不存在");
     }
+
+
 
 }

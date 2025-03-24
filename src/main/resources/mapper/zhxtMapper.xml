@@ -11,6 +11,9 @@
     <insert id="likeComments">
         insert into likes(article_comment_id,user_id,create_time,update_time) values(#{articleCommentId},#{userId},#{createTime},#{updateTime})
     </insert>
+    <update id="checkArticle">
+        update article set status = #{status} where id = #{article_id}
+    </update>
     <delete id="deleteArticle">
         delete from article where id = #{articleId}
     </delete>
@@ -52,7 +55,7 @@
     <select id="countQuery" resultType="java.lang.Long">
         SELECT COUNT(*) FROM article <where> <if test='category_id != null'>AND category_id = #{category_id}</if></where>
     </select>
-    <select id="getArticleDetailById" resultType="com.zr.uniSoul.pojo.entity.Article">
+    <select id="getArticleDetailById"  resultMap="article">
       select * from article where id = #{id}
     </select>
     <select id="getUserIdByArticleId" resultType="java.lang.Integer">

@@ -37,16 +37,223 @@ body.writing-mode {
     color: var(--success-color);
 }
 
-/* 主容器布局 */
+/* 主容器布局 - 全面重构响应式系统 */
 .main-container {
     display: grid;
-    grid-template-columns: 60px 1fr 300px;
-    gap: 2rem;
-    padding: 2rem;
+    grid-template-columns: minmax(60px, auto) minmax(0, 1fr) minmax(250px, 300px);
+    gap: 1.5rem;
+    padding: 1.5rem;
     height: calc(100vh - 60px);
+    max-width: 1920px; /* 增大最大宽度，适应更大屏幕 */
+    margin: 0 auto; /* 居中显示 */
+    overflow: hidden; /* 防止溢出 */
 }
 
-/* 侧边工具栏 */
+/* 修复编辑器容器 */
+.editor-container {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    overflow-y: auto;
+    min-width: 0; /* 确保内容不会撑破容器 */
+    min-height: 0; /* 确保内容不会撑破容器 */
+    max-height: 100%; /* 确保容器不会超出父元素 */
+    height: 100%; /* 确保填充整个高度 */
+}
+
+/* 封面上传区域 - 优化展示 */
+.avatar-wrapper, #avatarWrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 250px !important; /* 减小默认高度以确保在各种屏幕上可见 */
+    margin: 1rem 0 !important;
+    position: relative !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15) !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    cursor: pointer !important;
+    z-index: 10 !important;
+    background: #f5f5f5 !important;
+    flex-shrink: 0 !important; /* 防止在flex布局中被压缩 */
+}
+
+/* 响应式布局 - 断点优化 */
+@media (max-width: 1400px) {
+    .main-container {
+        grid-template-columns: minmax(60px, auto) minmax(0, 1fr) minmax(220px, 250px);
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .editor-container {
+        padding: 1.5rem;
+    }
+
+    .avatar-wrapper, #avatarWrapper {
+        height: 220px !important;
+    }
+}
+
+@media (max-width: 1200px) {
+    .main-container {
+        grid-template-columns: minmax(60px, auto) minmax(0, 1fr) minmax(200px, 220px);
+        gap: 0.8rem;
+    }
+
+    .editor-container {
+        padding: 1.2rem;
+        gap: 1.5rem;
+    }
+
+    .title-input {
+        font-size: 1.75rem;
+    }
+
+    .settings-panel {
+        padding: 1.2rem;
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .main-container {
+        grid-template-columns: minmax(50px, auto) minmax(0, 1fr) minmax(180px, 200px);
+        gap: 0.6rem;
+        padding: 0.8rem;
+    }
+
+    .avatar-wrapper, #avatarWrapper {
+        height: 200px !important;
+    }
+
+    .sidebar {
+        padding: 0.8rem;
+    }
+
+    .tool-btn {
+        width: 36px;
+        height: 36px;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-container {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr auto;
+        height: auto;
+        min-height: calc(100vh - 60px);
+    }
+
+    .sidebar {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        padding: 0.5rem;
+        order: 1;
+        margin-bottom: 0.5rem;
+        width: 100%;
+    }
+
+    .tool-group {
+        flex-direction: row;
+        gap: 0.5rem;
+        margin: 0 0.5rem;
+    }
+
+    .editor-container {
+        order: 2;
+        max-height: none; /* 移动端允许滚动 */
+        height: auto;
+    }
+
+    .settings-panel {
+        order: 3;
+    }
+
+    .avatar-wrapper, #avatarWrapper {
+        height: 180px !important;
+    }
+
+    .tool-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 0.9rem;
+    }
+}
+
+/* 超小屏幕设备 */
+@media (max-width: 576px) {
+    .main-container {
+        padding: 0.5rem;
+        gap: 0.5rem;
+    }
+
+    .editor-container {
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    .title-input {
+        font-size: 1.5rem;
+    }
+
+    .avatar-wrapper, #avatarWrapper {
+        height: 150px !important;
+    }
+
+    .settings-panel {
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    .section-title {
+        font-size: 1rem;
+    }
+
+    .sidebar {
+        padding: 0.3rem;
+    }
+
+    .tool-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 0.8rem;
+    }
+
+    .tool-group {
+        gap: 0.3rem;
+    }
+}
+
+/* 滚动条美化 */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f5f5f5;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #aaa;
+}
+
+/* 侧边工具栏优化 */
 .sidebar {
     background: var(--card-bg);
     border-radius: 16px;
@@ -55,6 +262,7 @@ body.writing-mode {
     flex-direction: column;
     gap: 2rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    height: fit-content; /* 高度自适应内容 */
 }
 
 .tool-group {
@@ -82,20 +290,10 @@ body.writing-mode {
     transform: translateY(-2px);
 }
 
-/* 编辑区样式 */
-.editor-container {
-    background: var(--card-bg);
-    border-radius: 16px;
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    overflow-y: auto;
-}
-
 .title-section {
     position: relative;
+    max-width: 100%;
+    width: 100%;
 }
 
 .title-input {
@@ -115,46 +313,43 @@ body.writing-mode {
     color: var(--light-text);
 }
 
-/* 封面上传区域 */
-.cover-section {
-    position: relative;
-    cursor: pointer;
+.avatar, #avatarPreview {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    border-radius: 10px !important;
+    transition: var(--transition) !important;
+    display: block !important;
+    visibility: visible !important;
 }
 
-
-
-.cover-preview {
-    position: relative;
-    width: 100%;
-    height: 300px;
-    border-radius: 16px;
-    overflow: hidden;
-}
-
-.cover-preview img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.cover-overlay {
+.avatar-edit {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
     bottom: 0;
+    left: 0;
+    width: 100%;
     background: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 12px;
+    transition: var(--transition);
+    opacity: 0.7;
+}
+
+.avatar-edit:hover {
+    opacity: 1;
+}
+
+.avatar-label {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: white;
-    opacity: 0;
-    transition: var(--transition);
+    gap: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
 }
 
-.cover-section:hover .cover-overlay {
-    opacity: 1;
+.avatar-label i {
+    font-size: 1.1rem;
 }
 
 /* 编辑器样式优化 */
@@ -361,9 +556,9 @@ input:checked + .slider:before {
     background: var(--bg-color);
     border-radius: 8px;
 }
-.avatarPreview {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;  /* 使用 cover 保持图片宽高比 */
-    margin-bottom: 0.5rem;
+
+/* 恢复hover效果 */
+.avatar-wrapper:hover, #avatarWrapper:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2) !important;
 }

@@ -1,75 +1,75 @@
- // API_BASE_URL = "http://localhost:8080";
+// API配置
+const API = {
+    // 基础URL
+    baseUrl: 'http://localhost:8080',
 
-// 学途启航-个人信息相关的API请求
-const xtqh_information = {
-    // // 获取个人信息
-    // getInformation: function() {
-    //     return $.ajax({
-    //         url: `${API_BASE_URL}/xtqh/information`,
-    //         type: 'GET',
-    //         headers: {
-    //             'Authorization': localStorage.getItem('token')
-    //         }
-    //     });
-    // },
+    // 获取个人信息
+    getInformation: function() {
+        return `${this.baseUrl}/xtqh/getinformation`;
+    },
 
     // 更新个人信息
-    updateInformation: function(userData) {
-        return $.ajax({
-            url: `${API_BASE_URL}/xtqh/information`,
-            type: 'POST',
-            contentType: 'application/json',
-            charset:'UTF-8',
-            data: JSON.stringify({
-                name: userData.name,
-                gender: userData.gender,
-                age: userData.age,
-                school: userData.school,
-                biography: userData.biography,
-            })
-        });
+    updateInformation: function() {
+        return `${this.baseUrl}/xtqh/information`;
     },
 
-    // 获取点赞数
-    getLikes: function() {
-        return $.ajax({
-            url: `${API_BASE_URL}/xtqh/likes`,
-            type: 'GET',
-            headers: {
-                'Authorization': localStorage.getItem('token')
-            },
-            data: {
-                likeCount: "string"
-            }
-        });
+    // 获取粉丝列表
+    getFansList: function() {
+        return `${this.baseUrl}/xtqh/getFansList`;
     },
 
-
-
-
-    // 发送私信
-    sendPrivateMessage: function(messageData) {
-        return $.ajax({
-            url: `${API_BASE_URL}/xtqh/privateMessage`,
-            type: 'GET',
-            headers: {
-                'Authorization': localStorage.getItem('token')
-            },
-            data: {
-                senderName: messageData.senderName
-            }
-        });
+    // 获取关注列表
+    getFollowList: function() {
+        return `${this.baseUrl}/xtqh/getFollowList`;
     },
 
-    uploadAvatar: function (formData) {
-        return $.ajax({
-            url: `${API_BASE_URL}/xtqh/changeAvatar`,
-            type: 'POST',
-            enctype: 'multipart/form-data',
-            data: formData,
-            processData: false,  // 告诉jQuery不要处理发送的数据
-            contentType: false   // 告诉jQuery不要设置Content-Type请求头
-        });
+    // 关注用户
+    followUser: function(userId) {
+        return `${this.baseUrl}/xtqh/followUser?userId=${userId}`;
+    },
+
+    // 取消关注用户
+    unfollowUser: function(userId) {
+        return `${this.baseUrl}/xtqh/unfollowUser?userId=${userId}`;
+    },
+
+    // 获取个人中心信息
+    getMyInformation: function() {
+        return `${this.baseUrl}/xtqh/MyInformation`;
+    },
+
+    // 上传头像
+    uploadAvatar: function() {
+        return `${this.baseUrl}/xtqh/changeAvatar`;
+    },
+
+    // 获取我的文章
+    getMyArticles: function() {
+        return `${this.baseUrl}/xtqh/getMyArticles`;
+    },
+
+    // 获取我的数据统计
+    getMyData: function() {
+        return `${this.baseUrl}/zhxt/getMyData`;
+    },
+
+    // 获取收藏文章
+    getCollectArticles: function() {
+        return `${this.baseUrl}/xtqh/getCollectArticles`;
+    },
+
+    // 获取我的专栏
+    getMyColumns: function() {
+        return `${this.baseUrl}/columns/getMyColumns`;
+    },
+
+    // 获取测评历史
+    getAssessmentHistory: function() {
+        return `${this.baseUrl}/assessment/history`;
+    },
+
+    // 删除文章
+    deleteArticle: function(articleId) {
+        return `${this.baseUrl}/zhxt/deleteArticle?articleId=${articleId}`;
     }
-
 };

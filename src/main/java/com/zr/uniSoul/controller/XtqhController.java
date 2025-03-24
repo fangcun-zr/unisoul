@@ -6,7 +6,9 @@ import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.pojo.vo.ArticleLikesVO;
 import com.zr.uniSoul.pojo.vo.ArticleVO;
 import com.zr.uniSoul.pojo.vo.FollowersVO;
+import com.zr.uniSoul.pojo.vo.UserVO;
 import com.zr.uniSoul.service.XtqhService;
+import com.zr.uniSoul.service.ZhxtService;
 import com.zr.uniSoul.utils.AliOssUtil;
 import com.zr.uniSoul.utils.CheckCode;
 import io.swagger.annotations.Api;
@@ -33,6 +35,9 @@ public class XtqhController {
 
     @Autowired
     private AliOssUtil aliOssUtil;
+
+    @Autowired
+    private ZhxtService zhxtService;
 
     /**
      * 用户登录
@@ -168,7 +173,7 @@ public class XtqhController {
     @ApiOperation("关注")
     public R<String> follow(@RequestParam("username") String username, HttpServletRequest request) {
         log.info("关注接口, 关注: {}", username);
-
+        log.info(username);
         if (username == null || username.isEmpty()) {
             return R.error("用户名不能为空");
         }
@@ -298,6 +303,54 @@ public class XtqhController {
         return R.success(followersVO);
     }
     /**
+     * 获取粉丝列表
+     */
+    @GetMapping("/getFansList")
+    @ApiOperation("获取粉丝列表")
+    public R<List<UserVO>> getFollowersList(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+Object userIdObj = session.getAttribute("userId");
+        if (userIdObj == null) {
+            return R.error("用户未登录");
+        }
+        Integer userId = Integer.parseInt(userIdObj.toString());
+        log.info("获取粉丝列表接口,{}", userId);
+        List<UserVO> userVOList = xtqhService.getFollowersList(userId);
+        if (userVOList == null || userVOList.isEmpty()) {
+            if(zhxtService.getMyData(userId).getFollowsCount()==0){
+
+                return R.success(userVOList);
+            }
+            log.info("获取粉丝列表失败");
+            return R.error("获取粉丝列表失败");
+        }
+        return R.success(userVOList);
+
+    }
+    /**
+     * 获取关注列表
+     */
+    @GetMapping("/getFollowList")
+    @ApiOperation("获取关注列表")
+    public R<List<UserVO>> getFollowList(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+Object userIdObj = session.getAttribute("userId");
+        if (userIdObj == null) {
+            return R.error("用户未登录");
+        }
+        Integer userId = Integer.parseInt(userIdObj.toString());
+        log.info("获取关注列表接口,{}", userId);
+        List<UserVO> userVOList = xtqhService.getFollowList(userId);
+        if (userVOList == null || userVOList.isEmpty()) {
+            if(zhxtService.getMyData(userId).getFollowsCount()==0){
+                return R.success(userVOList);
+            }
+            log.info("获取关注列表失败");
+            return R.error("获取关注列表失败");
+        }
+        return R.success(userVOList);
+    }
+    /**
      * 获取我的文章列表哦
      */
     @GetMapping("/getMyArticles")
@@ -313,5 +366,61 @@ public class XtqhController {
         }
         return R.success(articleVOList);
     }
+    /**
+     * 获取我的文章收藏列表
+     */
+    @GetMapping("/getCollectArticles")
+    @ApiOperation("获取我的文章收藏列表")
+    public R<List<ArticleVO>> getMyArticleCollect(HttpServletRequest request) {
+        log.info("获取我的文章收藏列表接口");
+        HttpSession session = request.getSession();
+        String userId = session.getAttribute("userId").toString();
+        List<ArticleVO> articleVOList = xtqhService.getMyArticleCollect(Integer.parseInt(userId));
+        return R.success(articleVOList);
+    }
 
+    /**
+     * 获取我的个人信息
+     */
+    @GetMapping("/getinformation")
+    @ApiOperation("获取我的个人信息")
+    public R<UserVO> getinformation(HttpServletRequest request) {
+        log.info("获取我的个人信息接口");
+        HttpSession session = request.getSession();
+        String userId = session.getAttribute("userId").toString();
+        if(userId==null){
+            return R.error("用户未登录");
+        }
+        return R.success(xtqhService.getinformation(Integer.parseInt(userId)));
+    }
+    /**
+     * 找回密码
+     */
+    @PostMapping("/findPassword")
+    @ApiOperation("找回密码")
+    public R<Object> findPassword(@RequestBody UserDTO user) {
+        log.info("找回密码接口,username:{},email:{}", user.getUsername(), user.getEmail());
+        String ret =  xtqhService.findPassword(user);
+        R r = new R();
+        if(ret != null){
+            r.setMsg("发送验证码成功");
+            return r.success(ret);
+        }
+
+        return R.error("发送失败，用户名与邮箱不匹配，请检查");
+    }
+
+
+    /**
+     * 修改密码
+     */
+    @PostMapping("/changePassWord")
+    public R changePassWord(@RequestBody UserDTO user) {
+        log.info("user:{}", user);
+        int ret = xtqhService.changePassWord(user.getUsername(),user.getPassword());
+        if (ret == 1) {
+            return R.success("修改密码成功");
+        }
+        return R.error("修改密码失败");
+    }
 }

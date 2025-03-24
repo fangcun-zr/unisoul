@@ -8,6 +8,7 @@ import com.zr.uniSoul.pojo.dto.PageQueryDTO;
 import com.zr.uniSoul.pojo.entity.Columns;
 import com.zr.uniSoul.pojo.vo.ArticleVO;
 import com.zr.uniSoul.pojo.vo.ColumnsVO;
+import com.zr.uniSoul.pojo.vo.UserVO;
 import com.zr.uniSoul.service.ColumnsService;
 import com.zr.uniSoul.utils.AliOssUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -77,6 +78,41 @@ public class ColumnsServiceImpl implements ColumnsService {
     }
 
     /**
+     * 修改专栏
+     * @param
+     * @return
+     */
+    @Override
+    public Integer updateColum(Integer columnId, String title, String description, Integer categoryId, MultipartFile cover) {
+        //将文件存储到阿里云
+        log.info("文件上传:{}",cover);
+        String filePath = "";
+        try {
+            //原始文件名
+            String originalFilename = cover.getOriginalFilename();
+            //截取原始文件后缀  xxx.png
+            String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            //生成新的文件名
+            String objectName = UUID.randomUUID().toString() + extension;
+            //上传文件
+            filePath = aliOssUtil.upload(cover.getBytes(), objectName);
+        } catch (IOException e) {
+            log.error("文件上传失败:{}",e);
+        }
+        //将文件路径保存到数据库
+        Columns columns = new Columns();
+        columns.setColumnId(columnId);
+        columns.setTitle(title);
+        columns.setDescription(description);
+        columns.setCategoryId(categoryId);
+        columns.setCoverUrl(filePath);
+        return columsMapper.updateByPrimaryKeySelective(columns);
+
+    }
+
+
+
+    /**
      * 查询我的专栏
      * @param userId
      * @return
@@ -117,4 +153,38 @@ public class ColumnsServiceImpl implements ColumnsService {
         return columsMapper.removeArticleFromColumn(articleId);
 
     }
+
+    /**
+     *  获取专栏作者信息
+     * @param columnId
+     * @return
+     */
+    @Override
+    public UserVO getAuthorInfo(Integer columnId) {
+        return columsMapper.getAuthorInfo(columnId);
+    }
+
+    /**
+     * 返回专栏信息
+     * @param columnId
+     * @return
+     */
+    @Override
+    public Columns getColumnDetail(Integer columnId) {
+        return columsMapper.selectByPrimaryKey(columnId);
+    }
+
+    /**
+     * 删除专栏
+     * @param columnId
+     * @return
+     */
+    @Override
+    public Integer deleteColumn(Integer columnId) {
+        //先将专栏的文章绑定信息改变
+        columsMapper.deleteArticleFromColumn(columnId);
+        return columsMapper.deleteByPrimaryKey(columnId);
+    }
+
+
 }

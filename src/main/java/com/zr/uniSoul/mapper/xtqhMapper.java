@@ -2,6 +2,7 @@ package com.zr.uniSoul.mapper;
 
 import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.pojo.vo.ArticleVO;
+import com.zr.uniSoul.pojo.vo.UserVO;
 import org.apache.ibatis.annotations.*;
 
 import java.time.LocalDateTime;
@@ -18,12 +19,12 @@ public interface xtqhMapper {
 
     int update(User user);
 
-    int follow(int user_id, int role_id);
+    int follow(int follower_id, int following_id);
 
     Integer findIdByUsername(String role_name);
 
-    @Select("select count(*) from follow where follower_id = #{userId} and following_id = #{followingId}")
-    int findFollow(int userId, Integer followingId);
+    @Select("select count(*) from follow where follower_id = #{follower_id} and following_id = #{followingId}")
+    int findFollow(int follower_id, Integer followingId);
     /**
      * 文章点赞，修改文章的点赞数量
      * @Param("article_id") int article_id
@@ -79,4 +80,16 @@ public interface xtqhMapper {
 
     @Update("update article set favoriteCount = favoriteCount + 1 where id = #{articleId}")
     void addFavoriteCount(int articleId);
+
+    List<UserVO> getFollowersList(Integer userId);
+
+    List<UserVO> getFollowingsList(Integer userId);
+
+    List<ArticleVO> getMyArticleCollect(int id);
+
+    UserVO getinformation(int id);
+
+    String findEmainlByUsername(String username);
+
+    int changePassWord(String username, String password);
 }

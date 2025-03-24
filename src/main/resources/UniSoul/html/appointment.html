@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心理咨询预约 - 心旅坊</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/appointment.css">
+</head>
+<body>
+<!-- 背景装饰 -->
+<div class="background-decoration">
+    <div class="circle c1"></div>
+    <div class="circle c2"></div>
+    <div class="circle c3"></div>
+    <div class="wave-container">
+        <svg viewBox="0 0 1440 320" class="wave">
+            <path fill="#ff7e5f" fill-opacity="0.2" d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+        </svg>
+    </div>
+</div>
+
+<!-- 导航栏 -->
+<nav class="navbar navbar-expand-lg navbar-glass fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="index.html">
+            <img src="../image/logo.png" alt="心旅坊" class="nav-logo">
+            <span>心旅坊</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">首页</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="appointment.html">预约服务</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="articles.html">心理文章</a>
+                </li>
+            </ul>
+            <div class="nav-right">
+                <div class="user-info dropdown">
+                    <a class="dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                        <img src="../image/avatar.png" alt="用户头像" class="nav-avatar">
+                        <span class="username">张三</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user"></i> 个人中心</a></li>
+                        <li><a class="dropdown-item" href="my-appointments.html"><i class="fas fa-calendar-check"></i> 我的预约</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> 退出登录</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- 主要内容 -->
+<main class="main-content">
+    <!-- 预约服务头部 -->
+    <section class="appointment-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="header-content">
+                        <h1 class="animate__animated animate__fadeInLeft">心理咨询预约</h1>
+                        <p class="animate__animated animate__fadeInLeft animate__delay-1s">
+                            专业的心理咨询师团队，为您提供一对一的心理健康服务
+                        </p>
+                        <div class="header-stats animate__animated animate__fadeInLeft animate__delay-2s">
+                            <div class="stat-item">
+                                <div class="stat-icon">
+                                    <i class="fas fa-user-md"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <h4>20+</h4>
+                                    <p>专业医师</p>
+                                </div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-icon">
+                                    <i class="fas fa-calendar-check"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <h4>1000+</h4>
+                                    <p>成功预约</p>
+                                </div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-icon">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <h4>98%</h4>
+                                    <p>满意度</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="header-image animate__animated animate__fadeInRight">
+                        <img src="../image/appointment-hero.png" alt="心理咨询">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header-wave">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                <path fill="#fff5f2" fill-opacity="1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,128C672,128,768,160,864,176C960,192,1056,192,1152,176C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- 预约流程 -->
+    <section class="process-section">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2 class="section-title">预约流程</h2>
+                <p class="section-desc">简单四步，开启您的心理咨询之旅</p>
+            </div>
+            <div class="process-timeline">
+                <div class="process-step animate__animated animate__fadeInUp">
+                    <div class="step-icon">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <h3>选择医生</h3>
+                    <p>浏览专业医师团队，选择适合您的咨询师</p>
+                </div>
+                <div class="process-step animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
+                    <div class="step-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h3>选择时间</h3>
+                    <p>查看医生可预约时间，选择合适的咨询时段</p>
+                </div>
+                <div class="process-step animate__animated animate__fadeInUp" style="animation-delay: 0.4s;">
+                    <div class="step-icon">
+                        <i class="fas fa-file-medical"></i>
+                    </div>
+                    <h3>填写信息</h3>
+                    <p>填写基本信息和咨询需求</p>
+                </div>
+                <div class="process-step animate__animated animate__fadeInUp" style="animation-delay: 0.6s;">
+                    <div class="step-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3>完成预约</h3>
+                    <p>确认预约信息，等待咨询时间到来</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 专业医师团队 -->
+    <section class="doctor-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="header-left">
+                    <h2 class="section-title">专业医师团队</h2>
+                    <p class="section-desc">选择专业的心理咨询师，开启您的心理健康之旅</p>
+                </div>
+                <div class="header-right">
+                    <div class="filter-controls">
+                        <div class="search-box">
+                            <input type="text" class="form-control" placeholder="搜索医生...">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <div class="filter-group">
+                            <select class="form-select" id="specialtyFilter">
+                                <option value="">全部专业</option>
+                                <option value="心理咨询">心理咨询</option>
+                                <option value="精神科">精神科</option>
+                                <option value="心理治疗">心理治疗</option>
+                            </select>
+                            <select class="form-select" id="sortFilter">
+                                <option value="rating">按评分排序</option>
+                                <option value="experience">按经验排序</option>
+                                <option value="price">按价格排序</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="doctor-grid">
+                <!-- 医生卡片示例 -->
+                <div class="doctor-card animate__animated animate__fadeInUp">
+                    <div class="doctor-header">
+                        <img src="../image/doctor1.jpg" alt="医生头像" class="doctor-avatar">
+                        <div class="doctor-badges">
+                            <span class="badge-item"><i class="fas fa-star"></i> 4.9</span>
+                            <span class="badge-item"><i class="fas fa-certificate"></i> 认证</span>
+                        </div>
+                    </div>
+                    <div class="doctor-info">
+                        <h3>王医生</h3>
+                        <p class="specialty">心理咨询师</p>
+                        <div class="doctor-stats">
+                            <span><i class="fas fa-user-clock"></i> 8年经验</span>
+                            <span><i class="fas fa-comments"></i> 1200+ 咨询</span>
+                        </div>
+                        <div class="doctor-tags">
+                            <span class="tag">抑郁症</span>
+                            <span class="tag">焦虑障碍</span>
+                            <span class="tag">婚恋咨询</span>
+                        </div>
+                        <div class="doctor-footer">
+                            <div class="price">
+                                <span class="amount">¥500</span>
+                                <span class="unit">/次</span>
+                            </div>
+                            <button class="btn-book">立即预约</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 更多医生卡片 -->
+            </div>
+
+            <div class="text-center mt-4">
+                <button class="btn-load-more">
+                    <i class="fas fa-spinner"></i> 加载更多
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 用户评价 -->
+    <section class="testimonials-section">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2 class="section-title">用户评价</h2>
+                <p class="section-desc">来自真实用户的心声</p>
+            </div>
+            <div class="testimonials-slider">
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <i class="fas fa-quote-left"></i>
+                        <p>非常专业的咨询服务，医生很耐心，帮助我走出了困境。</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="../image/avatar1.jpg" alt="用户头像">
+                        <div class="author-info">
+                            <h4>李小姐</h4>
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 更多评价卡片 -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 常见问题 -->
+    <section class="faq-section">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2 class="section-title">常见问题</h2>
+                <p class="section-desc">解答您的疑惑</p>
+            </div>
+            <div class="faq-grid">
+                <div class="faq-card">
+                    <div class="faq-header">
+                        <h3>如何选择合适的心理咨询师？</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-content">
+                        <p>您可以根据咨询师的专业方向、工作经验、用户评价等因素进行选择。
+                            建议您先阅读咨询师的个人简介和专业方向，选择与您的需求最匹配的咨询师。</p>
+                    </div>
+                </div>
+                <div class="faq-card">
+                    <div class="faq-header">
+                        <h3>预约咨询需要准备什么？</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-content">
+                        <p>建议您准备：个人基本信息、咨询需求描述、希望解决的问题等。首次咨询前，请保持充足的休息。</p>
+                    </div>
+                </div>
+                <div class="faq-card">
+                    <div class="faq-header">
+                        <h3>如何取消或改期预约？</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-content">
+                        <p>您可以在"我的预约"中操作取消或改期，请至少提前24小时进行操作，以免影响您的服务体验。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 服务保障 -->
+    <section class="guarantee-section">
+        <div class="container">
+            <div class="guarantee-grid">
+                <div class="guarantee-card">
+                    <div class="guarantee-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>专业认证</h3>
+                    <p>所有咨询师均持有专业资质认证</p>
+                </div>
+                <div class="guarantee-card">
+                    <div class="guarantee-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3>隐私保护</h3>
+                    <p>严格的隐私保护机制，保障您的个人信息安全</p>
+                </div>
+                <div class="guarantee-card">
+                    <div class="guarantee-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3>全程服务</h3>
+                    <p>专业客服团队，为您提供贴心服务</p>
+                </div>
+                <div class="guarantee-card">
+                    <div class="guarantee-icon">
+                        <i class="fas fa-undo"></i>
+                    </div>
+                    <h3>无忧退款</h3>
+                    <p>对服务不满意可申请退款</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系我们 -->
+    <section class="contact-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="contact-content">
+                        <h2 class="section-title">联系我们</h2>
+                        <p class="section-desc">如有任何问题，欢迎随时联系我们</p>
+                        <div class="contact-info">
+                            <div class="info-item">
+                                <i class="fas fa-phone-alt"></i>
+                                <div class="info-content">
+                                    <h4>咨询热线</h4>
+                                    <p>400-123-4567</p>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-envelope"></i>
+                                <div class="info-content">
+                                    <h4>电子邮箱</h4>
+                                    <p>support@xinlvfang.com</p>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-clock"></i>
+                                <div class="info-content">
+                                    <h4>服务时间</h4>
+                                    <p>周一至周日 9:00-21:00</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="contact-form-card">
+                        <h3>留言咨询</h3>
+                        <form id="contactForm">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="您的姓名" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="tel" class="form-control" placeholder="联系电话" required>
+                            </div>
+                            <div class="form-group">
+                                <textarea class="form-control" rows="4" placeholder="请输入您的问题或建议..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn-submit">提交留言</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- 悬浮预约按钮 -->
+<div class="floating-button">
+    <button class="btn-float" data-bs-toggle="modal" data-bs-target="#appointmentModal">
+        <i class="fas fa-calendar-plus"></i>
+        <span>立即预约</span>
+    </button>
+</div>
+
+<!-- 预约表单模态框 -->
+<div class="modal fade" id="appointmentModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-calendar-plus"></i> 预约咨询</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="appointmentForm" class="appointment-form">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>患者姓名</label>
+                                <input type="text" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>联系电话</label>
+                                <input type="tel" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>选择医生</label>
+                                <select class="form-select" required>
+                                    <option value="">请选择医生</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>预约日期</label>
+                                <input type="date" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>预约时间</label>
+                                <select class="form-select" required>
+                                    <option value="">请选择时间段</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>咨询类型</label>
+                                <select class="form-select" required>
+                                    <option value="online">在线咨询</option>
+                                    <option value="offline">面对面咨询</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label>咨询需求描述</label>
+                                <textarea class="form-control" rows="3" placeholder="请简要描述您的咨询需求..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="submit" class="btn btn-primary" form="appointmentForm">确认预约</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 加载动画 -->
+<div class="loading-overlay">
+    <div class="spinner-heart">
+        <div></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/appointment.js"></script>
+</body>
+</html>

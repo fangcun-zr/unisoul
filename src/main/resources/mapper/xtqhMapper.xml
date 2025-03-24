@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.zr.uniSoul.mapper.xtqhMapper">
     <insert id="follow">
-        insert into follow(follower_id,following_id) values(#{user_id},#{role_id})
+        insert into follow(follower_id,following_id) values(#{follower_id},#{following_id})
     </insert>
     <update id="update">
         update user set name=#{name},age=#{age},gender=#{gender},school=#{school},biography=#{biography},school=#{school}  where username = #{username}
@@ -41,6 +41,9 @@
     <update id="reduceFavoriteCount">
         update article set favoriteCount = favoriteCount - 1 where id = #{articleId}
     </update>
+    <update id="changePassWord">
+        update user set password = #{password} where username = #{username}
+    </update>
     <select id="getFollowersByUsername" resultType="java.lang.String">
         SELECT u.username
         FROM user u
@@ -51,5 +54,21 @@
         </select>
     <select id="getMyArticles" resultType="com.zr.uniSoul.pojo.vo.ArticleVO">
         select * from article where author_id = #{authorId}
+    </select>
+    <select id="getFollowersList" resultType="com.zr.uniSoul.pojo.vo.UserVO">
+#        先找follow表，再查user表
+    select * from user where id in (select following_id from follow where follower_id = #{userId})
+    </select>
+    <select id="getFollowingsList" resultType="com.zr.uniSoul.pojo.vo.UserVO">
+        select * from user where id in (select follower_id from follow where following_id = #{userId})
+    </select>
+    <select id="getMyArticleCollect" resultType="com.zr.uniSoul.pojo.vo.ArticleVO">
+        select * from article where id in (select article_id from likes_article where user_id = #{userId})
+    </select>
+    <select id="getinformation" resultType="com.zr.uniSoul.pojo.vo.UserVO">
+        select * from user where id = #{id}
+    </select>
+    <select id="findEmainlByUsername" resultType="java.lang.String">
+        select email from user where username = #{username}
     </select>
 </mapper>

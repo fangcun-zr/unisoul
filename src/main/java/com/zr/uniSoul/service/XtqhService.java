@@ -1,8 +1,11 @@
 package com.zr.uniSoul.service;
 
+import com.zr.uniSoul.common.R;
+import com.zr.uniSoul.pojo.dto.UserDTO;
 import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.pojo.vo.ArticleLikesVO;
 import com.zr.uniSoul.pojo.vo.ArticleVO;
+import com.zr.uniSoul.pojo.vo.UserVO;
 
 import java.util.List;
 
@@ -18,7 +21,7 @@ public interface XtqhService {
     int editUserInfo(User user);
 
 
-    int follow(int myUsername, String role_name);
+    int follow(int user_Id, String role_name);
     /**
      * 点赞情况
      * @param articleLikes
@@ -48,4 +51,47 @@ public interface XtqhService {
      * @return
      */
     int cancelCollect(int userId, int articleId);
+
+    /**
+     * 获取粉丝列表
+     * @param userId
+     * @return
+     */
+    List<UserVO> getFollowersList(Integer userId);
+
+    /**
+     * 获取关注列表
+     * @param userId
+     * @return
+     */
+    List<UserVO> getFollowList(Integer userId);
+
+    /**
+     * 获取收藏列表
+     * @param id
+     * @return
+     */
+    List<ArticleVO> getMyArticleCollect(int id);
+
+    /**
+     * 获取我的个人信息
+     * @param i
+     * @return
+     */
+    UserVO getinformation(int i);
+
+    /**
+     * 找回密码接口
+     * @param user
+     * @return
+     */
+    String findPassword(UserDTO user);
+
+    /**
+     * 修改密码
+     * @param username
+     * @param password
+     * @return
+     */
+    int changePassWord(String username, String password);
 }

@@ -3,13 +3,13 @@ package com.zr.uniSoul.mapper;
 import com.github.pagehelper.Page;
 import com.zr.uniSoul.pojo.dto.CommentsPageDTO;
 import com.zr.uniSoul.pojo.dto.PageQueryDTO;
+import com.zr.uniSoul.pojo.dto.ReviewDTO;
 import com.zr.uniSoul.pojo.entity.Article;
 import com.zr.uniSoul.pojo.entity.CommentLike;
 import com.zr.uniSoul.pojo.entity.Comments;
 import com.zr.uniSoul.pojo.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
-import org.springframework.context.annotation.Lazy;
 
 @Mapper
 public interface zhxtMapper {
@@ -57,4 +57,6 @@ public interface zhxtMapper {
     Integer getFollowerCount(int userId);
 
     String getContent(int id);
+
+    int checkArticle(ReviewDTO reviewDTO);
 }

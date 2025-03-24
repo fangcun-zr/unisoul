@@ -45,4 +45,5 @@ public interface AdminService {
 
     AssessmentVO changeAssessment(int id);
 
+    int deleteAssessment(int id);
 }
