@@ -16,4 +16,7 @@
         AND tg.is_deleted = 0
         GROUP BY t.id
     </select>
+    <select id="pageQuery" resultType="com.zr.uniSoul.pojo.vo.TopicVO">
+        select * from topics order by create_time desc
+    </select>
 </mapper>

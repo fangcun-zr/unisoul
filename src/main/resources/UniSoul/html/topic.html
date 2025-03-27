@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>话题详情 - 心旅坊</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/element-ui@2.15.13/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="../css/topics.css">
+    <link rel="stylesheet" href="../css/topic.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+
+<body>
+<!-- 背景装饰 -->
+<div class="background-decoration">
+    <div class="circle c1"></div>
+    <div class="circle c2"></div>
+    <div class="circle c3"></div>
+</div>
+
+<!-- Vue应用容器 -->
+<div id="app">
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-light navbar-glass fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <img src="../image/logo.png" alt="心旅坊" class="nav-logo">
+                心旅坊
+            </a>
+            <div class="navbar-nav ml-auto">
+                <a href="topics.html" class="nav-link">
+                    <i class="fas fa-arrow-left"></i> 返回话题列表
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主容器 -->
+    <div class="container">
+        <div class="topic-detail-page">
+            <!-- 话题主体 -->
+            <div class="topic-main">
+                <div class="topic-header">
+                    <div class="user-info">
+                        <img src="../image/default-avatar.png" alt="用户头像" class="user-avatar">
+                        <div class="user-meta">
+                            <div class="user-name"></div>
+                            <div class="post-time"></div>
+                        </div>
+                    </div>
+                    <div class="topic-meta">
+                            <span class="views">
+                                <i class="fas fa-eye"></i>
+                                <span>0</span> 浏览
+                            </span>
+                    </div>
+                </div>
+                <div class="topic-content">
+                    <h1 class="topic-title"></h1>
+                    <p class="topic-text"></p>
+                </div>
+                <div class="topic-footer">
+                    <div class="topic-tags"></div>
+                    <div class="topic-actions">
+                        <button class="action-btn like-btn">
+                            <i class="fas fa-heart"></i>
+                            <span>0</span>
+                        </button>
+                        <button class="action-btn reply-btn">
+                            <i class="fas fa-comment"></i>
+                            <span>0</span>
+                        </button>
+                        <button class="action-btn share-btn">
+                            <i class="fas fa-share"></i>
+                            分享
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 评论区域 -->
+            <div class="topic-replies">
+                <div class="replies-header">
+                    <h3>评论 <span class="replies-count">0</span></h3>
+                </div>
+                <div class="replies-container">
+                    <div class="replies-list">
+                        <!-- 评论列表将通过JavaScript动态加载 -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- 评论表单 -->
+            <div class="reply-form">
+                <textarea placeholder="写下你的评论..."></textarea>
+                <div class="form-footer">
+                    <label class="anonymous-checkbox">
+                        <input type="checkbox" id="anonymousCheckbox">
+                        <span>匿名发布</span>
+                    </label>
+                    <button class="submit-reply">
+                        <i class="fas fa-paper-plane"></i> 发表评论
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 脚本 -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/element-ui@2.15.13/lib/index.js"></script>
+<script src="../api/topics.js"></script>
+<script src="../js/topic.js"></script>
+<script>
+    // 初始化Vue和Element UI
+    new Vue({
+        el: '#app',
+        mounted() {
+            // Vue实例挂载完成后的回调
+        }
+    });
+</script>
+</body>
+
+</html>

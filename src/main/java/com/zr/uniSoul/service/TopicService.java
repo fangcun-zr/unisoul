@@ -1,10 +1,12 @@
 package com.zr.uniSoul.service;
 
+import com.zr.uniSoul.common.PageResult;
+import com.zr.uniSoul.pojo.dto.PageQueryDTO;
 import com.zr.uniSoul.pojo.dto.TopicDTO;
 import com.zr.uniSoul.pojo.entity.Replies;
 import com.zr.uniSoul.pojo.entity.Topic;
+import com.zr.uniSoul.pojo.vo.RepliesLikesVO;
 import com.zr.uniSoul.pojo.vo.TopicLikesVO;
-import com.zr.uniSoul.pojo.vo.TopicVO;
 
 import java.util.List;
 
@@ -97,21 +99,48 @@ public interface TopicService {
 
     /**
      * 根据标签获取话题
+     *
+     * @param username
      * @param tags
      * @return
      */
-    List<Topic> getTopicsByTags(List<String> tags);
+    List<Topic> getTopicsByTags(String username, List<String> tags);
 
     /**
      * 关键词查询
+     *
+     * @param username
      * @param keyWord
      * @return
      */
-    List<Topic> searchKeyWord(String keyWord);
+    List<Topic> searchKeyWord(String username, String keyWord);
 
     /**
      * 获取最新的话题
      * @return
      */
     List<Topic> newTopics();
+    /**
+     * 分页展示用户的登录
+     * @param pageQueryDTO
+     * @return
+     */
+    PageResult pageQuery(String username,PageQueryDTO pageQueryDTO);
+
+    /**
+     * 点赞话题的回复
+     * @param username
+     * @param repliesId
+     * @param likeCount
+     * @param isLike
+     * @return
+     */
+    RepliesLikesVO likeReplies(String username, long repliesId, long likeCount, boolean isLike);
+
+    /**
+     * 通过Id获取评论
+     * @param repliesId
+     * @return
+     */
+    Replies getRepliesById(String username , Long repliesId);
 }
