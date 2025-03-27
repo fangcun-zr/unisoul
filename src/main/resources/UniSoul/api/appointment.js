@@ -23,12 +23,13 @@ function handleError(error) {
     }
     return {
         success: false,
-        message: error.responseJSON.message || '服务器错误'
+        message: error.responseJSON?.error || '服务器错误'
     };
 }
 
 // API接口定义
 const MedicalAPI = {
+
     // 预约相关接口
     appointment: {
         create: function(appointmentData) {
@@ -47,11 +48,11 @@ const MedicalAPI = {
             }).then(this.handleResponse).catch(handleError);
         },
 
-        getList: function(patientName,current = 1, pageSize = 10) {
+        getList: function(page = 1, size = 10) {
             return $.ajax({
                 url: '/appointment/list',
                 type: 'GET',
-                data: {  patientName,current, pageSize }
+                data: { page, size }
             }).then(this.handleResponse).catch(handleError);
         }
     },
@@ -67,11 +68,14 @@ const MedicalAPI = {
             }).then(this.handleResponse).catch(handleError);
         },
 
-        getList: function(current = 1, pageSize = 10) {
+        getList: function(page = 1, size = 10) {
             return $.ajax({
                 url: '/doctor/list',
                 type: 'GET',
-                data: { current, pageSize }
+                data: {
+                    page: page,
+                    size: size,
+                }
             }).then(this.handleResponse).catch(handleError);
         }
     },

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="generator.mapper.AppointmentMapper">
+
+    <resultMap id="BaseResultMap" type="generator.domain.Appointment">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="patientName" column="patient_name" jdbcType="VARCHAR"/>
+            <result property="patientPhone" column="patient_phone" jdbcType="VARCHAR"/>
+            <result property="doctorName" column="doctor_name" jdbcType="VARCHAR"/>
+            <result property="appointmentDate" column="appointment_date" jdbcType="DATE"/>
+            <result property="appointmentTime" column="appointment_time" jdbcType="TIME"/>
+            <result property="consultationType" column="consultation_type" jdbcType="VARCHAR"/>
+            <result property="conditionDescription" column="condition_description" jdbcType="VARCHAR"/>
+            <result property="createdAt" column="created_at" jdbcType="TIMESTAMP"/>
+            <result property="updatedAt" column="updated_at" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,patient_name,patient_phone,
+        doctor_name,appointment_date,appointment_time,
+        consultation_type,condition_description,created_at,
+        updated_at
+    </sql>
+</mapper>

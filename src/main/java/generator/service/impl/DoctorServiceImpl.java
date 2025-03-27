@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -27,6 +28,7 @@ import java.util.List;
 public class DoctorServiceImpl extends ServiceImpl<DoctorMapper, Doctor> implements DoctorService {
 
     private static final Logger log = LoggerFactory.getLogger(DoctorServiceImpl.class);
+    @Transactional
     @Override
     public boolean registerDoctor(Doctor doctor,
                                   MultipartFile photo,
@@ -48,6 +50,8 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorMapper, Doctor> impleme
         return this.save(doctor);
     }
 
+
+
     private void validateRequiredFields(Doctor doctor) throws BusinessException {
         if (StringUtils.isBlank(doctor.getFullName())) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "姓名不能为空");
@@ -57,6 +61,7 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorMapper, Doctor> impleme
         }
         // 其他必要字段校验...
     }
+
 
     private void checkUniqueConstraints(Doctor doctor) throws BusinessException {
         // 校验手机号
@@ -93,12 +98,14 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorMapper, Doctor> impleme
         }
     }
 
+    @Transactional
     @Override
     public Page<Doctor> listDoctors(int current, int pageSize) {
         return this.page(new Page<>(current, pageSize),
                 new QueryWrapper<Doctor>().orderByDesc("created_at"));
     }
 
+    @Transactional
     @Override
     public Doctor getDoctorWithSchedule(Integer id) {
         Doctor doctor = this.getById(id);
@@ -123,6 +130,7 @@ public class DoctorServiceImpl extends ServiceImpl<DoctorMapper, Doctor> impleme
      * @param
      * @return
      */
+    @Transactional
     @Override
     public Boolean sendCheckCode(String email, String code) {
         log.info("验证码为：{}",code);
