@@ -9,12 +9,14 @@ import com.zr.uniSoul.pojo.entity.Article;
 import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.pojo.vo.MyDataVO;
 
+import javax.servlet.http.HttpServletRequest;
+
 public interface ZhxtService {
     int findIdByUsername(String username);
 
     Integer publish(Article article);
 
-    PageResult pageQuery(PageQueryDTO pageQueryDTO);
+    PageResult pageQuery(PageQueryDTO pageQueryDTO, HttpServletRequest request);
 
     PageResult getComments(CommentsPageDTO articleId);
 
@@ -35,4 +37,11 @@ public interface ZhxtService {
     MyDataVO getMyData(int userId);
 
     String generateSummary(int id,float ratio);
+
+    /**
+     * 对用户的浏览行为进行记录
+     * @param id
+     * @param userId
+     */
+    void recordUserAction(String id, int userId,int score);
 }

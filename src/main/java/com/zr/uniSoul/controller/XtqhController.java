@@ -15,6 +15,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,6 +24,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 @RestController
 @RequestMapping("/xtqh")
@@ -38,6 +41,11 @@ public class XtqhController {
 
     @Autowired
     private ZhxtService zhxtService;
+
+    // 注入自定义线程池
+    @Autowired
+    @Qualifier("asyncExecutor")
+    private Executor asyncExecutor;
 
     /**
      * 用户登录
@@ -233,6 +241,13 @@ public class XtqhController {
         articleLikesVO.setUserId(userId);
         log.info("点赞接口, 点赞: {}", articleLikesVO);
         articleLikesVO  = xtqhService.likes(articleLikesVO);
+
+        // 立即返回数据给前端
+
+
+        // 异步记录用户行为（不阻塞主线程）
+        asyncRecordUserAction(String.valueOf(ArticleId), request,2);
+
         return R.success(articleLikesVO);
     }
     /**
@@ -264,6 +279,10 @@ public class XtqhController {
             log.info("收藏失败");
             return R.success(false);
         }
+
+        // 异步记录用户行为（不阻塞主线程）
+        asyncRecordUserAction(String.valueOf(articleId), request,1);
+
         return R.success(true);
     }
 
@@ -422,5 +441,29 @@ Object userIdObj = session.getAttribute("userId");
             return R.success("修改密码成功");
         }
         return R.error("修改密码失败");
+    }
+
+    // 异步方法（需配合线程池或消息队列）
+    private void asyncRecordUserAction(String articleId, HttpServletRequest request,int score) {
+        CompletableFuture.runAsync(() -> {
+            try {
+                HttpSession session = request.getSession(false);
+                if (session == null) {
+                    return; // 无会话则直接退出
+                }
+                int userId = 0;
+                Object userIdObj = session.getAttribute("userId");
+                if (userIdObj instanceof Integer) {
+                    userId = (Integer) userIdObj;
+                } else if (userIdObj instanceof Long) {
+                    userId = ((Long) userIdObj).intValue();
+                } else {
+                    // 处理其他情况或抛出异常
+                }
+                zhxtService.recordUserAction(articleId, userId, score);
+            } catch (Exception e) {
+                log.error("异步记录用户行为失败: {}", e.getMessage());
+            }
+        }, asyncExecutor);
     }
 }

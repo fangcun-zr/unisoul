@@ -14,6 +14,9 @@
     <update id="checkArticle">
         update article set status = #{status} where id = #{article_id}
     </update>
+    <update id="updateUserTagScores">
+        update user_action set tag_scores = #{tagScores} where user_id = #{userId}
+    </update>
     <delete id="deleteArticle">
         delete from article where id = #{articleId}
     </delete>
@@ -84,5 +87,11 @@
     </select>
     <select id="getContent" resultType="java.lang.String">
         select content from article where id = #{id}
+    </select>
+    <select id="getTagsByArticleId" resultType="java.lang.String">
+        select tags from article where id = #{articleId}
+    </select>
+    <select id="getjsonInput" resultType="java.lang.String">
+        select tag_scores from user_action where user_id = #{userId}
     </select>
 </mapper>
