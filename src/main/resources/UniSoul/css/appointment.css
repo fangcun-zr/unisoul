@@ -325,6 +325,26 @@ body {
     gap: 1rem;
 }
 
+/* 在您的CSS文件中添加 */
+.modal {
+    overflow: visible !important; /* 允许下拉框溢出 */
+}
+
+.modal-body {
+    overflow: visible !important; /* 关键修复 */
+}
+
+/* 修复下拉选项框位置 */
+.form-select:focus {
+    box-shadow: none; /* 移除Bootstrap默认阴影 */
+    border-color: #86b7fe; /* 保持焦点状态 */
+}
+
+/* 确保下拉选项框可见 */
+.select2-container--open .select2-dropdown {
+    z-index: 1060 !important; /* 高于模态框的z-index(通常1050) */
+}
+
 .form-select {
     min-width: 180px;
     padding: 1rem 1.5rem;
@@ -336,6 +356,8 @@ body {
     background-position: right 1.2rem center;
     background-size: 12px;
     transition: var(--transition);
+    position: relative; /* 确保层级关系 */
+    z-index: 1; /* 防止被其他元素覆盖 */
 }
 
 .form-select:focus {

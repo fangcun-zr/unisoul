@@ -2,7 +2,7 @@ const AppointmentAPI = {
     // 获取预约列表
     getList: function(page = 1, filters = {}) {
         return $.ajax({
-            url: '/appointments/list',
+            url: 'api/appointments',
             type: 'GET',
             data: {
                 page: page,

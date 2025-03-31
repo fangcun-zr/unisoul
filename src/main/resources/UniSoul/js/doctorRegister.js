@@ -1,21 +1,24 @@
-$(document).ready(function() {
-    initializePage();
-    bindEvents();
-    initializeValidation();
-});
+function handleAvatarUpload(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            $('#avatarPreview').attr('src', event.target.result);
+        };
+        reader.readAsDataURL(file);
+    }
+}
 
-// 页面初始化
 function initializePage() {
     // 初始化表单验证
     initializeFormValidation();
     // 初始化图片上传预览
     initializeImagePreview();
-    // 初始化科室下拉框
-    initializeDepartments();
     // 初始化富文本编辑器
     initializeEditor();
     // 初始化日期选择器
     initializeDatePicker();
+    bindEvents(); // 事件绑定放在最后
 }
 
 // 绑定事件
@@ -28,7 +31,10 @@ function bindEvents() {
     $('#certificateFile').on('change', handleCertificateUpload);
 
     // 科室选择联动
-    $('#department').on('change', handleDepartmentChange);
+    $('#department').on('change', function() {
+        updateSpecializations();
+        console.log('科室变更:', this.value, '专业方向:', $('#specialty').html());
+    });
 
     // 发送验证码
     $('#sendVerificationCode').on('click', handleSendVerificationCode);
@@ -36,6 +42,25 @@ function bindEvents() {
     // 实时字段验证
     bindFieldValidation();
 }
+
+$(document).ready(function() {
+    initializePage();
+    bindEvents();
+    initializeValidation();
+
+});
+function initializeDatePicker() {
+    flatpickr.localize(flatpickr.l10ns.zh);
+    $('#birthday').flatpickr({
+        dateFormat: "Y-m-d",
+        maxDate: new Date().fp_incr(-365 * 18),
+        locale: "zh",
+        disableMobile: true
+    });
+}
+
+
+
 
 // 初始化表单验证
 function initializeFormValidation() {
@@ -142,15 +167,31 @@ async function handleFormSubmit(e) {
         return;
     }
 
-    const formData = new FormData($('#doctorRegisterForm')[0]);
+    const doctorData = {
+        fullName: $('#fullName').val().trim(), // 确保ID匹配
+        gender: $('#gender').val(),
+        phoneNumber: $('#phoneNumber').val().trim(),
+        email: $('#email').val().trim(),
+        birthDate: $('#birthDate').val(),
+        department: $('#department').val(),
+        specialty: $('#specialty').val(),
+        licenseNumber: $('#licenseNumber').val().trim(),
+        yearsOfExperience: parseInt($('#yearsOfExperience').val(), 10),
+        introduction: $('#introduction').summernote('code')
+    };
+
+    const formData = new FormData();
+    formData.append('doctor', new Blob([JSON.stringify(doctorData)], { type: 'application/json' }));
+    const avatarFile = $('#photo')[0].files[0];
+    if (avatarFile) formData.append('photo', avatarFile);
+    const certFile = $('#certificateFile')[0].files[0];
+    if (certFile) formData.append('certificate', certFile);
 
     try {
         showLoading('正在提交注册信息...');
         const response = await DoctorAPI.register(formData);
         showSuccess('注册成功！');
-        setTimeout(() => {
-            window.location.href = 'login.html';
-        }, 2000);
+        setTimeout(() => window.location.href = 'login.html', 2000);
     } catch (error) {
         showError('注册失败：' + (error.responseJSON?.message || '请稍后重试'));
     } finally {
@@ -158,11 +199,12 @@ async function handleFormSubmit(e) {
     }
 }
 
+
 // 处理验证码发送
 async function handleSendVerificationCode() {
-    const phone = $('#phone').val().trim();
-    if (!phone || !/^1[3456789]\d{9}$/.test(phone)) {
-        showError('请输入正确的手机号');
+    const email = $('#email').val().trim();
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showError('请输入有效的邮箱地址');
         return;
     }
 
@@ -171,7 +213,7 @@ async function handleSendVerificationCode() {
     let countdown = 60;
 
     try {
-        await DoctorAPI.sendVerificationCode(phone);
+        await DoctorAPI.sendVerificationCode(email);
         showSuccess('验证码已发送');
 
         const timer = setInterval(() => {
@@ -183,7 +225,7 @@ async function handleSendVerificationCode() {
             }
         }, 1000);
     } catch (error) {
-        showError('发送失败：' + (error.responseJSON?.message || '请稍后重试'));
+        showError('发送失败：' + (error.responseJSON?.message || '请检查邮箱是否正确'));
         $btn.prop('disabled', false);
     }
 }

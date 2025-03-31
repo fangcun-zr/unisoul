@@ -52,6 +52,7 @@
             <!-- 注册表单 -->
             <form id="doctorRegisterForm" class="register-form" enctype="multipart/form-data">
                 <!-- 基本信息部分 -->
+                <!-- 基本信息部分 -->
                 <div class="form-section">
                     <h3 class="section-title">
                         <i class="fas fa-user-md"></i>
@@ -61,7 +62,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="doctorName">姓名</label>
-                                <input type="text" class="form-control" id="doctorName" name="doctorName" required>
+                                <input type="text" class="form-control" id="fullName" name="fullName" required>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -77,36 +78,42 @@
                     </div>
 
                     <div class="row">
+                        <!-- 手机号 -->
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="phone">手机号</label>
+                                <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" required>
+                            </div>
+                        </div>
+
+                        <!-- 出生日期 -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="birthday">出生日期</label>
+                                <input type="text" class="form-control" id="birthDate" name="birthDate" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- 邮箱 + 验证码按钮 -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="email">邮箱</label>
                                 <div class="input-group">
-                                    <input type="tel" class="form-control" id="phone" name="phone" required>
+                                    <input type="email" class="form-control" id="email" name="email" required>
                                     <button type="button" id="sendVerificationCode" class="btn btn-outline-primary">
                                         发送验证码
                                     </button>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- 验证码 -->
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="verificationCode">验证码</label>
                                 <input type="text" class="form-control" id="verificationCode" name="verificationCode" required>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="email">邮箱</label>
-                                <input type="email" class="form-control" id="email" name="email" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="birthday">出生日期</label>
-                                <input type="text" class="form-control" id="birthday" name="birthday" required>
                             </div>
                         </div>
                     </div>
@@ -124,14 +131,16 @@
                                 <label for="department">所属科室</label>
                                 <select class="form-select" id="department" name="department" required>
                                     <option value="">请选择科室</option>
+                                    <!-- 原有科室选项已删除，将通过JS动态生成 -->
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="specialization">专业方向</label>
-                                <select class="form-select" id="specialization" name="specialization" required>
+                                <select class="form-select" id="specialty" name="specialty" required>
                                     <option value="">请先选择科室</option>
+                                    <!-- 原有专业方向选项已删除，将通过JS动态生成 -->
                                 </select>
                             </div>
                         </div>
@@ -147,7 +156,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="experience">从业年限</label>
-                                <input type="number" class="form-control" id="experience" name="experience" min="0" required>
+                                <input type="number" class="form-control" id="yearsOfExperience" name="yearsOfExperience" min="0" required>
                             </div>
                         </div>
                     </div>
@@ -164,7 +173,7 @@
                             <div class="form-group">
                                 <label for="doctorAvatar">个人照片</label>
                                 <div class="upload-wrapper">
-                                    <input type="file" class="form-control" id="doctorAvatar" name="avatar" accept="image/*" required>
+                                    <input type="file" class="form-control" id="photo" name="photo" accept="image/*" required>
                                     <div class="preview-container">
                                         <img id="avatarPreview" src="../image/avatar-placeholder.png" alt="头像预览">
                                     </div>
@@ -175,7 +184,7 @@
                             <div class="form-group">
                                 <label for="certificateFile">资格证书</label>
                                 <div class="upload-wrapper">
-                                    <input type="file" class="form-control" id="certificateFile" name="certificate" accept="image/*" required>
+                                    <input type="file" class="form-control" id="certificate" name="certificate" accept="image/*" required>
                                     <div class="preview-container">
                                         <img id="certificatePreview" src="../image/certificate-placeholder.png" alt="证书预览">
                                     </div>
@@ -220,10 +229,57 @@
     </div>
     <span class="loading-text">正在处理...</span>
 </div>
+<script>
+    // ================== 科室-专业方向二级联动 ==================
+    const departmentData = {
+        "心血管内科": ["高血压", "冠心病", "心律失常"],
+        "呼吸内科": ["哮喘", "慢性阻塞性肺疾病", "肺部感染"],
+        "消化内科": ["胃肠疾病", "肝病", "内镜诊疗"],
+        "神经内科": ["脑血管病", "癫痫", "帕金森病"],
+        "普通外科": ["胃肠外科", "肝胆外科", "甲状腺外科"],
+        "骨科": ["关节外科", "脊柱外科", "创伤骨科"],
+        "神经外科": ["脑肿瘤", "脑血管病", "功能神经外科"],
+        "妇产科": ["产科", "妇科肿瘤", "生殖内分泌"],
+        "儿科": ["新生儿科", "儿童保健", "小儿呼吸"],
+        "肿瘤科": ["化学治疗", "放射治疗", "靶向治疗"],
+        "眼科": ["白内障", "青光眼", "眼底病"],
+        "耳鼻咽喉科": ["听力障碍", "鼻窦炎", "咽喉肿瘤"],
+        "皮肤科": ["皮肤外科", "皮肤病理", "美容皮肤科"],
+        "急诊科": ["创伤急救", "中毒救治", "急危重症"],
+        "康复医学科": ["神经康复", "骨科康复", "心肺康复"]
+    };
+    // 初始化科室选项
+    function initDepartments() {
+        const select = document.getElementById('department');
+        Object.keys(departmentData).forEach(dept => {
+            select.appendChild(new Option(dept, dept));
+        });
+    }
+
+    // 更新专业方向选项
+    function updateSpecializations() {
+        const department = document.getElementById('department').value;
+        const specSelect = document.getElementById('specialty');
+
+        // 清空并重置选项
+        specSelect.innerHTML = '<option value="">请选择专业方向</option>';
+
+        if (department && departmentData[department]) {
+            departmentData[department].forEach(spec => {
+                specSelect.appendChild(new Option(spec, spec));
+            });
+        }
+    }
+
+    // 事件绑定
+    window.addEventListener('DOMContentLoaded', initDepartments);
+    document.getElementById('department').addEventListener('change', updateSpecializations);
+</script>
+
 
 <!-- 脚本引用 -->
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-notify/0.2.0/js/bootstrap-notify.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/zh.js"></script>

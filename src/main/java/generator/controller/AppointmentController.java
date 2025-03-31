@@ -26,6 +26,7 @@ public class AppointmentController {
 
     @PostMapping("/book")
     public BaseResponse<Boolean> bookAppointment(@RequestBody Appointment appointment) {
+        System.out.println("Received appointment booking request: " + appointment);
         try {
             boolean result = appointmentService.createAppointment(appointment);
             return ResultUtils.success(result);
