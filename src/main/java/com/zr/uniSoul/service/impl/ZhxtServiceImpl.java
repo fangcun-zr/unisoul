@@ -13,6 +13,7 @@ import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.pojo.vo.CommentsVO;
 import com.zr.uniSoul.pojo.vo.MyDataVO;
 import com.zr.uniSoul.service.ZhxtService;
+import com.zr.uniSoul.utils.RecommendedUtil;
 import com.zr.uniSoul.utils.TextSummarizerUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,8 @@ import org.springframework.stereotype.Service;
 import com.zr.uniSoul.mapper.zhxtMapper;
 import com.github.pagehelper.Page;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +35,9 @@ public class ZhxtServiceImpl implements ZhxtService {
     private zhxtMapper zhxtMapper;
     @Autowired
     private TextSummarizerUtil textSummarizerUtil;
+
+    @Autowired
+    private RecommendedUtil recommendedUtil;
     @Override
     public int findIdByUsername(String username) {
         return zhxtMapper.findIdByUsername(username);
@@ -51,13 +57,29 @@ public class ZhxtServiceImpl implements ZhxtService {
 
     /**
      * 文章分页展示
+     *
      * @param pageQueryDTO
+     * @param request
      * @return
      */
     @Override
-    public PageResult pageQuery(PageQueryDTO pageQueryDTO) {
+    public PageResult pageQuery(PageQueryDTO pageQueryDTO, HttpServletRequest request) {
         // 启动分页
         PageHelper.startPage(pageQueryDTO.getPage(), pageQueryDTO.getPageSize());
+
+        List<Article> articles = new ArrayList<>();
+
+        //获取userId
+        int userId = 0;
+        HttpSession session = request.getSession();
+        Object userIdObj = session.getAttribute("userId");
+        if (userIdObj instanceof Integer) {
+            userId = (Integer) userIdObj;
+        } else if (userIdObj instanceof Long) {
+            userId = ((Long) userIdObj).intValue();
+        } else {
+            // 处理其他情况或抛出异常
+        }
 
         // 根据条件选择不同的查询方法
         if (pageQueryDTO.getCategory_id() == null) {
@@ -68,15 +90,37 @@ public class ZhxtServiceImpl implements ZhxtService {
                 // 手动获取总记录数
                 Long total = zhxtMapper.countQueryAll();
 
+                //读取用户画像(标签得分)
+                String  jsonInput = zhxtMapper.getjsonInput(userId);
+                if(jsonInput!= null){
+                    log.info("jsonInput:{}", jsonInput);
+                    //对分页的文章进行智能推荐排序
+                    articles = recommendedUtil.sortArticles(page.getResult(),jsonInput);
+                }else {
+                    articles = page.getResult();
+                }
+
+
                 // 返回封装结果
-                return new PageResult(total, page.getResult());
+                return new PageResult(total,articles);
             }
             // 查询带条件的数据
             Page<Article> page = zhxtMapper.pageQueryForKeyWords(pageQueryDTO);
             // 手动获取总记录数
             Long total = zhxtMapper.countQueryForKeyWords(pageQueryDTO);
+
+            //读取用户画像(标签得分)
+            String  jsonInput = zhxtMapper.getjsonInput(userId);
+            if(jsonInput!= null){
+                log.info("jsonInput:{}", jsonInput);
+                //对分页的文章进行智能推荐排序
+               articles = recommendedUtil.sortArticles(page.getResult(),jsonInput);
+            }else {
+                articles = page.getResult();
+            }
+
             // 返回封装结果
-            return new PageResult(total, page.getResult());
+            return new PageResult(total, articles);
 
         } else {
             if(pageQueryDTO.getKeyWords() == null) {
@@ -86,15 +130,37 @@ public class ZhxtServiceImpl implements ZhxtService {
                 // 手动获取总记录数
                 Long total = zhxtMapper.countQuery(pageQueryDTO);
 
+
+                //读取用户画像(标签得分)
+                String  jsonInput = zhxtMapper.getjsonInput(userId);
+                if(jsonInput!= null){
+                    log.info("jsonInput:{}", jsonInput);
+                    //对分页的文章进行智能推荐排序
+                    articles = recommendedUtil.sortArticles(page.getResult(),jsonInput);
+                }else {
+                    articles = page.getResult();
+                }
+
                 // 返回封装结果
-                return new PageResult(total, page.getResult());
+                return new PageResult(total, articles);
             }
             // 查询带条件的数据
             Page<Article> page = zhxtMapper.pageQueryForKeyWords(pageQueryDTO);
             // 手动获取总记录数
             Long total = zhxtMapper.countQueryForKeyWords(pageQueryDTO);
+
+            //读取用户画像(标签得分)
+            String  jsonInput = zhxtMapper.getjsonInput(userId);
+            if(jsonInput!= null){
+                log.info("jsonInput:{}", jsonInput);
+                //对分页的文章进行智能推荐排序
+               articles = recommendedUtil.sortArticles(page.getResult(),jsonInput);
+            }else {
+                articles = page.getResult();
+            }
+
             // 返回封装结果
-            return new PageResult(total, page.getResult());
+            return new PageResult(total,articles);
 
         }
     }
@@ -224,5 +290,31 @@ public class ZhxtServiceImpl implements ZhxtService {
         return textSummarizerUtil.summarize(content, ratio);
     }
 
+    /**
+     * 记录用户操作
+     *
+     * @param id     文章id
+     * @param userId 用户ID，表示执行该操作的用户
+     */
+    @Override
+    public void recordUserAction(String id, int userId,int score) {
+        int articleId = Integer.parseInt(id);
+        log.info("userId:{}", userId);
+        //获取该文章的标签
+        String tags = zhxtMapper.getTagsByArticleId(articleId);
+        //解析标签
+        List<String> tagsList =  recommendedUtil.analyticalTags(tags);
+        log.info("文章标签:{}",tagsList);
+        //读取用户画像(标签得分)
+        String  jsonInput = zhxtMapper.getjsonInput(userId);
+        log.info("用户画像:{}",jsonInput);
+        //对画像和标签进行评分处理
+        String TagScores = recommendedUtil.updateTagScores(tagsList, jsonInput, score);
 
+        //更新用户画像
+        int ret = zhxtMapper.updateUserTagScores(userId, TagScores);
+        if(ret!=0){
+            log.info("用户画像更新成功");
+        }
+    }
 }

@@ -4,6 +4,7 @@ import com.zr.uniSoul.common.R;
 import com.zr.uniSoul.pojo.dto.AssessmentDTO;
 import com.zr.uniSoul.pojo.dto.BannedDTO;
 import com.zr.uniSoul.pojo.dto.WordDTO;
+import com.zr.uniSoul.pojo.vo.AssessmentSubmitCountVO;
 import com.zr.uniSoul.pojo.vo.AssessmentVO;
 import com.zr.uniSoul.pojo.vo.UserVO;
 import com.zr.uniSoul.pojo.vo.WordVO;
@@ -221,6 +222,7 @@ public class AdminController {
         }
     }
 
+
     /**
      * 获取所有敏感词
      */
@@ -282,4 +284,38 @@ public class AdminController {
 
     }
 
+    /**
+     * 返回各个测评的提交次数
+     */
+    @GetMapping("/assessmentSubmitCount")
+    public R<Object> assessmentSubmit(HttpServletRequest request){
+        if(!judgeAdmin(request)) {
+            return R.error("非管理员账户，没有权限");
+        }
+        log.info("返回各个测评的提交次数");
+        List<AssessmentSubmitCountVO> ret = adminService.assessmentSubmitCount();
+        if(ret!=null){
+            return R.success(ret);
+        }
+        else{
+            return R.error("操作失败");
+        }
+    }
+
+    /**
+     * 返回用户喜好分析
+     */
+    @GetMapping("/userAnalysis")
+    public R<Object> userAnalysis(HttpServletRequest request){
+        if(!judgeAdmin(request)) {
+            return R.error("非管理员账户，没有权限");
+        }
+        String ret = adminService.userAnalysis();
+        if(ret!=null){
+            return R.success(ret);
+        }
+        else {
+            return R.error("操作失败");
+        }
+    }
 }

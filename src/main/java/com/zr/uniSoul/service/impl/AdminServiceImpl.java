@@ -5,11 +5,9 @@ import com.zr.uniSoul.mapper.AdminMapper;
 import com.zr.uniSoul.pojo.dto.AssessmentDTO;
 import com.zr.uniSoul.pojo.dto.QuestionDTO;
 import com.zr.uniSoul.pojo.dto.WordDTO;
-import com.zr.uniSoul.pojo.vo.AssessmentVO;
-import com.zr.uniSoul.pojo.vo.QuestionsVo;
-import com.zr.uniSoul.pojo.vo.UserVO;
-import com.zr.uniSoul.pojo.vo.WordVO;
+import com.zr.uniSoul.pojo.vo.*;
 import com.zr.uniSoul.service.AdminService;
+import com.zr.uniSoul.utils.AnalysisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
 
 /**
  * 后台管理service实现
@@ -209,10 +208,10 @@ public class AdminServiceImpl implements AdminService {
         log.info("addWords:{}", words);
         int count = 0;
         for (String word : words) {
-        if (word != null || !word.trim().isEmpty()) {
-            adminMapper.addWords(word);
-            count++;
-        }
+            if (word != null || !word.trim().isEmpty()) {
+                adminMapper.addWords(word);
+                count++;
+            }
         }
 
         return  count;
@@ -250,6 +249,34 @@ public class AdminServiceImpl implements AdminService {
         }
         return 0;
 
+    }
+
+    /**
+     * 用户分析接口方法
+     *
+     * <p>该方法用于执行用户分析操作，并返回一个包含用户分析信息的列表。</p>
+     *
+     * @return 返回包含用户分析信息的列表，如果分析失败或没有数据则返回null。
+     * @throws Exception 如果在执行分析过程中发生异常，将抛出此异常。
+     */
+    @Override
+    public String userAnalysis() {
+
+        //获取信息
+        List<String> tagsList = adminMapper.getUserTags();
+
+        return  AnalysisUtil.calculateAverages(tagsList);
+    }
+
+    /**
+     * 获取评估提交次数的统计信息
+     *
+     * @return 评估提交次数的统计信息列表，每个元素为 {@link AssessmentSubmitCountVO} 对象。
+     *         目前此方法返回值为 null，表示尚未实现功能。
+     */
+    @Override
+    public List<AssessmentSubmitCountVO> assessmentSubmitCount() {
+        return adminMapper.assessmentSubmitCount();
     }
 
     //TODO 后台管理

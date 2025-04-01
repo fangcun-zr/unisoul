@@ -2,6 +2,7 @@ package com.zr.uniSoul.service;
 
 import com.zr.uniSoul.pojo.dto.AssessmentDTO;
 import com.zr.uniSoul.pojo.dto.WordDTO;
+import com.zr.uniSoul.pojo.vo.AssessmentSubmitCountVO;
 import com.zr.uniSoul.pojo.vo.AssessmentVO;
 import com.zr.uniSoul.pojo.vo.UserVO;
 import com.zr.uniSoul.pojo.vo.WordVO;
@@ -48,6 +49,11 @@ public interface AdminService {
     AssessmentVO changeAssessment(int id);
 
     int deleteAssessment(int id);
+
+    String userAnalysis();
+
+    List<AssessmentSubmitCountVO> assessmentSubmitCount();
+
 
     List<WordVO> getAllWords();
 

@@ -60,5 +60,11 @@ public interface zhxtMapper {
 
     int checkArticle(ReviewDTO reviewDTO);
 
+    String getTagsByArticleId(int articleId);
+
+    String getjsonInput(int userId);
+
+    int updateUserTagScores(int userId, String tagScores);
+
     void addviewCount(int articleId);
 }

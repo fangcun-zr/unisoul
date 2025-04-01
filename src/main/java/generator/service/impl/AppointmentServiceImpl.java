@@ -18,6 +18,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
@@ -30,6 +31,7 @@ public class AppointmentServiceImpl extends ServiceImpl<AppointmentMapper, Appoi
     @Resource
     private DoctorMapper doctorMapper;
 
+    @Transactional
     @Override
     public boolean createAppointment(Appointment appointment) throws BusinessException {
         // 校验必填字段
@@ -61,11 +63,13 @@ public class AppointmentServiceImpl extends ServiceImpl<AppointmentMapper, Appoi
         return this.save(appointment);
     }
 
+    @Transactional
     @Override
     public boolean cancelAppointment(Integer id) {
         return this.removeById(id);
     }
 
+    @Transactional
     @Override
     public Page<Appointment> listAppointments(String patientName, int current, int pageSize) {
         QueryWrapper<Appointment> queryWrapper = new QueryWrapper<>();
@@ -75,6 +79,7 @@ public class AppointmentServiceImpl extends ServiceImpl<AppointmentMapper, Appoi
         return this.page(new Page<>(current, pageSize), queryWrapper);
     }
 
+    @Transactional
     @Override
     public boolean updateStatus(Integer id, String status) throws BusinessException {
         Appointment appointment = this.getById(id);
@@ -92,6 +97,7 @@ public class AppointmentServiceImpl extends ServiceImpl<AppointmentMapper, Appoi
         return this.updateById(appointment);
     }
 
+    @Transactional
     @Override
     public List<String> getAvailableTimeSlots(Integer doctorId, Date date) throws BusinessException {
         // 获取医生信息
@@ -117,6 +123,7 @@ public class AppointmentServiceImpl extends ServiceImpl<AppointmentMapper, Appoi
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public Page<Appointment> getPatientHistory(String patientName, String patientPhone, int current, int pageSize) {
         QueryWrapper<Appointment> queryWrapper = new QueryWrapper<>();
@@ -126,6 +133,7 @@ public class AppointmentServiceImpl extends ServiceImpl<AppointmentMapper, Appoi
         return this.page(new Page<>(current, pageSize), queryWrapper);
     }
 
+    @Transactional
     @Override
     public void exportAppointments(HttpServletResponse response, String doctorName, Date startDate, Date endDate) throws IOException {
         QueryWrapper<Appointment> queryWrapper = new QueryWrapper<>();

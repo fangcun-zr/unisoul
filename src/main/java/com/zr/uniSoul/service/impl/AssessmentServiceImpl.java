@@ -89,12 +89,13 @@ public class AssessmentServiceImpl implements AssessmentService {
             reportVO.setStatus(500);  // 失败状态码
             reportVO.setErrorMessage(getFriendlyError(ex));
         }
+        //测评次数加一
+        assessmentMapper.addAssessmentTimes(answerDTO.getId());
         return reportVO;
     }
 
     /**
      * 保存测试报告
-     *
      * @param reportDTO
      * @param userId
      * @return
