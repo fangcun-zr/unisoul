@@ -2,9 +2,8 @@ package com.zr.uniSoul.mapper;
 
 import com.zr.uniSoul.pojo.dto.AssessmentDTO;
 import com.zr.uniSoul.pojo.dto.QuestionDTO;
-import com.zr.uniSoul.pojo.vo.AssessmentVO;
-import com.zr.uniSoul.pojo.vo.QuestionsVo;
-import com.zr.uniSoul.pojo.vo.UserVO;
+import com.zr.uniSoul.pojo.dto.WordDTO;
+import com.zr.uniSoul.pojo.vo.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -48,4 +47,16 @@ public interface AdminMapper {
     void deleteAssessmentSession(int id);
 
     void deleteQuestions(int id);
+
+    List<String> getUserTags(); //    获取所有用户标签
+
+    List<AssessmentSubmitCountVO> assessmentSubmitCount();
+
+    List<WordVO> getAllWords();
+
+    int addWords(String word);
+
+    int deleteWords(Integer ids);
+
+    int setWordsStatus(WordDTO wordDTO);
 }

@@ -9,6 +9,8 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * 医疗人员信息表
@@ -16,6 +18,8 @@ import lombok.Data;
  */
 @TableName(value ="doctor")
 @Data
+@SpringBootApplication
+@EnableTransactionManagement
 public class Doctor {
     /**
      * 唯一标识ID

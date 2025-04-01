@@ -98,5 +98,25 @@
         from question
         where assessment_id = #{id}
     </select>
+    <select id="getUserTags" resultType="java.lang.String">
+        select tag_scores from user_action
+    </select>
+    <select id="assessmentSubmitCount" resultType="com.zr.uniSoul.pojo.vo.AssessmentSubmitCountVO">
+        select csCount, name ,id from assessment
+    </select>
+    <select id="getAllWords" resultType="com.zr.uniSoul.pojo.vo.WordVO">
+        select * from sensitive_words
+    </select>
 
+    <delete id="deleteWords">
+        delete from sensitive_words where id = #{id}
+    </delete>
+
+    <insert id="addWords">
+        insert sensitive_words (word) values (#{word})
+    </insert>
+
+    <update id="setWordsStatus">
+        update sensitive_words set status = #{status} where id = #{id}
+    </update>
 </mapper>
