@@ -18,10 +18,11 @@ import java.util.stream.Collectors;
 
 /**
  * 智能推荐工具类
- * <p>
+ * @Author zr
+ * @Date 2025/04/01
  * 提供基于语义相似度的标签匹配与得分更新功能，支持从JSON字符串解析标签列表，
  * 并根据用户行为动态更新标签得分。
- * </p>
+ *
  */
 @Component
 @Data
@@ -93,20 +94,24 @@ public class RecommendedUtil {
      * @param jsonInput 原始JSON字符串，格式如 {"心理":85, "学习":75}
      * @return 更新后的JSON字符串，可直接存入数据库的tag_scores字段
      */
-    public String updateTagScores(List<String> tags, String jsonInput ,int score) {
+    public String updateTagScores(List<String> tags, String jsonInput, int score) {
         // 将JSON字符串解析为Map结构
         Map<String, Integer> tagScores = parseJsonToMap(jsonInput);
 
         // 遍历每个标签进行处理
         tags.forEach(tag -> {
             // 直接匹配逻辑
+            // 检查标签是否存在于Map中
             if (tagScores.containsKey(tag)) {
+                // 如果存在，则直接增加分数
                 tagScores.put(tag, tagScores.get(tag) + score);
                 return;
             }
 
             // 语义相似度匹配逻辑
+            // 寻找与当前标签最匹配的已有标签
             Optional<Map.Entry<String, Integer>> bestMatch = findBestMatch(tag, tagScores);
+            // 如果找到最佳匹配，则增加其分数
             bestMatch.ifPresent(entry ->
                     tagScores.put(entry.getKey(), entry.getValue() + score)
             );
@@ -115,6 +120,7 @@ public class RecommendedUtil {
         // 转换回JSON字符串
         return mapToJson(tagScores);
     }
+
     // endregion
 
     // region ========== 内部工具方法 ==========
