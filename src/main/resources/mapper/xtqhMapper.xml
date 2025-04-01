@@ -44,6 +44,9 @@
     <update id="changePassWord">
         update user set password = #{password} where username = #{username}
     </update>
+    <insert id="setUserAction">
+        insert into user_action(user_id) values(#{userId})
+    </insert>
     <select id="getFollowersByUsername" resultType="java.lang.String">
         SELECT u.username
         FROM user u
@@ -70,5 +73,8 @@
     </select>
     <select id="findEmainlByUsername" resultType="java.lang.String">
         select email from user where username = #{username}
+    </select>
+    <select id="getIdByUsername" resultType="java.lang.Integer">
+        select id from user where username = #{username}
     </select>
 </mapper>

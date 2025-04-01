@@ -7,12 +7,13 @@ import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * 患者预约信息表
@@ -20,6 +21,8 @@ import lombok.Data;
  */
 @TableName(value ="appointment")
 @Data
+@SpringBootApplication
+@EnableTransactionManagement
 public class Appointment {
     /**
      * 唯一标识ID
@@ -55,7 +58,7 @@ public class Appointment {
      * 预约时间
      */
     @TableField("appointment_time")
-    @JsonFormat(pattern = "HH:mm:ss")
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime appointmentTime;
 
     /**
@@ -85,9 +88,7 @@ public class Appointment {
     /**
      * 预约状态（NEW/CONFIRMED/COMPLETED/CANCELLED）
      */
-    private String status;
-
-
+    private String status = "PENDING";
 
 
 }

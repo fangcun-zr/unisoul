@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="generator.mapper.DoctorMapper">
+
+    <resultMap id="BaseResultMap" type="generator.domain.Doctor">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="fullName" column="full_name" jdbcType="VARCHAR"/>
+            <result property="gender" column="gender" jdbcType="OTHER"/>
+            <result property="phoneNumber" column="phone_number" jdbcType="VARCHAR"/>
+            <result property="email" column="email" jdbcType="VARCHAR"/>
+            <result property="birthDate" column="birth_date" jdbcType="DATE"/>
+            <result property="department" column="department" jdbcType="VARCHAR"/>
+            <result property="specialty" column="specialty" jdbcType="VARCHAR"/>
+            <result property="licenseNumber" column="license_number" jdbcType="VARCHAR"/>
+            <result property="yearsOfExperience" column="years_of_experience" jdbcType="TINYINT"/>
+            <result property="introduction" column="introduction" jdbcType="VARCHAR"/>
+            <result property="createdAt" column="created_at" jdbcType="TIMESTAMP"/>
+            <result property="updatedAt" column="updated_at" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <select id="selectDoctorSchedule" resultType="generator.domain.Appointment">
+        SELECT *
+        FROM appointment
+        WHERE
+            doctor_name = #{doctorName}
+          AND appointment_date BETWEEN #{startDate} AND #{endDate}
+        ORDER BY appointment_date ASC, appointment_time ASC
+    </select>
+
+    <sql id="Base_Column_List">
+        id,full_name,gender,
+        phone_number,email,birth_date,
+        department,specialty,license_number,
+        years_of_experience,introduction,created_at,
+        updated_at,photo,certificate
+    </sql>
+</mapper>

@@ -11,6 +11,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import com.zr.uniSoul.service.ZhxtService;
@@ -21,6 +22,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 /**
  * 智绘心途板块代码
@@ -36,6 +39,11 @@ public class ZhxtController {
 
     @Autowired
     private AliOssUtil aliOssUtil;
+
+    // 注入自定义线程池
+    @Autowired
+    @Qualifier("asyncExecutor")
+    private Executor asyncExecutor;
 
     /**
      * 发布文章
@@ -119,9 +127,9 @@ public class ZhxtController {
      */
     @PostMapping("list")
     @ApiOperation("文章分页展示")
-    public R<PageResult> list(@RequestBody PageQueryDTO pageQueryDTO) {
+    public R<PageResult> list(@RequestBody PageQueryDTO pageQueryDTO,HttpServletRequest request) {
         log.info("分页查询：{}", pageQueryDTO);
-        PageResult pageResult = zhxtService.pageQuery(pageQueryDTO);
+        PageResult pageResult = zhxtService.pageQuery(pageQueryDTO,request);
         return R.success(pageResult);
     }
 
@@ -207,12 +215,6 @@ public class ZhxtController {
         }
     }
 
-    /**
-     * 从HttpSession中获取userId
-     *
-     * @param request HttpServletRequest对象
-     * @return 用户ID，若未找到或userId不是Integer类型则返回0
-     */
     private int getUserIdFromSession(HttpServletRequest request) {
         HttpSession session = request.getSession();
         Object userIdObj = session.getAttribute("userId");
@@ -226,14 +228,75 @@ public class ZhxtController {
      */
     @GetMapping("detail")
     @ApiOperation("获取文章详情信息")
-    public R<Article> getArticleDetail(@RequestParam String id) {
+    public R<Article> getArticleDetail(@RequestParam String id,HttpServletRequest request) {
         log.info("获取文章详情信息：文章id={}", id);
         Article article = zhxtService.getArticleDetail(id);
 
-        if (article != null) {
-            return R.success(article);
+        if (article == null) {
+            return R.error("文章不存在");
         }
-        return R.error("文章不存在");
+
+        // 立即返回数据给前端
+
+
+        // 异步记录用户行为（不阻塞主线程）
+        asyncRecordUserAction(id, request,1);
+
+        return R.success(article);
+//        if (article != null) {
+//
+//            //记录用户行为（浏览）
+//            //获取用户id
+//            HttpSession session = request.getSession();
+//            int userId = 0;
+//            Object userIdObj = session.getAttribute("userId");
+//            if (userIdObj instanceof Integer) {
+//                userId = (Integer) userIdObj;
+//            } else if (userIdObj instanceof Long) {
+//                userId = ((Long) userIdObj).intValue();
+//            } else {
+//                // 处理其他情况或抛出异常
+//            }
+//            if (userId == 0) {
+//                return R.success(article);
+//            }
+//            zhxtService.recordUserAction(id,userId,1);
+//
+//            return R.success(article);
+//        }
+//        return R.error("文章不存在");
+    }
+
+
+    // 异步方法（需配合线程池或消息队列）
+    private void asyncRecordUserAction(String articleId, HttpServletRequest request, int score) {
+        CompletableFuture.runAsync(() -> {
+            try {
+                HttpSession session = request.getSession(false);
+                if (session == null) {
+                    log.warn("会话不存在，无法记录用户行为");
+                    return;
+                }
+                int userId = 0;
+                Object userIdObj = session.getAttribute("userId");
+                if (userIdObj instanceof Integer) {
+                    userId = (Integer) userIdObj;
+                } else if (userIdObj instanceof Long) {
+                    userId = ((Long) userIdObj).intValue();
+                } else {
+                    log.warn("用户未登录或userId无效");
+                    return; // 直接退出，避免调用recordUserAction时传入无效的userId
+                }
+                // 确保userId不为0
+                if (userId == 0) {
+                    log.warn("用户ID无效，无法记录用户行为");
+                    return;
+                }
+                zhxtService.recordUserAction(articleId, userId, score);
+            } catch (Exception e) {
+                log.error("异步记录用户行为失败: {}", e.getMessage(), e);
+            }
+        }, asyncExecutor);
     }
 
     @GetMapping("author_info")
@@ -303,4 +366,7 @@ public class ZhxtController {
         }
         return R.error("文章不存在");
     }
+
+
+
 }

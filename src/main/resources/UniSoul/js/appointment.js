@@ -1,4 +1,4 @@
-// 工具函数
+
 const Utils = {
     // 日期时间处理
     date: {
@@ -42,6 +42,11 @@ const Utils = {
             const now = new Date().getTime();
             const expirationTime = parsedItem.timestamp + (parsedItem.expirationInMinutes * 60 * 1000);
 
+            if (!parsedItem.data || !parsedItem.timestamp) {
+                localStorage.removeItem(key);
+                return null;
+            }
+
             if (now > expirationTime) {
                 localStorage.removeItem(key);
                 return null;
@@ -72,23 +77,34 @@ const Utils = {
     }
 };
 
+
 // 页面初始化
 $(document).ready(function() {
     initPage();
     bindEvents();
+    if (typeof $ === 'undefined') {
+        console.error('jQuery 未加载！');
+    }
 });
+
+
 
 // 初始化页面
 function initPage() {
     loadDoctorList();
     loadAppointmentList();
+    alert("初始化");
 }
 
 // 表单验证
 function validateAppointmentForm() {
+    alert("表单验证");
     const data = {
-        patientName: $('#patientName').val().trim(),
-        doctorId: $('#doctorSelect').val(),
+        patientName: $('#patientName').val()?.trim() || '',
+        doctorName: $('#doctorSelect').val(),
+        patientPhone: $('#patientPhone').val()?.trim() || '',
+        consultationType: $('#consultationType').val(),
+        conditionDescription: $('#conditionDescription').val(),
         appointmentDate: $('#appointmentDate').val(),
         appointmentTime: $('#appointmentTime').val()
     };
@@ -97,7 +113,7 @@ function validateAppointmentForm() {
         showError('请输入患者姓名');
         return false;
     }
-    if (!data.doctorId) {
+    if (!data.doctorName) {
         showError('请选择医生');
         return false;
     }
@@ -121,29 +137,27 @@ function validateAppointmentForm() {
 function loadDoctorList(page = 1) {
     const cacheKey = `doctors_page_${page}`;
     const cachedData = Utils.cache.get(cacheKey);
+    alert("加载医生列表");
 
-    if (cachedData) {
-        renderDoctorList(cachedData);
-        renderDoctorOptions(cachedData);
-        return;
-    }
 
-    MedicalAPI.doctor.getList(page)
+    MedicalAPI.doctor.getList(page, 10) // 明确传递size参数
         .then(response => {
             Utils.cache.set(cacheKey, response);
             renderDoctorList(response);
-            renderDoctorOptions(response);
+            renderDoctorOptions(response.content); // 可能需要调整数据结构
         })
-        .catch(error => {
-            console.error('Failed to load doctors:', error);
-            showError('加载医生列表失败');
-        });
 }
 
 // 渲染医生列表
 function renderDoctorList(data) {
     const $doctorList = $('#doctorList');
     $doctorList.empty();
+
+    if (!data || !data.content || !Array.isArray(data.content)) {
+        console.error('Invalid doctor data:', data);
+        showError('医生数据加载异常');
+        return;
+    }
 
     data.content.forEach(doctor => {
         $doctorList.append(`
@@ -157,19 +171,6 @@ function renderDoctorList(data) {
     });
 
     updatePagination(data, 'doctor');
-}
-
-// 渲染医生选项
-function renderDoctorOptions(doctors) {
-    const $doctorSelect = $('#doctorSelect');
-    $doctorSelect.empty();
-    $doctorSelect.append('<option value="">请选择医生</option>');
-
-    doctors.content.forEach(doctor => {
-        $doctorSelect.append(`
-            <option value="${doctor.id}">${doctor.name} - ${doctor.specialization}</option>
-        `);
-    });
 }
 
 // 加载预约列表
@@ -188,6 +189,12 @@ function loadAppointmentList(page = 1) {
 function renderAppointmentList(data) {
     const $appointmentList = $('#appointmentList');
     $appointmentList.empty();
+
+    if (!data || !data.content || !Array.isArray(data.content)) {
+        console.error('Invalid appointment data:', data);
+        showError('预约数据加载异常');
+        return;
+    }
 
     data.content.forEach(appointment => {
         $appointmentList.append(`
@@ -213,6 +220,7 @@ function renderAppointmentList(data) {
 function bindEvents() {
     // 预约表单提交
     $('#appointmentForm').on('submit', function(e) {
+        alert("预约表单提交");
         e.preventDefault();
         const data = validateAppointmentForm();
         if (data) {
@@ -256,6 +264,7 @@ function bindEvents() {
 
 // 提交预约
 function submitAppointment(appointmentData) {
+    alert("提交");
     MedicalAPI.appointment.create(appointmentData)
         .then(response => {
             showSuccess('预约成功');
@@ -266,6 +275,7 @@ function submitAppointment(appointmentData) {
             console.error('Appointment failed:', error);
             showError('预约失败');
         });
+
 }
 
 // 提交医生信息
