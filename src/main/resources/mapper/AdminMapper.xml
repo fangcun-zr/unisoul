@@ -44,6 +44,9 @@
         </foreach>
         )
     </update>
+    <update id="setWordsStatus">
+        update sensitive_words set status = #{status} where id = #{id}
+    </update>
 
     <!-- 批量插入新问题 -->
     <insert id="insertQuestions">
@@ -52,6 +55,9 @@
         <foreach collection="questions" item="q" separator=",">
             (#{assessmentId}, #{q.topic}, #{q.questionType}, #{q.sortOrder}, #{q.options})
         </foreach>
+    </insert>
+    <insert id="addWords">
+        insert sensitive_words (word) values (#{word})
     </insert>
     <delete id="deleteUser">
        delete from user where id = #{id}
@@ -77,6 +83,9 @@
         -- 最后删除 question 记录
         DELETE FROM question WHERE assessment_id = #{id};
     </delete>
+    <delete id="deleteWords">
+       delete from sensitive_words where id = #{id}
+    </delete>
 
     <select id="getIsAdmin" resultType="java.lang.Integer">
         select isadmin from user where id = #{userId}
@@ -97,6 +106,9 @@
         select question_id,topic,question_type,options,sort_order
         from question
         where assessment_id = #{id}
+    </select>
+    <select id="getAllWords" resultType="com.zr.uniSoul.pojo.vo.WordVO">
+                select * from sensitive_words
     </select>
 
 </mapper>

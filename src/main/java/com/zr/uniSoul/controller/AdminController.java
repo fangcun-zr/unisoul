@@ -3,8 +3,10 @@ package com.zr.uniSoul.controller;
 import com.zr.uniSoul.common.R;
 import com.zr.uniSoul.pojo.dto.AssessmentDTO;
 import com.zr.uniSoul.pojo.dto.BannedDTO;
+import com.zr.uniSoul.pojo.dto.WordDTO;
 import com.zr.uniSoul.pojo.vo.AssessmentVO;
 import com.zr.uniSoul.pojo.vo.UserVO;
+import com.zr.uniSoul.pojo.vo.WordVO;
 import com.zr.uniSoul.service.AdminService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -217,6 +219,67 @@ public class AdminController {
         else {
             return R.error("操作失败");
         }
+    }
+
+    /**
+     * 获取所有敏感词
+     */
+    @GetMapping("/getAllwords")
+    public R<List<WordVO>> getSensitiveWords(HttpServletRequest request){
+        if(!judgeAdmin(request)) {
+            return R.error("非管理员账户，没有权限");
+        }
+        return R.success(adminService.getAllWords());
+    }
+
+    /**
+     * 添加敏感词
+     */
+    @PostMapping("/addWords")
+    public R<String> addWords(@RequestBody List<String> words,HttpServletRequest request){
+        log.info("添加敏感词{}",words);
+        if(!judgeAdmin(request)) {
+            return R.error("非管理员账户，没有权限");
+        }
+        int ret = adminService.addWords(words);
+        if(ret >0 ){
+            return R.success("操作成功");
+        }
+        else {
+            return R.error("操作失败");
+        }
+    }
+
+    /**
+     * 删除敏感词
+     */
+    @PostMapping("/deleteWords")
+    public R<String> deleteWords(@RequestBody List<Integer> ids,HttpServletRequest request){
+        log.info("删除敏感词{}",ids);
+        if(!judgeAdmin(request)) {
+            return R.error("非管理员账户，没有权限");
+        }
+        int ret = adminService.deleteWords(ids);
+        if(ret >0 ){
+            return R.success("操作成功");
+        }
+        else {
+            return R.error("操作失败");
+        }
+    }
+
+    /**
+     * 设置敏感词状态
+     */
+    @PostMapping("/setWordStatus")
+    public R<Integer> setWordsStatus(@RequestBody WordDTO wordDTO, HttpServletRequest request){
+        log.info("设置敏感词状态{}",wordDTO);
+        if(!judgeAdmin(request)) {
+            return R.error("非管理员账户，没有权限");
+        }
+        int status = adminService.setWordsStatus(wordDTO);
+        return R.success(status);
+
     }
 
 }

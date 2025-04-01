@@ -207,6 +207,12 @@ public class ZhxtController {
         }
     }
 
+    /**
+     * 从HttpSession中获取userId
+     *
+     * @param request HttpServletRequest对象
+     * @return 用户ID，若未找到或userId不是Integer类型则返回0
+     */
     private int getUserIdFromSession(HttpServletRequest request) {
         HttpSession session = request.getSession();
         Object userIdObj = session.getAttribute("userId");
@@ -223,6 +229,7 @@ public class ZhxtController {
     public R<Article> getArticleDetail(@RequestParam String id) {
         log.info("获取文章详情信息：文章id={}", id);
         Article article = zhxtService.getArticleDetail(id);
+
         if (article != null) {
             return R.success(article);
         }
@@ -296,7 +303,4 @@ public class ZhxtController {
         }
         return R.error("文章不存在");
     }
-
-
-
 }

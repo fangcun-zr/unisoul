@@ -180,6 +180,8 @@ public class ZhxtServiceImpl implements ZhxtService {
     @Override
     public Article getArticleDetail(String id) {
         int articleId = Integer.parseInt(id);
+        //让阅读人数加一
+        zhxtMapper.addviewCount(articleId);
         return zhxtMapper.getArticleDetailById(articleId);
     }
 

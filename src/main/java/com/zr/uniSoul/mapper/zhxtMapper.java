@@ -59,4 +59,6 @@ public interface zhxtMapper {
     String getContent(int id);
 
     int checkArticle(ReviewDTO reviewDTO);
+
+    void addviewCount(int articleId);
 }

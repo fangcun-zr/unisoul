@@ -11,6 +11,9 @@
     <insert id="likeComments">
         insert into likes(article_comment_id,user_id,create_time,update_time) values(#{articleCommentId},#{userId},#{createTime},#{updateTime})
     </insert>
+    <insert id="addviewCount">
+        update article set view_count = view_count + 1 where id = #{articleId}
+    </insert>
     <update id="checkArticle">
         update article set status = #{status} where id = #{article_id}
     </update>
