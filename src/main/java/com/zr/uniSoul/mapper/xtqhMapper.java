@@ -92,4 +92,8 @@ public interface xtqhMapper {
     String findEmainlByUsername(String username);
 
     int changePassWord(String username, String password);
+
+    int getIdByUsername(String username);
+
+    int setUserAction(int userId);
 }

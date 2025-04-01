@@ -67,6 +67,20 @@ public class ZhxtServiceImpl implements ZhxtService {
         // 启动分页
         PageHelper.startPage(pageQueryDTO.getPage(), pageQueryDTO.getPageSize());
 
+        List<Article> articles = new ArrayList<>();
+
+        //获取userId
+        int userId = 0;
+        HttpSession session = request.getSession();
+        Object userIdObj = session.getAttribute("userId");
+        if (userIdObj instanceof Integer) {
+            userId = (Integer) userIdObj;
+        } else if (userIdObj instanceof Long) {
+            userId = ((Long) userIdObj).intValue();
+        } else {
+            // 处理其他情况或抛出异常
+        }
+
         // 根据条件选择不同的查询方法
         if (pageQueryDTO.getCategory_id() == null) {
             if(pageQueryDTO.getKeyWords() == null) {
@@ -76,15 +90,37 @@ public class ZhxtServiceImpl implements ZhxtService {
                 // 手动获取总记录数
                 Long total = zhxtMapper.countQueryAll();
 
+                //读取用户画像(标签得分)
+                String  jsonInput = zhxtMapper.getjsonInput(userId);
+                if(jsonInput!= null){
+                    log.info("jsonInput:{}", jsonInput);
+                    //对分页的文章进行智能推荐排序
+                    articles = recommendedUtil.sortArticles(page.getResult(),jsonInput);
+                }else {
+                    articles = page.getResult();
+                }
+
+
                 // 返回封装结果
-                return new PageResult(total, page.getResult());
+                return new PageResult(total,articles);
             }
             // 查询带条件的数据
             Page<Article> page = zhxtMapper.pageQueryForKeyWords(pageQueryDTO);
             // 手动获取总记录数
             Long total = zhxtMapper.countQueryForKeyWords(pageQueryDTO);
+
+            //读取用户画像(标签得分)
+            String  jsonInput = zhxtMapper.getjsonInput(userId);
+            if(jsonInput!= null){
+                log.info("jsonInput:{}", jsonInput);
+                //对分页的文章进行智能推荐排序
+               articles = recommendedUtil.sortArticles(page.getResult(),jsonInput);
+            }else {
+                articles = page.getResult();
+            }
+
             // 返回封装结果
-            return new PageResult(total, page.getResult());
+            return new PageResult(total, articles);
 
         } else {
             if(pageQueryDTO.getKeyWords() == null) {
@@ -94,28 +130,35 @@ public class ZhxtServiceImpl implements ZhxtService {
                 // 手动获取总记录数
                 Long total = zhxtMapper.countQuery(pageQueryDTO);
 
+
+                //读取用户画像(标签得分)
+                String  jsonInput = zhxtMapper.getjsonInput(userId);
+                if(jsonInput!= null){
+                    log.info("jsonInput:{}", jsonInput);
+                    //对分页的文章进行智能推荐排序
+                    articles = recommendedUtil.sortArticles(page.getResult(),jsonInput);
+                }else {
+                    articles = page.getResult();
+                }
+
                 // 返回封装结果
-                return new PageResult(total, page.getResult());
+                return new PageResult(total, articles);
             }
             // 查询带条件的数据
             Page<Article> page = zhxtMapper.pageQueryForKeyWords(pageQueryDTO);
             // 手动获取总记录数
             Long total = zhxtMapper.countQueryForKeyWords(pageQueryDTO);
-            //获取userId
-            int userId = 0;
-            HttpSession session = request.getSession();
-            Object userIdObj = session.getAttribute("userId");
-            if (userIdObj instanceof Integer) {
-                userId = (Integer) userIdObj;
-            } else if (userIdObj instanceof Long) {
-                userId = ((Long) userIdObj).intValue();
-            } else {
-                // 处理其他情况或抛出异常
-            }
+
             //读取用户画像(标签得分)
             String  jsonInput = zhxtMapper.getjsonInput(userId);
-            //对分页的文章进行智能推荐排序
-            List<Article> articles = recommendedUtil.sortArticles(page.getResult(),jsonInput);
+            if(jsonInput!= null){
+                log.info("jsonInput:{}", jsonInput);
+                //对分页的文章进行智能推荐排序
+               articles = recommendedUtil.sortArticles(page.getResult(),jsonInput);
+            }else {
+                articles = page.getResult();
+            }
+
             // 返回封装结果
             return new PageResult(total,articles);
 
