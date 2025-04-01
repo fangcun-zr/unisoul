@@ -35,13 +35,13 @@ function initializeFilters() {
         locale: "zh"
     });
 
-    const statusOptions = {
-        all: '全部状态',
-        pending: '待确认',
-        confirmed: '已确认',
-        completed: '已完成',
-        cancelled: '已取消'
-    };
+    const statusOptions = [
+        {value: '', text: '全部状态'},
+        {value: 'pending', text: '待确认'},
+        {value: 'confirmed', text: '已确认'},
+        {value: 'completed', text: '已完成'},
+        {value: 'cancelled', text: '已取消'}
+    ];
 
     const $statusFilter = $('#statusFilter');
     Object.entries(statusOptions).forEach(([value, text]) => {
@@ -86,7 +86,6 @@ function loadAppointments(page) {
             showError('加载预约列表失败');
             console.error('Failed to load appointments:', error);
         })
-        .finally(hideLoading);
 }
 
 function renderAppointments(appointments) {

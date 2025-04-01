@@ -53,8 +53,8 @@ const DoctorAPI = {
     // 发送验证码
     sendVerificationCode: function(phone) {
         return $.ajax({
-            url: '/api/verification/send',
-            type: 'POST',
+            url: '/doctor/sendVerificationCode',
+            type: 'GET',
             contentType: 'application/json',
             data: JSON.stringify({ phone: phone })
         });
@@ -63,7 +63,7 @@ const DoctorAPI = {
     // 验证验证码
     verifyCode: function(phone, code) {
         return $.ajax({
-            url: '/api/verification/verify',
+            url: '/doctor/verifyCode',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify({
