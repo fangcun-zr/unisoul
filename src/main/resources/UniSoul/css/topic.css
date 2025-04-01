@@ -146,35 +146,51 @@
     padding: 40px;
     border: 1px solid rgba(255, 255, 255, 0.3);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
 }
 
-.replies-title {
-    font-size: 24px;
-    font-weight: 600;
-    color: var(--text-primary);
+.replies-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 30px;
     padding-bottom: 15px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
+.replies-header h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.replies-count {
+    color: var(--text-secondary);
+    font-size: 16px;
+    font-weight: normal;
+}
+
 .replies-list {
     display: flex;
     flex-direction: column;
-    gap: 25px;
-    margin-bottom: 40px;
+    gap: 20px;
 }
 
 .reply-item {
     background: var(--bg-secondary);
     border-radius: 16px;
     padding: 25px;
+    margin-bottom: 20px;
     transition: all 0.3s ease;
     border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .reply-item:hover {
     transform: translateX(5px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .reply-header {
@@ -196,11 +212,12 @@
 }
 
 .reply-content {
+    font-size: 15px;
+    line-height: 1.6;
     color: var(--text-primary);
-    line-height: 1.7;
-    font-size: 16px;
-    margin-bottom: 15px;
+    margin: 15px 0;
     white-space: pre-wrap;
+    word-break: break-word;
 }
 
 .reply-footer {
@@ -211,25 +228,30 @@
 
 /* 评论表单样式 */
 .reply-form {
-    background: var(--bg-secondary);
-    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border-radius: var(--border-radius);
     padding: 30px;
-    margin-top: 40px;
-    border: 1px solid rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 40px;
+    box-sizing: border-box;
 }
 
 .reply-form textarea {
     width: 100%;
-    min-height: 120px;
-    margin-bottom: 20px;
+    min-height: 100px;
     border-radius: 12px;
-    padding: 15px;
+    padding: 16px;
     border: 1px solid rgba(0, 0, 0, 0.1);
     background: rgba(255, 255, 255, 0.9);
     resize: vertical;
-    font-size: 16px;
+    font-size: 15px;
     line-height: 1.6;
     transition: all 0.3s ease;
+    max-height: 300px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
 }
 
 .reply-form textarea:focus {
@@ -238,10 +260,54 @@
     box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
 }
 
-.form-actions {
+.form-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding-top: 15px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.anonymous-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-secondary);
+    font-size: 14px;
+    cursor: pointer;
+    padding: 8px 0;
+}
+
+.anonymous-checkbox input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    cursor: pointer;
+}
+
+.submit-reply {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 24px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.submit-reply:hover {
+    background: var(--primary-color-dark);
+    transform: translateY(-1px);
+}
+
+.submit-reply i {
+    font-size: 14px;
 }
 
 /* 匿名复选框样式 */
@@ -330,6 +396,40 @@
 
     .reply-item {
         padding: 20px;
+    }
+
+    .topic-replies,
+    .reply-form {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .replies-header {
+        margin-bottom: 20px;
+    }
+
+    .replies-header h3 {
+        font-size: 18px;
+    }
+
+    .reply-form textarea {
+        min-height: 80px;
+        padding: 12px;
+    }
+
+    .form-footer {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+
+    .anonymous-checkbox {
+        order: 2;
+        justify-content: center;
+    }
+
+    .submit-reply {
+        order: 1;
     }
 }
 
