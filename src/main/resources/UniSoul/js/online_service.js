@@ -547,6 +547,7 @@ function appendMessage(message) {
 // 格式化消息时间
 function formatMessageTime(timestamp) {
     const date = new Date(timestamp);
+    date.setHours(date.getHours() + 8);
     const now = new Date();
     const diff = now - date;
 
@@ -621,6 +622,7 @@ function formatTime(timestamp) {
         }
 
         const now = new Date();
+        date.setHours(date.getHours() + 8);
         const diff = now - date;
 
         // 如果是今天的消息，只显示时间

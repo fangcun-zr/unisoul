@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -116,19 +118,21 @@ public class ChatController {
         }
     }
 
-    @PostMapping("/send")
-    public R<String> sendMessage(HttpServletRequest request , @RequestBody ChatMessage message) {
-        try {
-            Long userId = (Long) request.getSession().getAttribute("userId");
-            message.setSenderId(Long.toString(userId));
-            log.info("发送消息, senderId={}, receiverId={}", message.getSenderId(), message.getReceiverId());
-            chatService.handleMessage(message);
-            return R.success("发送成功");
-        } catch (Exception e) {
-            log.error("发送消息失败", e);
-            return R.error("发送消息失败: " + e.getMessage());
-        }
-    }
+//    @PostMapping("/send")
+//    public R<String> sendMessage(HttpServletRequest request , @RequestBody ChatMessage message) {
+//        try {
+//            Long userId = (Long) request.getSession().getAttribute("userId");
+//            message.setSenderId(Long.toString(userId));
+//            LocalDateTime date = LocalDateTime.now();
+//            log.info("发送消息, senderId={}, receiverId={},createTime = {}", message.getSenderId(), message.getReceiverId(), date);
+//            message.setCreateTime(date);
+//            chatService.handleMessage(message);
+//            return R.success("发送成功");
+//        } catch (Exception e) {
+//            log.error("发送消息失败", e);
+//            return R.error("发送消息失败: " + e.getMessage());
+//        }
+//    }
 
     @DeleteMapping("/message/{messageId}")
     public R<String> deleteMessage(@PathVariable String messageId) {

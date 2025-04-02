@@ -13,6 +13,8 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Controller;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @Controller
@@ -41,6 +43,9 @@ public class ChatWebSocket {
             }
 
             // 处理消息（保存到数据库等）
+            LocalDateTime dateTime = LocalDateTime.now();
+            System.out.println(dateTime);
+            message.setCreateTime(dateTime);
             chatService.handleMessage(message);
 
             // 发送消息给接收者
