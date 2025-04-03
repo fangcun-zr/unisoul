@@ -37,7 +37,7 @@ public class SensitiveWordFilter {
         log.info("敏感词库加载完成，共加载{}个敏感词", words.size());
         words.forEach(this::addKeyword);
 
-        log.info(("[敏感词库] 我操你妈示例检测结果：" + filter("测试我操你妈")));
+        log.info(("[敏感词库] 我操示例检测结果：" + filter("测试我操")));
     }
 
     private void addKeyword(String keyword) {

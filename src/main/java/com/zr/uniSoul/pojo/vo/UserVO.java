@@ -20,5 +20,6 @@ public class UserVO {
     private String avatarUrl;
     private int status;
     private int isAdmin;
+    private int category;
 
 }

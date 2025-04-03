@@ -112,7 +112,10 @@ public class XtqhServiceImpl implements XtqhService {
             log.error("头像上传未知异常 | 错误类型: {} | 堆栈跟踪:", e.getClass().getSimpleName(), e);
             throw new RuntimeException("用户注册流程异常");
         }
-        return xtqhmapper.insert(user.getUsername(), user.getPassword(), user.getEmail(), user.getCreateTime(), user.getName(), user.getAvatarUrl());
+        //构建人物画像信息
+        xtqhmapper.insert(user.getUsername(), user.getPassword(), user.getEmail(), user.getCreateTime(), user.getName(), user.getAvatarUrl());
+        int id = xtqhmapper.getIdByUsername(user.getUsername());
+        return xtqhmapper.setUserAction(id);
     }
 
     @Override

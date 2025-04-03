@@ -42,6 +42,17 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
+            <version>2.5.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-websocket</artifactId>
+            <version>5.3.10</version> <!-- 请根据你的 Spring 版本进行调整 -->
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-messaging</artifactId>
+            <version>5.3.10</version> <!-- 请根据你的 Spring 版本进行调整 -->
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -125,7 +136,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -222,7 +232,6 @@
             <version>4.5.13</version>
         </dependency>
 
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
@@ -232,6 +241,33 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.13.0</version>
+        </dependency>
+
+        <!-- DeepLearning4j（DL4J）库的核心模块。
+        一个开源的、基于Java的深度学习库，
+        允许开发者在Java和Scala环境中构建、训练和部署深度学习模型。 -->
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-core</artifactId>
+            <version>1.0.0-M2.1</version>
+        </dependency>
+
+        <!-- ND4J（Numpy for Java）库的核心模块。
+        ND4J（N-Dimensional Arrays for Java）是DL4J的底层线性代数库，
+        提供了对多维数组的支持以及高效的数学运算。nd4j-native-platform依
+        赖项包含了ND4J的本地（native）库，这些库针对特定的硬件和操作系统进行
+        了优化，以提高性能^[2]^。-->
+        <dependency>
+            <groupId>org.nd4j</groupId>
+            <artifactId>nd4j-native-platform</artifactId>
+            <version>1.0.0-M2.1</version>
+        </dependency>
+
+        <!-- 添加 Word2Vec 相关依赖 -->
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-nlp</artifactId>
+            <version>1.0.0-M2.1</version>
         </dependency>
 
     </dependencies>

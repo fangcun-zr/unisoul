@@ -7,6 +7,8 @@ import java.util.List;
 @Data
 public class MessageConsultVO {
     private String senderId;
+    private String senderName;
+    private String senderAvatar;
     private String receiverId;
     private List<ConsultMessage> messageList;
 }

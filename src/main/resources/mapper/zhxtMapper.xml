@@ -11,8 +11,14 @@
     <insert id="likeComments">
         insert into likes(article_comment_id,user_id,create_time,update_time) values(#{articleCommentId},#{userId},#{createTime},#{updateTime})
     </insert>
+    <insert id="addviewCount">
+        update article set view_count = view_count + 1 where id = #{articleId}
+    </insert>
     <update id="checkArticle">
         update article set status = #{status} where id = #{article_id}
+    </update>
+    <update id="updateUserTagScores">
+        update user_action set tag_scores = #{tagScores} where user_id = #{userId}
     </update>
     <delete id="deleteArticle">
         delete from article where id = #{articleId}
@@ -84,5 +90,11 @@
     </select>
     <select id="getContent" resultType="java.lang.String">
         select content from article where id = #{id}
+    </select>
+    <select id="getTagsByArticleId" resultType="java.lang.String">
+        select tags from article where id = #{articleId}
+    </select>
+    <select id="getjsonInput" resultType="java.lang.String">
+        select tag_scores from user_action where user_id = #{userId}
     </select>
 </mapper>

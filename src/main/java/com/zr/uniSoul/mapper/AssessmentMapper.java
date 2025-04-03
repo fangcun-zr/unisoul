@@ -24,6 +24,8 @@ public interface AssessmentMapper {
     int save(ReportDTO reportDTO);
 
     List<ReportVO> getMyReport(int userId);
+
+    void addAssessmentTimes(int id);
 }
 
 

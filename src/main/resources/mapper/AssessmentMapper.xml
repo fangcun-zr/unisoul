@@ -6,6 +6,9 @@
         INSERT INTO assessment_reports (user_id, created_at,session_uuid,conclusion,suggestions)
         VALUES (#{userId},#{generatedTime},#{sessionUuid},#{content.conclusion},#{content.suggestions})
     </insert>
+    <update id="addAssessmentTimes">
+        UPDATE assessment SET csCount = csCount + 1 WHERE id = #{id}
+    </update>
 
 
     <!--    <insert id="startAssessment" useGeneratedKeys="true" keyProperty="session_id">-->
