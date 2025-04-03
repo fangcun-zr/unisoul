@@ -1,17 +1,28 @@
 const AppointmentAPI = {
     // 获取预约列表
-    getList: function(page = 1, filters = {}) {
+    getList: function(params) {
         return $.ajax({
-            url: 'api/appointments',
-            type: 'GET',
+            url: '/appointment/list',
+            method: 'GET', getList: function(params) {
+                return $.ajax({
+                    url: '/appointment/list',
+                    method: 'GET',
+                    data: {
+                        current: params.current,    // ✅ 确保参数名与后端一致
+                        pageSize: params.pageSize,  // 使用后端接受的参数名
+                        status: params.status,
+                        appointmentDate: params.appointmentDate
+                    }
+                });
+            },
             data: {
-                page: page,
-                size: 10,
-                ...filters
+                current: params.current,    // ✅ 确保参数名与后端一致
+                pageSize: params.pageSize,  // 使用后端接受的参数名
+                status: params.status,
+                appointmentDate: params.appointmentDate
             }
         });
     },
-
     // 创建新预约
     create: function(appointmentData) {
         return $.ajax({
@@ -25,7 +36,7 @@ const AppointmentAPI = {
     // 更新预约状态
     updateStatus: function(appointmentId, status) {
         return $.ajax({
-            url: `/appointments/${appointmentId}/status`,
+            url: `/appointment/${appointmentId}/status`,
             type: 'PUT',
             contentType: 'application/json',
             data: JSON.stringify({ status: status })
@@ -35,15 +46,15 @@ const AppointmentAPI = {
     // 取消预约
     cancel: function(appointmentId) {
         return $.ajax({
-            url: `/appointments/${appointmentId}/cancel`,
-            type: 'PUT'
+            url: `/appointment/cancel/${appointmentId}`,
+            type: 'POST'
         });
     },
 
     // 获取医生可预约时间段
     getDoctorSchedule: function(doctorId, date) {
         return $.ajax({
-            url: `/appointments/doctor/${doctorId}/schedule`,
+            url: `/appointment/doctor/${doctorId}/schedule`,
             type: 'GET',
             data: { date: date }
         });
@@ -58,20 +69,25 @@ const AppointmentAPI = {
     },
 
     // 获取患者预约历史
-    getPatientHistory: function(patientId) {
+    getPatientHistory: function() {
         return $.ajax({
-            url: `/api/appointments/patient/${patientId}/history`,
-            type: 'GET'
+            url: '/appointment/patient/history',
+            type: 'GET',
+            data: {
+                patientName: currentUserName // 直接使用当前登录用户姓名
+            }
         });
     },
 
     // 导出预约记录
     exportList: function(filters) {
         return $.ajax({
-            url: '/api/appointments/export',
-            type: 'GET',
+            url: '/appointment/export',
+            method: 'GET',
             data: filters,
-            responseType: 'blob'
+            xhrFields: {
+                responseType: 'blob'
+            }
         });
     }
 };

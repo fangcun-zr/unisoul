@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -57,17 +58,13 @@ public class Doctor {
      */
     @TableField("birth_date")
     @JsonProperty("birth_date")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date birthDate;
 
     /**
      * 所属科室
      */
     private String department;
-
-    /**
-     * 专业方向
-     */
-    private String specialty;
 
     /**
      * 执业证号（唯一约束）
@@ -101,16 +98,6 @@ public class Doctor {
     @TableField("updated_at")
     @JsonProperty("updated_at")
     private Date updatedAt;
-
-    /**
-     * 个人照片（大二进制对象）
-     */
-    private byte[] photo;
-
-    /**
-     * 资格证书（大二进制对象）
-     */
-    private byte[] certificate;
 
     /**
      * 新增非持久化字段 - 近期排班信息

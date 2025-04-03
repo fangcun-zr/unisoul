@@ -70,8 +70,8 @@
                                 <label for="gender">性别</label>
                                 <select class="form-select" id="gender" name="gender" required>
                                     <option value="">请选择</option>
-                                    <option value="male">男</option>
-                                    <option value="female">女</option>
+                                    <option value="男">男</option>
+                                    <option value="女">女</option>
                                 </select>
                             </div>
                         </div>
@@ -89,8 +89,9 @@
                         <!-- 出生日期 -->
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="birthday">出生日期</label>
-                                <input type="text" class="form-control" id="birthDate" name="birthDate" required>
+                                <label for="birthDate">出生日期</label>
+                                <input type="text" class="form-control" id="birthDate" name="birthDate"
+                                       placeholder="选择出生日期" required>
                             </div>
                         </div>
                     </div>
@@ -113,7 +114,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="verificationCode">验证码</label>
-                                <input type="text" class="form-control" id="verificationCode" name="verificationCode" required>
+                                <input type="tel" class="form-control" id="verificationCode" name="verificationCode" required pattern="[A-Za-z0-9]{4}" title="请输入4位字母或数字">
                             </div>
                         </div>
                     </div>
@@ -135,15 +136,6 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="specialization">专业方向</label>
-                                <select class="form-select" id="specialty" name="specialty" required>
-                                    <option value="">请先选择科室</option>
-                                    <!-- 原有专业方向选项已删除，将通过JS动态生成 -->
-                                </select>
-                            </div>
-                        </div>
                     </div>
 
                     <div class="row">
@@ -157,38 +149,6 @@
                             <div class="form-group">
                                 <label for="experience">从业年限</label>
                                 <input type="number" class="form-control" id="yearsOfExperience" name="yearsOfExperience" min="0" required>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 资质证明部分 -->
-                <div class="form-section">
-                    <h3 class="section-title">
-                        <i class="fas fa-certificate"></i>
-                        资质证明
-                    </h3>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="doctorAvatar">个人照片</label>
-                                <div class="upload-wrapper">
-                                    <input type="file" class="form-control" id="photo" name="photo" accept="image/*" required>
-                                    <div class="preview-container">
-                                        <img id="avatarPreview" src="../image/avatar-placeholder.png" alt="头像预览">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="certificateFile">资格证书</label>
-                                <div class="upload-wrapper">
-                                    <input type="file" class="form-control" id="certificate" name="certificate" accept="image/*" required>
-                                    <div class="preview-container">
-                                        <img id="certificatePreview" src="../image/certificate-placeholder.png" alt="证书预览">
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -256,34 +216,21 @@
         });
     }
 
-    // 更新专业方向选项
-    function updateSpecializations() {
-        const department = document.getElementById('department').value;
-        const specSelect = document.getElementById('specialty');
-
-        // 清空并重置选项
-        specSelect.innerHTML = '<option value="">请选择专业方向</option>';
-
-        if (department && departmentData[department]) {
-            departmentData[department].forEach(spec => {
-                specSelect.appendChild(new Option(spec, spec));
-            });
-        }
-    }
 
     // 事件绑定
     window.addEventListener('DOMContentLoaded', initDepartments);
-    document.getElementById('department').addEventListener('change', updateSpecializations);
+    document.getElementById('department');
 </script>
 
 
 <!-- 脚本引用 -->
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-notify/0.2.0/js/bootstrap-notify.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/zh.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/additional-methods.min.js"></script>
 <script src="../api/doctorRegister.js"></script>
 <script src="../js/doctorRegister.js"></script>

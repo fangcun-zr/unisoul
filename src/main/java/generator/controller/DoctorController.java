@@ -42,13 +42,11 @@ public class DoctorController {
     private static final Logger log = LoggerFactory.getLogger(DoctorController.class);
 
     // 注册医生（带文件上传）
-    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/register")
     public BaseResponse<Boolean> registerDoctor(
-            @RequestPart Doctor doctor,
-            @RequestPart(value = "photo", required = false) MultipartFile photo,
-            @RequestPart(value = "certificate", required = false) MultipartFile certificate) {
+            @RequestBody Doctor doctor) {
         try {
-            boolean result = doctorService.registerDoctor(doctor, photo, certificate);
+            boolean result = doctorService.registerDoctor(doctor);
             return ResultUtils.success(result);
         } catch (BusinessException e) {
             return ResultUtils.error(e.getCode(), e.getMessage());
@@ -59,7 +57,7 @@ public class DoctorController {
     @PostMapping("/add")
     public BaseResponse<Boolean> addDoctor(@RequestBody Doctor doctor) {
         try {
-            boolean result = doctorService.registerDoctor(doctor, null, null);
+            boolean result = doctorService.registerDoctor(doctor);
             return ResultUtils.success(result);
         } catch (BusinessException e) {
             return ResultUtils.error(e.getCode(), e.getMessage());

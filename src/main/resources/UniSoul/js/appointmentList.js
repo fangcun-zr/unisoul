@@ -1,3 +1,12 @@
+if (typeof Promise.prototype.finally !== 'function') {
+    Promise.prototype.finally = function(callback) {
+        return this.then(
+            value => Promise.resolve(callback()).then(() => value),
+            err => Promise.resolve(callback()).then(() => { throw err })
+        );
+    };
+}
+
 $(document).ready(function() {
     initializePage();
     bindEvents();
@@ -8,10 +17,18 @@ let currentUserRole = '';
 let currentUserId = '';
 
 function loadUserInfo() {
-    const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
-    currentUserRole = userInfo.role;
-    currentUserId = userInfo.id;
-    updateUIByRole();
+    alert("加载用户信息")
+    try {
+        const rawUserInfo = localStorage.getItem('userInfo');
+        const userInfo = JSON.parse(rawUserInfo || '{}');
+
+        currentUserRole = userInfo.role?.toLowerCase() || '';
+        currentUserName = userInfo.doctorName || userInfo.patientName || userInfo.name || '';
+
+        updateUIByRole();
+    } catch (e) {
+        console.error('解析用户信息失败:', e);
+    }
 }
 
 function updateUIByRole() {
@@ -27,6 +44,7 @@ function updateUIByRole() {
 function initializePage() {
     initializeFilters();
     loadAppointments(1);
+    alert("页面初始化")
 }
 
 function initializeFilters() {
@@ -37,19 +55,20 @@ function initializeFilters() {
 
     const statusOptions = [
         {value: '', text: '全部状态'},
-        {value: 'pending', text: '待确认'},
+        {value: 'PENDING', text: '待确认'},
         {value: 'confirmed', text: '已确认'},
         {value: 'completed', text: '已完成'},
         {value: 'cancelled', text: '已取消'}
     ];
 
     const $statusFilter = $('#statusFilter');
-    Object.entries(statusOptions).forEach(([value, text]) => {
-        $statusFilter.append(`<option value="${value}">${text}</option>`);
+    statusOptions.forEach(option => {
+        $statusFilter.append(`<option value="${option.value}">${option.text}</option>`);
     });
 }
 
 function bindEvents() {
+    alert("绑定事件启动")
     $('#statusFilter, #dateFilter').on('change', function() {
         loadAppointments(1);
     });
@@ -60,6 +79,28 @@ function bindEvents() {
         loadAppointments(page);
     });
 
+    // 在bindEvents中添加
+    $(document).on('click', '.appointment-card', function() {
+        const appointmentId = $(this).data('id');
+        showAppointmentDetail(appointmentId);
+    });
+
+    function showAppointmentDetail(id) {
+        AppointmentAPI.getDetail(id).then(res => {
+            const detailHTML = `
+            <div class="detail-section">
+                <h6>基本信息</h6>
+                <p>预约号：${res.id}</p>
+                <p>状态：${getStatusText(res.status)}</p>
+                <p>预约时间：${formatDateTime(res.appointmentDateTime)}</p>
+            </div>
+            <!-- 其他详细信息 -->
+        `;
+            $('#appointmentDetailContent').html(detailHTML);
+            $('#appointmentDetailModal').modal('show');
+        });
+    }
+
     $(document).on('click', '.btn-cancel-appointment', function() {
         const appointmentId = $(this).data('id');
         cancelAppointment(appointmentId);
@@ -68,27 +109,59 @@ function bindEvents() {
     $('#exportBtn').on('click', exportAppointments);
 }
 
-function loadAppointments(page) {
-    const filters = {
+function loadAppointments(current = 1) {
+    const requestParams = {
+        current: current,
+        pageSize: 10,
         status: $('#statusFilter').val(),
-        date: $('#dateFilter').val(),
-        role: currentUserRole,
-        userId: currentUserId
+        appointmentDate: $('#dateFilter').val()
     };
 
     showLoading();
-    AppointmentAPI.getList(page, filters)
-        .then(response => {
-            renderAppointments(response.content);
-            renderPagination(response);
+    AppointmentAPI.getList(requestParams)
+        .done(function(response) {
+            alert(response.code)
+            if (response.code === 0) {
+                // ✅ 明确解析分页字段
+                const {
+                    records,  // 数据列表
+                    current: currentPage,
+                    pages: totalPages,
+                    total: totalItems
+                } = response.data;
+
+                renderAppointments(records);
+                renderPagination({
+                    currentPage: currentPage,
+                    totalPages: totalPages,
+                    totalItems: totalItems
+                });
+                updateStats(response.data);
+            }
         })
-        .catch(error => {
-            showError('加载预约列表失败');
-            console.error('Failed to load appointments:', error);
-        })
+        .fail(showError)
+        .always(hideLoading);
+}
+function updateStats(pageData) {
+    // ✅ 直接从分页数据解构
+    const { records, total } = pageData;
+    const today = new Date().toISOString().split('T')[0];
+
+    const stats = records.reduce((acc, appointment) => ({
+        todayCount: acc.todayCount + (appointment.appointmentDate === today ? 1 : 0),
+        pendingCount: acc.pendingCount + (appointment.status === 'PENDING' ? 1 : 0),
+        completedCount: acc.completedCount + (appointment.status === 'COMPLETED' ? 1 : 0)
+    }), { todayCount: 0, pendingCount: 0, completedCount: 0 });
+
+    // 更新DOM
+    $('#todayCount').text(stats.todayCount);
+    $('#pendingCount').text(stats.pendingCount);
+    $('#completedCount').text(stats.completedCount);
+    $('#totalCount').text(total); // ✅ 使用总记录数
 }
 
 function renderAppointments(appointments) {
+    alert("渲染预约列表")
     const $container = $('#appointmentList');
     $container.empty();
 
@@ -112,21 +185,18 @@ function createAppointmentCard(appointment) {
                         ${getStatusText(appointment.status)}
                     </span>
                 </div>
-                <div class="header-right">
-                    ${formatDateTime(appointment.createdAt)}
-                </div>
             </div>
             <div class="appointment-body">
                 ${currentUserRole === 'doctor' ?
-        renderPatientInfo(appointment) :
-        renderDoctorInfo(appointment)}
-                <div class="appointment-time">
-                    <i class="far fa-clock"></i>
-                    预约时间：${formatDateTime(appointment.appointmentTime)}
-                </div>
-            </div>
-            <div class="appointment-footer">
-                ${renderActionButtons(appointment)}
+        `<div class="patient-info">
+                        <span>患者：${appointment.patientName}</span>
+                        <span>电话：${appointment.patientPhone || '无'}</span>
+                    </div>` :
+        `<div class="doctor-info">
+                        <span>医生：${appointment.doctorName}</span>
+                        <span>科室：${appointment.consultationType}</span>
+                    </div>`
+    }
             </div>
         </div>
     `;
@@ -207,12 +277,22 @@ function canCancel(appointment) {
 
 function getStatusText(status) {
     const statusMap = {
-        'pending': '待确认',
-        'confirmed': '已确认',
-        'completed': '已完成',
-        'cancelled': '已取消'
+        'PENDING': '待确认',
+        'CONFIRMED': '已确认',
+        'COMPLETED': '已完成',
+        'CANCELLED': '已取消'
     };
     return statusMap[status] || status;
+}
+
+function formatAppointmentTime(dateTime) {
+    return new Date(dateTime).toLocaleString('zh-CN', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
 }
 
 function confirmAppointment(appointmentId) {
@@ -254,14 +334,21 @@ function cancelAppointment(appointmentId) {
     }
 }
 
-function renderPagination(data) {
+// 分页渲染函数修改
+function renderPagination(paginationData) {
     const $pagination = $('.pagination');
     $pagination.empty();
 
+    // ✅ 使用解构并添加默认值
+    const {
+        currentPage = 1,
+        totalPages = 1
+    } = paginationData;
+
     let html = '';
-    for (let i = 1; i <= data.totalPages; i++) {
+    for (let i = 1; i <= totalPages; i++) {
         html += `
-            <li class="page-item ${i === data.number + 1 ? 'active' : ''}">
+            <li class="page-item ${i === currentPage ? 'active' : ''}">
                 <a class="page-link" href="#" data-page="${i}">${i}</a>
             </li>
         `;
@@ -280,11 +367,13 @@ function formatDateTime(dateTime) {
 }
 
 function showLoading() {
-    $('#loadingSpinner').show();
+    $('#loadingSpinner').fadeIn();
+    $('#appointmentList').addClass('blur-content');
 }
 
 function hideLoading() {
-    $('#loadingSpinner').hide();
+    $('#loadingSpinner').fadeOut();
+    $('#appointmentList').removeClass('blur-content');
 }
 
 function showSuccess(message) {
@@ -312,35 +401,53 @@ function showError(message) {
 }
 
 function renderEmptyState() {
-    const $container = $('#appointmentList');
-    $container.html(`
+    const emptyHTML = `
         <div class="empty-state">
-            <i class="fas fa-calendar-times"></i>
-            <p id="emptyStateText">暂无预约记录</p>
+            <i class="fas fa-calendar-times fa-3x mb-3"></i>
+            <h5>${currentUserRole === 'doctor' ? '暂无患者预约' : '暂无预约记录'}</h5>
+            ${currentUserRole === 'patient' ?
+        '<button class="btn btn-primary mt-3" onclick="location.href=\'create.html\'">立即预约</button>' : ''}
         </div>
-    `);
+    `;
+    $('#appointmentList').html(emptyHTML);
 }
 
 function exportAppointments() {
+    const dateRange = $('#dateFilter').val().split(' to ');
+
     const filters = {
         status: $('#statusFilter').val(),
-        date: $('#dateFilter').val(),
-        role: currentUserRole,
-        userId: currentUserId
+        startDate: dateRange[0] || '',
+        endDate: dateRange[1] || dateRange[0] || '',
+        consultationType: $('#departmentFilter').val()
     };
 
+    // 清理空参数
+    Object.keys(filters).forEach(key => {
+        if (!filters[key]) delete filters[key];
+    });
+
+    showLoading();
     AppointmentAPI.exportList(filters)
-        .then(response => {
-            const blob = new Blob([response], { type: 'application/vnd.ms-excel' });
+        .then(blob => {
+            const filename = `预约记录_${new Date().toLocaleDateString('zh-CN')}.xlsx`;
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
+            a.style.display = 'none';
             a.href = url;
-            a.download = '预约记录.xlsx';
+            a.download = filename;
             document.body.appendChild(a);
             a.click();
             window.URL.revokeObjectURL(url);
+            showSuccess('导出成功');
         })
-        .catch(() => {
-            showError('导出失败');
-        });
+        .catch(err => {
+            console.error('导出失败:', err);
+            showError(`导出失败: ${err.statusText || '服务器错误'}`);
+        })
+        .then(() => {
+            hideLoading();
+        }, () => {
+            hideLoading();
+    });
 }

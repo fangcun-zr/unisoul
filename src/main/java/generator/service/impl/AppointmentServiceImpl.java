@@ -10,6 +10,7 @@ import generator.mapper.AppointmentMapper;
 import generator.mapper.DoctorMapper;
 import generator.service.AppointmentService;
 import generator.common.ErrorCode;
+import org.apache.poi.ss.usermodel.Row;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -22,6 +23,7 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,6 +32,7 @@ public class AppointmentServiceImpl extends ServiceImpl<AppointmentMapper, Appoi
 
     @Resource
     private DoctorMapper doctorMapper;
+
 
     @Transactional
     @Override
@@ -71,12 +74,9 @@ public class AppointmentServiceImpl extends ServiceImpl<AppointmentMapper, Appoi
 
     @Transactional
     @Override
-    public Page<Appointment> listAppointments(String patientName, int current, int pageSize) {
-        QueryWrapper<Appointment> queryWrapper = new QueryWrapper<>();
-        if (StringUtils.hasText(patientName)) {
-            queryWrapper.eq("patient_name", patientName);
-        }
-        return this.page(new Page<>(current, pageSize), queryWrapper);
+    public Page<Appointment> listAppointments(int current, int pageSize) {
+        // 空查询条件，获取全表分页数据
+        return this.page(new Page<>(current, pageSize), new QueryWrapper<>());
     }
 
     @Transactional
@@ -135,30 +135,82 @@ public class AppointmentServiceImpl extends ServiceImpl<AppointmentMapper, Appoi
 
     @Transactional
     @Override
-    public void exportAppointments(HttpServletResponse response, String doctorName, Date startDate, Date endDate) throws IOException {
+    public void exportAppointments(
+            HttpServletResponse response,
+            String status,
+            Date startDate,
+            Date endDate,
+            String consultationType) throws IOException {
+
         QueryWrapper<Appointment> queryWrapper = new QueryWrapper<>();
-        if (StringUtils.hasText(doctorName)) {
-            queryWrapper.like("doctor_name", doctorName);
+
+        // 构建查询条件
+        if (StringUtils.hasText(status)) {
+            queryWrapper.eq("status", status.toUpperCase());
         }
-        if (startDate != null) {
-            queryWrapper.ge("appointment_date", startDate);
+        if (startDate != null && endDate != null) {
+            queryWrapper.between("appointment_date", startDate, endDate);
+        } else {
+            if (startDate != null) {
+                queryWrapper.ge("appointment_date", startDate);
+            }
+            if (endDate != null) {
+                queryWrapper.le("appointment_date", endDate);
+            }
         }
-        if (endDate != null) {
-            queryWrapper.le("appointment_date", endDate);
+        if (StringUtils.hasText(consultationType)) {
+            queryWrapper.eq("consultation_type", consultationType);
         }
 
         List<Appointment> data = this.list(queryWrapper);
 
-        // 生成Excel
+        // 生成 Excel 文件
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("预约记录");
-            // 创建表头...
-            // 填充数据...
+
+            // 创建表头
+            String[] headers = {"预约ID", "患者姓名", "联系电话", "医生姓名", "预约日期",
+                    "预约时间", "咨询类型", "病情描述", "创建时间", "状态"};
+            Row headerRow = sheet.createRow(0);
+            for (int i = 0; i < headers.length; i++) {
+                headerRow.createCell(i).setCellValue(headers[i]);
+            }
+
+            // 填充数据
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm");
+            SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            int rowNum = 1;
+            for (Appointment item : data) {
+                Row row = sheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(item.getId());
+                row.createCell(1).setCellValue(item.getPatientName());
+                row.createCell(2).setCellValue(item.getPatientPhone());
+                row.createCell(3).setCellValue(item.getDoctorName());
+                row.createCell(4).setCellValue(dateFormat.format(item.getAppointmentDate()));
+                row.createCell(5).setCellValue(timeFormat.format(item.getAppointmentTime()));
+                row.createCell(6).setCellValue(item.getConsultationType());
+                row.createCell(7).setCellValue(item.getConditionDescription() != null ? item.getConditionDescription() : "");
+                row.createCell(8).setCellValue(datetimeFormat.format(item.getCreatedAt()));
+                row.createCell(9).setCellValue(convertStatus(item.getStatus()));
+            }
 
             // 设置响应头
             response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
             response.setHeader("Content-Disposition", "attachment; filename=appointments.xlsx");
+
             workbook.write(response.getOutputStream());
+        }
+    }
+
+    private String convertStatus(String status) {
+        switch (status.toUpperCase()) {
+            case "PENDING": return "待确认";
+            case "CONFIRMED": return "已确认";
+            case "COMPLETED": return "已完成";
+            case "CANCELLED": return "已取消";
+            default: return "未知状态";
         }
     }
 

@@ -12,6 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -46,10 +47,9 @@ public class AppointmentController {
 
     @GetMapping("/list")
     public BaseResponse<Page<Appointment>> getAppointmentList(
-            @RequestParam(required = false) String patientName,
-            @RequestParam(defaultValue = "1") int current,
+            @RequestParam(defaultValue = "1") int current,  // 保留分页参数
             @RequestParam(defaultValue = "10") int pageSize) {
-        Page<Appointment> appointments = appointmentService.listAppointments(patientName, current, pageSize);
+        Page<Appointment> appointments = appointmentService.listAppointments(current, pageSize);
         return ResultUtils.success(appointments);
     }
 
@@ -87,14 +87,13 @@ public class AppointmentController {
     }
 
     @GetMapping("/export")
-    public void exportAppointments(HttpServletResponse response,
-                                   @RequestParam(required = false) String doctorName,
-                                   @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
-                                   @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
-        try {
-            appointmentService.exportAppointments(response, doctorName, startDate, endDate);
-        } catch (Exception e) {
-            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "导出失败");
-        }
+    public void exportAppointments(
+            HttpServletResponse response,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
+            @RequestParam(required = false) String consultationType) throws IOException {
+
+        appointmentService.exportAppointments(response, status, startDate, endDate, consultationType);
     }
 }

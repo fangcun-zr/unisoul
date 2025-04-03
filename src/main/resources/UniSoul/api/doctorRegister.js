@@ -1,12 +1,12 @@
 const DoctorAPI = {
     // 注册医生
-    register: function(formData) {
+    register: function(jsonData) {
         return $.ajax({
             url: '/doctor/register',
             type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false
+            contentType: 'application/json', // 必须明确指定
+            data: jsonData,
+            processData: false
         });
     },
 

@@ -6,9 +6,7 @@ import generator.exception.BusinessException;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface DoctorService {
-    boolean registerDoctor(Doctor doctor,
-                           MultipartFile photo,
-                           MultipartFile certificate) throws BusinessException;
+    boolean registerDoctor(Doctor doctor) throws BusinessException;
 
     Page<Doctor> listDoctors(int current, int pageSize);
     Doctor getDoctorWithSchedule(Integer id);

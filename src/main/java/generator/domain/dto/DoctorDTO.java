@@ -27,21 +27,12 @@ public class DoctorDTO extends Doctor {
         dto.setEmail(doctor.getEmail());
         dto.setBirthDate(doctor.getBirthDate());
         dto.setDepartment(doctor.getDepartment());
-        dto.setSpecialty(doctor.getSpecialty());
         dto.setLicenseNumber(doctor.getLicenseNumber());
         dto.setYearsOfExperience(doctor.getYearsOfExperience());
         dto.setIntroduction(doctor.getIntroduction());
         dto.setCreatedAt(doctor.getCreatedAt());
         dto.setUpdatedAt(doctor.getUpdatedAt());
         dto.setRecentSchedule(doctor.getRecentSchedule());
-
-        // 处理二进制字段
-        if (doctor.getPhoto() != null) {
-            dto.setPhotoBase64(Base64.getEncoder().encodeToString(doctor.getPhoto()));
-        }
-        if (doctor.getCertificate() != null) {
-            dto.setCertificateBase64(Base64.getEncoder().encodeToString(doctor.getCertificate()));
-        }
 
         return dto;
     }
