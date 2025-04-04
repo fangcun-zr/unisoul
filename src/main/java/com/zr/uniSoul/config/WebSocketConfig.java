@@ -28,7 +28,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         try {
             registry.addEndpoint("/api/websocket/chat")
-                    .setAllowedOriginPatterns("http://localhost:[*]")  // 允许本地开发环境
+                    .setAllowedOriginPatterns("http://localhost:[*]", "http://112.124.56.137:7070")  // 允许本地开发环境
                     .withSockJS()
                     .setStreamBytesLimit(512 * 1024)
                     .setHttpMessageCacheSize(1000)
