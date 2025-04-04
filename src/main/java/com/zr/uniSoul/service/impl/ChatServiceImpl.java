@@ -1,7 +1,12 @@
 package com.zr.uniSoul.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.zr.uniSoul.common.PageResult;
 import com.zr.uniSoul.mapper.ChatMessageMapper;
+import com.zr.uniSoul.pojo.dto.PageQueryDTO;
 import com.zr.uniSoul.pojo.entity.ChatMessage;
+import com.zr.uniSoul.pojo.entity.Replies;
 import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.service.ChatService;
 import generator.mapper.UserMapper;
@@ -199,5 +204,20 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public String getAvatar(Long userId) {
         return chatMessageMapper.selectAvatarById(Long.toString(userId));
+    }
+
+    @Override
+    public PageResult pageQueryMessage(PageQueryDTO pageQueryDTO) {
+        PageHelper.startPage(pageQueryDTO.getPage(), pageQueryDTO.getPageSize());
+        Page<ChatMessage> page = chatMessageMapper.pageQueryMessage(pageQueryDTO);
+        log.info("page={}", page);
+        if (page == null) {
+            // 返回一个空的PageResult或者抛出自定义异常
+            return new PageResult(0, new ArrayList<>()); // 假设PageResult的构造函数接受total和result列表作为参数
+            // 或者
+            // throw new CustomException("No comments found");
+        }
+        log.info("page.getResult={}", page.getResult());
+        return new PageResult(page.getTotal(), page.getResult());
     }
 }

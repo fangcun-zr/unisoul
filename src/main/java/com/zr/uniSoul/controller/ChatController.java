@@ -1,5 +1,7 @@
 package com.zr.uniSoul.controller;
 
+import com.zr.uniSoul.common.PageResult;
+import com.zr.uniSoul.pojo.dto.PageQueryDTO;
 import com.zr.uniSoul.pojo.entity.ChatMessage;
 import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.pojo.vo.ArticleVO;
@@ -7,6 +9,7 @@ import com.zr.uniSoul.pojo.vo.UserVO;
 import com.zr.uniSoul.service.ChatService;
 import com.zr.uniSoul.common.R;
 import com.zr.uniSoul.service.XtqhService;
+import io.swagger.annotations.ApiOperation;
 import kotlin.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,29 +63,21 @@ public class ChatController {
         }
     }
 
-    @GetMapping("/messages")
-    public R<List<ChatMessage>> getMessages(
-            HttpServletRequest request,
-            @RequestParam(required = true) String userId,
-            @RequestParam(required = true) String receiverId) {
+    @PostMapping("/messages")
+    public R<PageResult> getMessages(HttpServletRequest request, @RequestBody PageQueryDTO pageQueryDTO) {
         Long Id = (Long) request.getSession().getAttribute("userId");
-        userId = Long.toString(Id);
+        String userId = Long.toString(Id);
+        String receiverId = String.valueOf(pageQueryDTO.getReceiverId());
         try {// 参数验证
             if (userId == null || userId.trim().isEmpty() ||
                     receiverId == null || receiverId.trim().isEmpty()) {
                 log.warn("用户ID或接收者ID为空");
-                return R.success(new ArrayList<>());
+                return R.error("用户ID或接收者ID为空");
             }
-
             log.info("获取聊天记录, userId={}, receiverId={}", userId, receiverId);
-            List<ChatMessage> messages = chatService.getChatHistory(userId, receiverId);
-
-            if (messages == null) {
-                messages = new ArrayList<>();
-            }
-
-            log.info("成功获取聊天记录, 数量: {}", messages.size());
-            return R.success(messages);
+            PageResult pageResult = chatService.pageQueryMessage(pageQueryDTO);
+            log.info("成功获取聊天记录, 数量: {}", pageResult);
+            return R.success(pageResult);
         } catch (Exception e) {
             log.error("获取聊天记录失败, userId={}, receiverId={}", userId, receiverId, e);
             return R.error("获取聊天记录失败: " + e.getMessage());

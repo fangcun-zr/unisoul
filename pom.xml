@@ -13,7 +13,7 @@
     <artifactId>UniSoul</artifactId>
     <version>1.0-SNAPSHOT</version>
     <properties>
-        <java.version>17</java.version>
+        <java.version>14</java.version>
     </properties>
     <dependencies>
 
@@ -281,5 +281,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

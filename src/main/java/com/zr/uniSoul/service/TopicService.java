@@ -143,4 +143,12 @@ public interface TopicService {
      * @return
      */
     Replies getRepliesById(String username , Long repliesId);
+
+    /**
+     * 获取话题评论分页展示
+     * @param username
+     * @param pageQueryDTO
+     * @return
+     */
+    PageResult pageQueryReplies(String username, PageQueryDTO pageQueryDTO);
 }

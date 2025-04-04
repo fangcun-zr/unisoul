@@ -4,6 +4,7 @@ import com.zr.uniSoul.common.R;
 import com.zr.uniSoul.pojo.dto.AssessmentDTO;
 import com.zr.uniSoul.pojo.dto.BannedDTO;
 import com.zr.uniSoul.pojo.dto.WordDTO;
+import com.zr.uniSoul.pojo.entity.Topic;
 import com.zr.uniSoul.pojo.vo.AssessmentSubmitCountVO;
 import com.zr.uniSoul.pojo.vo.AssessmentVO;
 import com.zr.uniSoul.pojo.vo.UserVO;
@@ -105,6 +106,22 @@ public class AdminController {
         int articleId = bannedDTO.getId();
         int status = bannedDTO.getStatus();
         int ret = adminService.setArticle(articleId,status);
+        if(ret==1){
+            return R.success("操作成功");
+        }
+        else {
+            return R.error("操作失败");
+        }
+    }
+    @PostMapping("/setTopic")
+    public R<String> setTopic(@RequestBody BannedDTO bannedDTO, HttpServletRequest request){
+        log.info("对话题进行操作{}",bannedDTO);
+        if(!judgeAdmin(request)){
+            return R.error("非管理员账户，没有权限");
+        }
+        int topicId = bannedDTO.getId();
+        int status = bannedDTO.getStatus();
+        int ret = adminService.setTopic(topicId,status);
         if(ret==1){
             return R.success("操作成功");
         }
@@ -317,5 +334,13 @@ public class AdminController {
         else {
             return R.error("操作失败");
         }
+    }
+    @GetMapping("getHotTopics")
+    public R<List<Topic>> getHotTopics(HttpServletRequest request , @RequestParam String startTime , @RequestParam String endTime) {
+        if (!judgeAdmin(request)) {
+            return R.error("非管理员账户，没有权限");
+        }
+        log.info("查询开始时间{}，查询结束时间{}",startTime,endTime);
+        return R.success(adminService.getHotTopics(startTime, endTime));
     }
 }
