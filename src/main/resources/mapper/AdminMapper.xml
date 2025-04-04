@@ -26,6 +26,9 @@
     <update id="setArticle">
         update article set status = #{status} where id = #{articleId}
     </update>
+    <update id="setTopic">
+        update topics set status = #{status} where id = #{topicId}
+    </update>
     <update id="saveAssessment">
         update assessment set name = #{name}, introduction = #{introduction}, questions_count = #{questionCount} ,category_id = #{categoryId} where id = #{id}
     </update>
@@ -106,6 +109,12 @@
     </select>
     <select id="getAllWords" resultType="com.zr.uniSoul.pojo.vo.WordVO">
         select * from sensitive_words
+    </select>
+    <select id="getHotTopics" resultType="com.zr.uniSoul.pojo.entity.Topic">
+        select * from topics
+        where #{endTimestamp} > topics.create_time and create_time > #{startTimestamp}
+        order by views desc
+        limit 10
     </select>
 
     <delete id="deleteWords">

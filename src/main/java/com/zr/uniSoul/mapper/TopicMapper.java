@@ -80,7 +80,7 @@ public interface TopicMapper {
      * 获取回复
      * @param topicId
      */
-    @Select("SELECT * FROM replies WHERE topic_id = #{topicId} ORDER BY create_time DESC")
+    @Select("SELECT * FROM replies WHERE topic_id = #{topicId} ORDER BY create_time DESC limit 10")
     List<Replies> getReplies(Long topicId);
 
     /**
@@ -277,4 +277,18 @@ public interface TopicMapper {
      */
     @Select("SELECT avatarUrl FROM user WHERE username = #{username}")
     String getAvatarUrl(String username);
+
+    /**
+     * 获取状态可以显示的话题
+     * @param pageQueryDTO
+     * @return
+     */
+    Page<TopicVO> pageQueryStatus(PageQueryDTO pageQueryDTO);
+
+    /**
+     * 获取话题回复分页展示
+     * @param pageQueryDTO
+     * @return
+     */
+    Page<Replies> pageQueryReplies(PageQueryDTO pageQueryDTO);
 }

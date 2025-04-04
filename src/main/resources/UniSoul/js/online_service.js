@@ -839,6 +839,7 @@ function initWebSocket() {
             timeout: 10000,
             debug: true
         });
+        console.log('SockJS连接创建成功:',socket);
 
         // 创建STOMP客户端
         stompClient = Stomp.over(socket);

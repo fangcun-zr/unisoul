@@ -293,7 +293,12 @@ public class TopicServiceImpl implements TopicService {
     @Override
     public PageResult pageQuery(String username , PageQueryDTO pageQueryDTO) {
         PageHelper.startPage(pageQueryDTO.getPage(), pageQueryDTO.getPageSize());
-        Page<TopicVO> page = topicMapper.pageQuery(pageQueryDTO);
+        Page<TopicVO> page = null;
+        if(username == "admin"){
+            page = topicMapper.pageQuery(pageQueryDTO);
+        }else {
+            page = topicMapper.pageQueryStatus(pageQueryDTO);
+        }
         page.forEach(topicVO -> {
             List<Tags> tags = topicMapper.getTags(topicVO.getId());
             List<String> tagsName = tags.stream().map(Tags::getName).collect(Collectors.toList());
@@ -366,5 +371,38 @@ public class TopicServiceImpl implements TopicService {
         }
         repliesById.setLike(b);
         return repliesById;
+    }
+
+    /**
+     * 获取话题评论分页展示
+     * @param username
+     * @param pageQueryDTO
+     * @return
+     */
+    @Override
+    public PageResult pageQueryReplies(String username, PageQueryDTO pageQueryDTO) {
+        PageHelper.startPage(pageQueryDTO.getPage(), pageQueryDTO.getPageSize());
+        Page<Replies> page = topicMapper.pageQueryReplies(pageQueryDTO);
+        log.info("page={}", page);
+        if (page == null) {
+            // 返回一个空的PageResult或者抛出自定义异常
+            return new PageResult(0, new ArrayList<>()); // 假设PageResult的构造函数接受total和result列表作为参数
+            // 或者
+            // throw new CustomException("No comments found");
+        }
+        log.info("page.getResult={}", page.getResult());
+        page.forEach(replies ->{
+            if(replies != null) {
+                System.out.println(replies.getId());
+                Boolean b = topicMapper.inquireLikeRepliesStatus(username, replies.getId());
+                if(b == null){
+                    b = false;
+                }
+                replies.setLike(b);
+                replies.setAvatarUrl(topicMapper.getAvatarUrl(replies.getUsername()));
+            }
+        });
+
+        return new PageResult(page.getTotal(), page.getResult());
     }
 }

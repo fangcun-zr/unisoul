@@ -3,10 +3,12 @@ package com.zr.uniSoul.mapper;
 import com.zr.uniSoul.pojo.dto.AssessmentDTO;
 import com.zr.uniSoul.pojo.dto.QuestionDTO;
 import com.zr.uniSoul.pojo.dto.WordDTO;
+import com.zr.uniSoul.pojo.entity.Topic;
 import com.zr.uniSoul.pojo.vo.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Mapper
@@ -59,4 +61,7 @@ public interface AdminMapper {
     int deleteWords(Integer ids);
 
     int setWordsStatus(WordDTO wordDTO);
+    int setTopic(int topicId, int status);
+
+    List<Topic> getHotTopics(Timestamp startTimestamp,Timestamp endTimestamp);
 }

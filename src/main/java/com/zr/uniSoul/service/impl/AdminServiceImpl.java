@@ -5,6 +5,7 @@ import com.zr.uniSoul.mapper.AdminMapper;
 import com.zr.uniSoul.pojo.dto.AssessmentDTO;
 import com.zr.uniSoul.pojo.dto.QuestionDTO;
 import com.zr.uniSoul.pojo.dto.WordDTO;
+import com.zr.uniSoul.pojo.entity.Topic;
 import com.zr.uniSoul.pojo.vo.*;
 import com.zr.uniSoul.service.AdminService;
 import com.zr.uniSoul.utils.AnalysisUtil;
@@ -14,6 +15,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -249,6 +254,43 @@ public class AdminServiceImpl implements AdminService {
         }
         return 0;
 
+    }
+
+    /**
+     * 设置话题状态
+     * @param topicId
+     * @param status
+     * @return
+     */
+    @Override
+    public int setTopic(int topicId, int status) {
+        if(status==1){
+            status=0;
+        }
+        else {
+            status=1;
+        }
+        return adminMapper.setTopic(topicId,status);
+    }
+
+    /**
+     需要传递两个时间节点（开始时间，截止时间）获取这个区间内的十条热门话题
+     * @return
+     */
+    @Override
+    public List<Topic> getHotTopics(String startTime, String endTime) {
+        //获取开始时间
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            //获取到timestamp类型的时间
+            Timestamp startTimestamp = new Timestamp(simpleDateFormat.parse(startTime).getTime());
+            Timestamp endTimestamp = new Timestamp(simpleDateFormat.parse(endTime).getTime());
+            List<Topic> hotTopics = adminMapper.getHotTopics(startTimestamp, endTimestamp);
+            log.info("hotTopics:{}",hotTopics);
+            return hotTopics;
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**

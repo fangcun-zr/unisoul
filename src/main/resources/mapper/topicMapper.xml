@@ -19,4 +19,10 @@
     <select id="pageQuery" resultType="com.zr.uniSoul.pojo.vo.TopicVO">
         select * from topics order by create_time desc
     </select>
+    <select id="pageQueryStatus" resultType="com.zr.uniSoul.pojo.vo.TopicVO">
+        select * from topics where status = 1 order by create_time desc
+    </select>
+    <select id="pageQueryReplies" resultType="com.zr.uniSoul.pojo.entity.Replies">
+        select * from replies where topic_id = #{topicId} and replies.status = 1 order by create_time desc
+    </select>
 </mapper>

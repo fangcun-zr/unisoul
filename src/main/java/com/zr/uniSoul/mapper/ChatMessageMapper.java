@@ -1,6 +1,9 @@
 package com.zr.uniSoul.mapper;
 
+import com.github.pagehelper.Page;
+import com.zr.uniSoul.pojo.dto.PageQueryDTO;
 import com.zr.uniSoul.pojo.entity.ChatMessage;
+import com.zr.uniSoul.pojo.entity.Replies;
 import com.zr.uniSoul.pojo.entity.User;
 import org.apache.ibatis.annotations.*;
 
@@ -57,20 +60,6 @@ public interface ChatMessageMapper {
     @Update("UPDATE user SET is_online = #{isOnline} WHERE id = #{userId}")
     void updateOnlineStatus(@Param("userId") String userId, @Param("isOnline") boolean isOnline);
 
-    /**
-     * 获取用户的聊天列表
-     * 返回所有可聊天的用户，在线用户优先显示
-     *
-     * @param userId 当前用户ID
-     * @return 用户列表
-     */
-    @Select("SELECT u.* FROM user u " +
-            "LEFT JOIN chat_message m ON (m.sender_id = u.id OR m.receiver_id = u.id) " +
-            "WHERE (m.sender_id = #{userId} OR m.receiver_id = #{userId}) " +
-            "AND u.id != #{userId} " +
-            "GROUP BY u.id " +
-            "ORDER BY u.is_online DESC, m.create_time DESC")
-    List<User> getChatList(@Param("userId") String userId);
     @Select("SELECT avatarUrl FROM user WHERE id = #{senderId}")
     String selectAvatarById(String senderId);
 
@@ -81,6 +70,13 @@ public interface ChatMessageMapper {
      */
     @Select("SELECT category FROM user WHERE id = #{userId}")
     Integer getCategoryById(String userId);
+
+    /**
+     * 消息分页展示
+     * @param pageQueryDTO
+     * @return
+     */
+    Page<ChatMessage> pageQueryMessage(PageQueryDTO pageQueryDTO);
 
     // ... 其他已有的方法 ...
 }

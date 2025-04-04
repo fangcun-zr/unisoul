@@ -378,7 +378,7 @@ function showMyReplies() {
             console.error('Failed to load my replies:', error);
             showError('加载评论失败');
         })
-        .finally(() => {
+        .always(() => {
             hideLoading();
         });
 }
@@ -434,9 +434,12 @@ function deleteReply(replyId) {
         cancelButtonText: '取消',
         type: 'warning'
     }).then(() => {
+        showLoading();
         $.ajax({
-            url: `${API_BASE_URL}/topic/deleteReplies?id=${replyId}`,  // 修改为正确的参数名 id
-            method: 'DELETE'
+            url: `${API_BASE_URL}/topic/deleteReplies`,
+            method: 'POST',
+            data: { id: replyId },
+            contentType: 'application/x-www-form-urlencoded'
         })
             .done(function (response) {
                 if (response.code === 1) {
@@ -450,6 +453,9 @@ function deleteReply(replyId) {
             .fail(function (error) {
                 console.error('Delete reply failed:', error);
                 showError('删除失败，请重试');
+            })
+            .always(function () {
+                hideLoading();
             });
     }).catch(() => {
         // 用户取消删除操作
