@@ -153,7 +153,7 @@ function renderDoctorList(data) {
     const $doctorList = $('#doctorList');
     $doctorList.empty();
 
-    if (!data || !data.content || !Array.isArray(data.content)) {
+    if (!data?.data?.doctors || !Array.isArray(data.data.doctors)) {
         console.error('Invalid doctor data:', data);
         showError('医生数据加载异常');
         return;
@@ -190,13 +190,13 @@ function renderAppointmentList(data) {
     const $appointmentList = $('#appointmentList');
     $appointmentList.empty();
 
-    if (!data || !data.content || !Array.isArray(data.content)) {
+    if (!data?.data?.records || !Array.isArray(data.data.records)) {
         console.error('Invalid appointment data:', data);
         showError('预约数据加载异常');
         return;
     }
 
-    data.content.forEach(appointment => {
+    data.data.records.forEach(appointment => {
         $appointmentList.append(`
             <div class="appointment-item" data-id="${appointment.id}">
                 <div class="appointment-info">
