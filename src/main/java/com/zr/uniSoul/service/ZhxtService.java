@@ -10,6 +10,7 @@ import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.pojo.vo.MyDataVO;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 public interface ZhxtService {
     int findIdByUsername(String username);
@@ -44,4 +45,6 @@ public interface ZhxtService {
      * @param userId
      */
     void recordUserAction(String id, int userId,int score);
+
+    List<Article> getRecommendArticle(String articleId);
 }
