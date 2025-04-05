@@ -2,6 +2,7 @@ package com.zr.uniSoul.filter;
 
 import com.zr.uniSoul.mapper.SensitiveWordRepository;
 import com.zr.uniSoul.trie.TrieNode;
+import com.zr.uniSoul.wrapper.SensitiveRequestWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.CharUtils;
 import org.apache.commons.lang.StringUtils;
@@ -9,8 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
-
 
 /**
  * 敏感词过滤核心逻辑
@@ -26,8 +32,21 @@ public class SensitiveWordFilter {
     @Autowired
     private SensitiveWordRepository repository;
 
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
+        HttpServletRequest req = (HttpServletRequest) request;
+        String path = req.getRequestURI();
 
+        // 特定路径跳过敏感词过滤
+        if (path.startsWith("/columns/create") || path.startsWith("/static")) {
+            chain.doFilter(request, response); // 直接传递原始请求，不进行敏感词过滤
+            return;
+        }
 
+        // 其他路径执行过滤逻辑
+        SensitiveRequestWrapper wrappedRequest = new SensitiveRequestWrapper(req, this);
+        chain.doFilter(wrappedRequest, response);
+    }
 
     @PostConstruct
     public void init() {
@@ -128,7 +147,6 @@ public class SensitiveWordFilter {
             this.root = newRoot; // 原子替换根节点
         }
     }
-
 
     /**
      * 私有方法：向指定节点添加关键词（线程安全）

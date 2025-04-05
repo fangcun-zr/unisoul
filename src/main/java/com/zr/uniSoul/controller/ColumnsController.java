@@ -111,11 +111,11 @@ public class ColumnsController {
      * 创建专栏
      */
     @PostMapping(value = "/create")
-    public R<Object> createColum(HttpServletRequest request ,
-                                 @RequestParam String title,
-                                 @RequestParam String description,
-                                 @RequestParam Integer categoryId
-            , @RequestPart MultipartFile cover) {
+    public R<Object> createColum( HttpServletRequest request,
+                                  @RequestParam("title") String title,
+                                  @RequestParam("description") String description,
+                                  @RequestParam("categoryId") Integer categoryId,
+                                  @RequestPart("cover") MultipartFile cover) {
         log.info("创建专栏 title:{},description:{},categoryId:{},cover:{}", title, description, categoryId, cover);
         //判断登录
         HttpSession session = request.getSession();
