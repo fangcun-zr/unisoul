@@ -111,10 +111,13 @@
         select * from sensitive_words
     </select>
     <select id="getHotTopics" resultType="com.zr.uniSoul.pojo.entity.Topic">
-        select * from topics
-        where #{endTimestamp} > topics.create_time and create_time > #{startTimestamp}
-        order by views desc
-        limit 10
+        SELECT t.*, u.name AS nickName,
+        (SELECT COUNT(*) FROM replies WHERE topic_id = t.id) AS repliesNum
+        FROM topics t
+        JOIN user u ON t.username = u.username COLLATE utf8mb4_0900_ai_ci  <!-- 显式指定校对规则 -->
+        WHERE #{endTimestamp} > t.create_time AND t.create_time > #{startTimestamp}
+        ORDER BY t.views*0.2 + t.likes*0.3 + repliesNum*0.4 DESC
+        LIMIT 10
     </select>
 
     <delete id="deleteWords">

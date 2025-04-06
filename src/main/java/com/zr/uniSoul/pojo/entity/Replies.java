@@ -9,6 +9,7 @@ public class Replies implements Serializable {
     private long id;
     private long topicId;
     private String username;
+    private String nickName;
     private String content;
     private boolean anonymous;
     private boolean isLike;

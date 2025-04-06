@@ -303,6 +303,7 @@ public class TopicController {
         log.info("分页查询：{}", pageQueryDTO);
         String username = (String) request.getSession().getAttribute("username");
         PageResult pageResult = topicService.pageQuery(username, pageQueryDTO);
+        log.info("pageResult:{}", pageResult);
         return R.success(pageResult);
     }
 
@@ -341,5 +342,29 @@ public class TopicController {
         }
         PageResult pageResult = topicService.pageQueryReplies(username, pageQueryDTO);
         return R.success(pageResult);
+    }
+
+    /**
+     * 获取近期热门话题
+     * @return
+     */
+    @GetMapping("/getHotValue")
+    public R<List<Topic>> getHotValue(){
+        return R.success(topicService.getHotValue());
+    }
+
+    /**
+     * 获取我的话题
+     * @param request
+     * @return
+     */
+    @GetMapping("/getMyTopics")
+    public R<List<Topic>> getMyTopics(HttpServletRequest request){
+        String username = (String) request.getSession().getAttribute("username");
+        if(username == null){
+            return R.error("用户未登录");
+        }else{
+            return R.success(topicService.getTopicsByUsername(username));
+        }
     }
 }

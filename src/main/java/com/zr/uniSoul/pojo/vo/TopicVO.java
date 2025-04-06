@@ -14,6 +14,7 @@ public class TopicVO implements Serializable {
     private boolean isLike;
     private long views;
     private String username;
+    private String nickName;
     private String avatarUrl;
     private long repliesCount;
     private List<String> tags;

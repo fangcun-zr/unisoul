@@ -151,4 +151,17 @@ public interface TopicService {
      * @return
      */
     PageResult pageQueryReplies(String username, PageQueryDTO pageQueryDTO);
+
+    /**
+     * 获取近期热门话题
+     * @return
+     */
+    List<Topic> getHotValue();
+
+    /**
+     * 根据用户名获取话题
+     * @param username
+     * @return
+     */
+    List<Topic> getTopicsByUsername(String username);
 }
