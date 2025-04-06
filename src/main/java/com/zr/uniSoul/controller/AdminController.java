@@ -324,6 +324,7 @@ public class AdminController {
      */
     @GetMapping("/userAnalysis")
     public R<Object> userAnalysis(HttpServletRequest request){
+        log.info("返回用户喜好分析");
         if(!judgeAdmin(request)) {
             return R.error("非管理员账户，没有权限");
         }
