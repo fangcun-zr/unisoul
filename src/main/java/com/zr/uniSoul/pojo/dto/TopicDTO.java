@@ -14,5 +14,6 @@ public class TopicDTO {
     private long likes;
     private long views;
     private String username;
+    private String nickName;
     private List<String> tags;
 }

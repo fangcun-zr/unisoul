@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 @Data
 public class ReportDTO {
 
+    private int assessmentId;
     private int userId;
     private String sessionUuid;
     private LocalDateTime generatedTime;

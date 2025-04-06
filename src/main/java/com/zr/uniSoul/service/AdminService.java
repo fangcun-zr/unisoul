@@ -2,6 +2,7 @@ package com.zr.uniSoul.service;
 
 import com.zr.uniSoul.pojo.dto.AssessmentDTO;
 import com.zr.uniSoul.pojo.dto.WordDTO;
+import com.zr.uniSoul.pojo.entity.Topic;
 import com.zr.uniSoul.pojo.vo.AssessmentSubmitCountVO;
 import com.zr.uniSoul.pojo.vo.AssessmentVO;
 import com.zr.uniSoul.pojo.vo.UserVO;
@@ -62,4 +63,20 @@ public interface AdminService {
     int deleteWords(List<Integer> ids);
 
     int setWordsStatus(WordDTO wordDTO);
+
+    /**
+     * 设置话题状态
+     * @param topicId
+     * @param status
+     * @return
+     */
+    int setTopic(int topicId, int status);
+
+    /**
+     * 获取区间内的热门话题
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    List<Topic> getHotTopics(String startTime, String endTime);
 }

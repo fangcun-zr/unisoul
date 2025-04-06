@@ -1,5 +1,7 @@
 package com.zr.uniSoul.service;
 
+import com.zr.uniSoul.common.PageResult;
+import com.zr.uniSoul.pojo.dto.PageQueryDTO;
 import com.zr.uniSoul.pojo.entity.ChatMessage;
 import com.zr.uniSoul.pojo.entity.User;
 
@@ -76,4 +78,12 @@ public interface ChatService {
      * @return
      */
     String getAvatar(Long userId);
+
+    /**
+     * 消息分页展示
+     * @param pageQueryDTO
+     * @return
+     */
+    PageResult pageQueryMessage(PageQueryDTO pageQueryDTO);
+
 }

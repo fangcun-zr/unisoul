@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -265,6 +266,23 @@ public class ZhxtController {
 //            return R.success(article);
 //        }
 //        return R.error("文章不存在");
+    }
+
+    /**
+     * 根据当前文章推荐文章
+     * @param articleId
+     * @param request
+     * @param
+     */
+    @GetMapping("recommendArticle")
+    @ApiOperation("根据当前文章推荐文章")
+    public R<List<Article>> recommend(@RequestParam String articleId, HttpServletRequest request) {
+        log.info("获取推荐文章：articleId={}", articleId);
+        List<Article> articles = zhxtService.getRecommendArticle(articleId);
+        if (articles != null) {
+            return R.success(articles);
+        }
+        return R.error("没有找到推荐的相似文章");
     }
 
 

@@ -3,6 +3,7 @@ package com.zr.uniSoul.service.impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.zr.uniSoul.common.PageResult;
+import com.zr.uniSoul.mapper.AdminMapper;
 import com.zr.uniSoul.mapper.TopicMapper;
 import com.zr.uniSoul.pojo.dto.PageQueryDTO;
 import com.zr.uniSoul.pojo.dto.TopicDTO;
@@ -16,6 +17,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -24,13 +29,18 @@ import java.util.stream.Collectors;
 public class TopicServiceImpl implements TopicService {
     @Autowired
     private TopicMapper topicMapper;
+    @Autowired
+    private AdminMapper adminMapper;
     /**
      * 创建话题
      * @param topicDTO
      */
     @Override
     public void createTopic(TopicDTO topicDTO) {
-        log.info("topic:{}",topicDTO);
+        List<String> tags1 = topicDTO.getTags();
+        String[] split = tags1.get(0).strip().split("，");
+        List<String> list = Arrays.asList(split);
+        topicDTO.setTags(list);
         topicMapper.createTopic(topicDTO);
         long topicId = topicDTO.getId();//获取已经存入数据库的主键值
         List<Tags> allTags = topicMapper.getAllTags();
@@ -195,6 +205,7 @@ public class TopicServiceImpl implements TopicService {
             b = false;
         }
         topic.setLike(b);
+        log.info("topic:{}",topic);
         return topic;
     }
 
@@ -293,7 +304,12 @@ public class TopicServiceImpl implements TopicService {
     @Override
     public PageResult pageQuery(String username , PageQueryDTO pageQueryDTO) {
         PageHelper.startPage(pageQueryDTO.getPage(), pageQueryDTO.getPageSize());
-        Page<TopicVO> page = topicMapper.pageQuery(pageQueryDTO);
+        Page<TopicVO> page = null;
+        if(username == "admin"){
+            page = topicMapper.pageQuery(pageQueryDTO);
+        }else {
+            page = topicMapper.pageQueryStatus(pageQueryDTO);
+        }
         page.forEach(topicVO -> {
             List<Tags> tags = topicMapper.getTags(topicVO.getId());
             List<String> tagsName = tags.stream().map(Tags::getName).collect(Collectors.toList());
@@ -303,7 +319,6 @@ public class TopicServiceImpl implements TopicService {
                 b = false;
             }
             topicVO.setLike(b);
-            topicVO.setRepliesCount(topicMapper.getRepliesCount(topicVO.getId()));
             if(topicVO.isAnonymous()){
                 topicVO.setAvatarUrl("anonymousPicture");
             }else {
@@ -366,5 +381,69 @@ public class TopicServiceImpl implements TopicService {
         }
         repliesById.setLike(b);
         return repliesById;
+    }
+
+    /**
+     * 获取话题评论分页展示
+     * @param username
+     * @param pageQueryDTO
+     * @return
+     */
+    @Override
+    public PageResult pageQueryReplies(String username, PageQueryDTO pageQueryDTO) {
+        PageHelper.startPage(pageQueryDTO.getPage(), pageQueryDTO.getPageSize());
+        Page<Replies> page = topicMapper.pageQueryReplies(pageQueryDTO);
+        log.info("page={}", page);
+        if (page == null) {
+            // 返回一个空的PageResult或者抛出自定义异常
+            return new PageResult(0, new ArrayList<>()); // 假设PageResult的构造函数接受total和result列表作为参数
+            // 或者
+            // throw new CustomException("No comments found");
+        }
+        log.info("page.getResult={}", page.getResult());
+        page.forEach(replies ->{
+            if(replies != null) {
+                System.out.println(replies.getId());
+                Boolean b = topicMapper.inquireLikeRepliesStatus(username, replies.getId());
+                if(b == null){
+                    b = false;
+                }
+                replies.setLike(b);
+                replies.setAvatarUrl(topicMapper.getAvatarUrl(replies.getUsername()));
+            }
+        });
+
+        return new PageResult(page.getTotal(), page.getResult());
+    }
+
+    /**
+     * 获取近期热门话题
+     * @return
+     */
+    @Override
+    public List<Topic> getHotValue() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        //获取到timestamp类型的时间
+        Timestamp endTimestamp = new Timestamp(System.currentTimeMillis());
+        //获取当前时间的前一周
+        Timestamp startTimestamp = new Timestamp(endTimestamp.getTime() - 15 * 24 * 60 * 60 * 1000);
+        List<Topic> hotTopics = adminMapper.getHotTopics(startTimestamp, endTimestamp);
+        log.info("hotTopics:{}",hotTopics);
+        return hotTopics;
+    }
+
+    /**
+     * 根据用户名获取话题
+     * @param username
+     * @return
+     */
+    @Override
+    public List<Topic> getTopicsByUsername(String username) {
+        List<Topic> topicsByUsername = topicMapper.getTopicsByUsername(username);
+        topicsByUsername.forEach(topic ->{
+            List<String> tags = topicMapper.getTags(topic.getId()).stream().map(Tags::getName).collect(Collectors.toList());
+            topic.setTags(tags);
+        });
+        return topicsByUsername;
     }
 }

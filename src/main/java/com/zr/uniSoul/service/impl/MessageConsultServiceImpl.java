@@ -55,6 +55,7 @@ public class MessageConsultServiceImpl implements MessageConsultService {
             // 4. 更新对话历史（同时保存用户提问和AI回复）
             updateHistory(session, question, reply);
 
+//            log.info("AI回复: {}", reply);
             return reply;
         } catch (Exception e) {
             return e.getMessage();

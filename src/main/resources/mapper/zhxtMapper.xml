@@ -97,4 +97,14 @@
     <select id="getjsonInput" resultType="java.lang.String">
         select tag_scores from user_action where user_id = #{userId}
     </select>
+    <select id="getRecommendArticle" resultMap="article">
+        SELECT * FROM article
+        WHERE
+        <foreach item="tag" collection="list" separator=" OR ">
+            FIND_IN_SET(
+            #{tag},
+            REPLACE(REPLACE(REPLACE(tags, '[', ''), ']', ''), '"', '')
+            ) > 0
+        </foreach>
+    </select>
 </mapper>

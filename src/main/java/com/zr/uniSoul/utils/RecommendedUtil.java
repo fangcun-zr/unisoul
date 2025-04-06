@@ -8,9 +8,13 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.deeplearning4j.models.embeddings.loader.WordVectorSerializer;
 import org.deeplearning4j.models.word2vec.Word2Vec;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.io.File;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -38,11 +42,11 @@ public class RecommendedUtil {
      */
     private static final double SIMILARITY_THRESHOLD = 0.6;
 
+
     /**
-     * 预训练词向量模型文件路径（需替换为实际路径）
+     * 预训练词向量模型文件路径（资源路径）
      */
-    private static final String WORD_VECTOR_PATH = "src/main/resources/" +
-            "Tencent_AILab_ChineseEmbedding/Tencent_AILab_ChineseEmbedding.txt";
+    private static final String WORD_VECTOR_PATH = "Tencent_AILab_ChineseEmbedding/Tencent_AILab_ChineseEmbedding.txt";
 
     // region ========== 初始化方法 ==========
 
@@ -58,9 +62,23 @@ public class RecommendedUtil {
     @PostConstruct
     public void initWord2VecModel() {
         try {
-            word2VecModel = WordVectorSerializer.readWord2VecModel(new File(WORD_VECTOR_PATH));
+            // 通过类加载器获取资源流
+            ClassPathResource resource = new ClassPathResource(WORD_VECTOR_PATH);
+
+            // 创建临时文件（因为 Word2Vec 库需要 File 对象）
+            File tempFile = File.createTempFile("word2vec", ".txt");
+            tempFile.deleteOnExit(); // JVM退出时删除临时文件
+
+            // 将资源流复制到临时文件
+            try (InputStream is = resource.getInputStream()) {
+                Files.copy(is, tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            }
+
+            // 加载模型
+            word2VecModel = WordVectorSerializer.readWord2VecModel(tempFile);
+
         } catch (Exception e) {
-            throw new RuntimeException("词向量模型加载失败，请检查文件路径: " + WORD_VECTOR_PATH, e);
+            throw new RuntimeException("词向量模型加载失败，请检查资源文件: " + WORD_VECTOR_PATH, e);
         }
     }
     // endregion

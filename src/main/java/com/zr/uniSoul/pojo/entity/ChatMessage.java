@@ -60,7 +60,7 @@ public class ChatMessage {
      */
     private String status;
     /**
-     * 发送消息的用户的头像
+     * 接收消息的用户的头像
      */
-    private String senderAvatar;
+    private String receiverAvatar;
 }

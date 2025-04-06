@@ -3,10 +3,14 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.zr.uniSoul.mapper.TopicMapper">
     <select id="getTopicsByTags" resultType="com.zr.uniSoul.pojo.entity.Topic">
-        SELECT t.*
+        SELECT
+        t.*,
+        u.name AS nickName,
+        (SELECT COUNT(*) FROM replies WHERE topic_id = t.id) AS repliesCount
         FROM topics t
         INNER JOIN topic_tags tt ON t.id = tt.topic_id
         INNER JOIN tags tg ON tt.tag_id = tg.id
+        JOIN user u ON t.username = u.username COLLATE utf8mb4_0900_ai_ci
         WHERE tg.name IN
         <foreach item="tag" collection="tags" open="(" separator="," close=")">
             #{tag}
@@ -14,9 +18,44 @@
         AND t.is_deleted = 0
         AND tt.is_deleted = 0
         AND tg.is_deleted = 0
-        GROUP BY t.id
     </select>
     <select id="pageQuery" resultType="com.zr.uniSoul.pojo.vo.TopicVO">
         select * from topics order by create_time desc
+    </select>
+    <select id="pageQueryStatus" resultType="com.zr.uniSoul.pojo.vo.TopicVO">
+        select *,u.name AS nickName,(SELECT COUNT(*) FROM replies WHERE topic_id = topics.id) AS repliesCount from topics
+        JOIN user u ON topics.username = u.username COLLATE utf8mb4_0900_ai_ci  <!-- 显式指定校对规则 -->
+        where topics.status = 1 order by create_time desc
+    </select>
+    <select id="pageQueryReplies" resultType="com.zr.uniSoul.pojo.entity.Replies">
+        select *,u.name AS nickName from replies
+        JOIN user u ON replies.username = u.username COLLATE utf8mb4_0900_ai_ci
+        where topic_id = #{topicId} and replies.status = 1 order by create_time desc
+    </select>
+    <select id="getTopicInformation" resultType="com.zr.uniSoul.pojo.dto.TopicDTO">
+        SELECT *,(SELECT COUNT(*) FROM replies WHERE topic_id = #{topicId}) AS repliesCount, u.name AS nickName FROM topics
+        JOIN user u ON topics.username = u.username COLLATE utf8mb4_0900_ai_ci
+        WHERE topics.id = #{topicId}
+    </select>
+    <select id="searchKeyWord" resultType="com.zr.uniSoul.pojo.entity.Topic">
+        SELECT *,(SELECT COUNT(*) FROM replies WHERE topic_id = topics.id) AS repliesNum,u.name AS nickName
+        FROM topics
+        JOIN user u ON topics.username = u.username COLLATE utf8mb4_0900_ai_ci
+        WHERE title LIKE CONCAT('%', #{keyWord}, '%')
+    </select>
+    <select id="getReplies" resultType="com.zr.uniSoul.pojo.entity.Replies">
+        SELECT *,u.name AS nickName FROM replies
+        JOIN user u ON replies.username = u.username COLLATE utf8mb4_0900_ai_ci
+        WHERE topic_id = #{topicId} ORDER BY create_time DESC limit 10
+    </select>
+    <select id="getRepliesByUsername" resultType="com.zr.uniSoul.pojo.entity.Replies">
+        SELECT *,u.name AS nickName FROM replies
+        JOIN user u ON replies.username = u.username COLLATE utf8mb4_0900_ai_ci
+        WHERE replies.username = #{username}
+    </select>
+    <select id="getTopicsByUsername" resultType="com.zr.uniSoul.pojo.entity.Topic">
+        select *,(SELECT COUNT(*) FROM replies WHERE topic_id = topics.id) AS repliesNum
+        from topics
+        where topics.username = #{username}
     </select>
 </mapper>

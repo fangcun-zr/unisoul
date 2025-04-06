@@ -26,6 +26,9 @@
     <update id="setArticle">
         update article set status = #{status} where id = #{articleId}
     </update>
+    <update id="setTopic">
+        update topics set status = #{status} where id = #{topicId}
+    </update>
     <update id="saveAssessment">
         update assessment set name = #{name}, introduction = #{introduction}, questions_count = #{questionCount} ,category_id = #{categoryId} where id = #{id}
     </update>
@@ -106,6 +109,15 @@
     </select>
     <select id="getAllWords" resultType="com.zr.uniSoul.pojo.vo.WordVO">
         select * from sensitive_words
+    </select>
+    <select id="getHotTopics" resultType="com.zr.uniSoul.pojo.entity.Topic">
+        SELECT t.*, u.name AS nickName,
+        (SELECT COUNT(*) FROM replies WHERE topic_id = t.id) AS repliesNum
+        FROM topics t
+        JOIN user u ON t.username = u.username COLLATE utf8mb4_0900_ai_ci  <!-- 显式指定校对规则 -->
+        WHERE #{endTimestamp} > t.create_time AND t.create_time > #{startTimestamp}
+        ORDER BY t.views*0.2 + t.likes*0.3 + repliesNum*0.4 DESC
+        LIMIT 10
     </select>
 
     <delete id="deleteWords">

@@ -317,4 +317,26 @@ public class ZhxtServiceImpl implements ZhxtService {
             log.info("用户画像更新成功");
         }
     }
+
+    /**
+     * 获取推荐文章
+     * @param articleId
+     * @return
+     */
+
+    @Override
+    public List<Article> getRecommendArticle(String articleId) {
+        int articleIdInt = Integer.parseInt(articleId);
+        //获取该文章的标签
+        String tags = zhxtMapper.getTagsByArticleId(articleIdInt);
+        //解析标签
+        List<String> tagsList =  recommendedUtil.analyticalTags(tags);
+        log.info("文章标签:{}",tagsList);
+        //通过标签检索数据库相同标签的文章：
+        List<Article> result = zhxtMapper.getRecommendArticle(tagsList);
+//
+//        log.info("推荐到文章：{}",result);
+
+        return result;
+    }
 }

@@ -11,6 +11,8 @@ import com.zr.uniSoul.pojo.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 @Mapper
 public interface zhxtMapper {
 
@@ -67,4 +69,6 @@ public interface zhxtMapper {
     int updateUserTagScores(int userId, String tagScores);
 
     void addviewCount(int articleId);
+
+    List<Article> getRecommendArticle(List<String> tagsList);
 }
