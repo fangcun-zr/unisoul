@@ -17,7 +17,6 @@ let currentUserRole = '';
 let currentUserId = '';
 
 function loadUserInfo() {
-    alert("加载用户信息")
     try {
         const rawUserInfo = localStorage.getItem('userInfo');
         const userInfo = JSON.parse(rawUserInfo || '{}');
@@ -44,7 +43,6 @@ function updateUIByRole() {
 function initializePage() {
     initializeFilters();
     loadAppointments(1);
-    alert("页面初始化")
 }
 
 function initializeFilters() {
@@ -68,7 +66,6 @@ function initializeFilters() {
 }
 
 function bindEvents() {
-    alert("绑定事件启动")
     $('#statusFilter, #dateFilter').on('change', function() {
         loadAppointments(1);
     });
@@ -120,7 +117,6 @@ function loadAppointments(current = 1) {
     showLoading();
     AppointmentAPI.getList(requestParams)
         .done(function(response) {
-            alert(response.code)
             if (response.code === 0) {
                 // ✅ 明确解析分页字段
                 const {
@@ -161,7 +157,6 @@ function updateStats(pageData) {
 }
 
 function renderAppointments(appointments) {
-    alert("渲染预约列表")
     const $container = $('#appointmentList');
     $container.empty();
 
@@ -176,27 +171,36 @@ function renderAppointments(appointments) {
 }
 
 function createAppointmentCard(appointment) {
+    const patientName = appointment.patient?.patientName || '未知患者';
+    const patientPhone = appointment.patient?.patientPhone ?
+        `${appointment.patient.patientPhone.slice(0,3)}****${appointment.patient.patientPhone.slice(7)}` :
+        '无';
     return `
         <div class="appointment-card" data-id="${appointment.id}">
             <div class="appointment-header">
                 <div class="header-left">
                     <span class="appointment-id">预约号：${appointment.id}</span>
-                    <span class="status-badge ${appointment.status}">
+                    <span class="status-badge ${appointment.status.toLowerCase()}">
                         ${getStatusText(appointment.status)}
                     </span>
                 </div>
             </div>
             <div class="appointment-body">
-                ${currentUserRole === 'doctor' ?
-        `<div class="patient-info">
-                        <span>患者：${appointment.patientName}</span>
-                        <span>电话：${appointment.patientPhone || '无'}</span>
-                    </div>` :
-        `<div class="doctor-info">
-                        <span>医生：${appointment.doctorName}</span>
-                        <span>科室：${appointment.consultationType}</span>
-                    </div>`
+                ${currentUserRole === 'doctor'
+        ? `<div class="patient-info">
+                            <span>患者：${patientName}</span>
+                            <span>电话：${patientPhone|| '无'}</span>
+                        </div>`
+        : `<div class="doctor-info">
+                            <span>患者：${appointment.patientName} </span>
+                            <span>电话：${appointment.patientPhone} </span>
+                            <span>医生执业证号：${appointment.licenseNumber} </span>
+                            <span>咨询方式：${appointment.consultationType} </span>
+                        </div>`
     }
+                <div class="appointment-time">
+                    时间：${formatAppointmentTime(appointment.appointmentDate)}
+                </div>
             </div>
         </div>
     `;

@@ -10,7 +10,6 @@ function handleAvatarUpload(e) {
 }
 
 function initializePage() {
-    alert('页面初始化')
     // 初始化表单验证
     initializeFormValidation();
     // 初始化富文本编辑器
@@ -54,7 +53,6 @@ function initializeDatePicker() {
 
 // 初始化表单验证
 function initializeFormValidation() {
-    alert('表单验证')
     $('#doctorRegisterForm').validate({
         rules: {
             doctorName: {
@@ -129,6 +127,35 @@ function initializeEditor() {
     });
 }
 
+function resetForm() {
+    // 重置表单字段
+    $('#doctorRegisterForm')[0].reset();
+
+    // 重置特殊字段
+    $('#gender').val('MALE').trigger('change'); // 重置性别为默认值
+    $('#birthDate').flatpickr().setDate('1990-01-01'); // 重置日期选择器
+    $('#yearsOfExperience').val('0'); // 重置工作经验
+
+    // 重置富文本编辑器
+    $('#introduction').summernote('code', '');
+
+    // 重置头像预览
+    $('#avatarPreview').attr('src', '/images/default-avatar.png');
+    $('#avatarUpload').val(''); // 清空文件输入
+
+    // 重置验证码相关
+    $('#verificationCode').val('');
+    $('#sendVerificationCode').prop('disabled', false).text('发送验证码');
+
+    // 清除验证错误状态
+    const validator = $('#doctorRegisterForm').validate();
+    validator.resetForm();
+    $('.is-invalid').removeClass('is-invalid');
+
+    // 重置成功后焦点回到第一个输入框
+    $('#doctorName').focus();
+}
+
 // 处理表单提交
 async function handleFormSubmit(e) {
     e.preventDefault();
@@ -149,8 +176,9 @@ async function handleFormSubmit(e) {
     try {
         showLoading('正在提交...');
         const response = await DoctorAPI.register(JSON.stringify(doctorData));
-        if (response.code === 200) {
+        if (response.code === 0) {
             showSuccess('注册成功');
+            resetForm();
         }
     } catch (error) {
         showError(error.message);

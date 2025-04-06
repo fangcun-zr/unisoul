@@ -91,17 +91,19 @@ $(document).ready(function() {
 
 // 初始化页面
 function initPage() {
+    if (!sessionStorage.getItem('initialPage')) {
+        sessionStorage.setItem('initialPage', window.location.href);
+    }
     loadDoctorList();
     loadAppointmentList();
-    alert("初始化");
+
 }
 
 // 表单验证
 function validateAppointmentForm() {
-    alert("表单验证");
     const data = {
         patientName: $('#patientName').val()?.trim() || '',
-        doctorName: $('#doctorSelect').val(),
+        licenseNumber: $('#doctorSelect').val(),
         patientPhone: $('#patientPhone').val()?.trim() || '',
         consultationType: $('#consultationType').val(),
         conditionDescription: $('#conditionDescription').val(),
@@ -113,7 +115,7 @@ function validateAppointmentForm() {
         showError('请输入患者姓名');
         return false;
     }
-    if (!data.doctorName) {
+    if (!data.licenseNumber) {
         showError('请选择医生');
         return false;
     }
@@ -137,7 +139,6 @@ function validateAppointmentForm() {
 function loadDoctorList(page = 1) {
     const cacheKey = `doctors_page_${page}`;
     const cachedData = Utils.cache.get(cacheKey);
-    alert("加载医生列表");
 
 
     MedicalAPI.doctor.getList(page, 10) // 明确传递size参数
@@ -220,7 +221,6 @@ function renderAppointmentList(data) {
 function bindEvents() {
     // 预约表单提交
     $('#appointmentForm').on('submit', function(e) {
-        alert("预约表单提交");
         e.preventDefault();
         const data = validateAppointmentForm();
         if (data) {
@@ -264,18 +264,20 @@ function bindEvents() {
 
 // 提交预约
 function submitAppointment(appointmentData) {
-    alert("提交");
     MedicalAPI.appointment.create(appointmentData)
         .then(response => {
             showSuccess('预约成功');
             $('#appointmentModal').modal('hide');
             loadAppointmentList();
+
+            // 添加重定向逻辑
+            const initialPage = sessionStorage.getItem('initialPage') || '/';  // 默认首页
+            window.location.href = initialPage;
         })
         .catch(error => {
             console.error('Appointment failed:', error);
             showError('预约失败');
         });
-
 }
 
 // 提交医生信息
