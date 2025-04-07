@@ -266,13 +266,15 @@ function bindEvents() {
 function submitAppointment(appointmentData) {
     MedicalAPI.appointment.create(appointmentData)
         .then(response => {
+
+            alert("预约成功")
+            const initialPage = sessionStorage.getItem('initialPage') || '/';  // 默认首页
+            window.location.href = initialPage;
+
+
             showSuccess('预约成功');
             $('#appointmentModal').modal('hide');
             loadAppointmentList();
-
-            // 添加重定向逻辑
-            const initialPage = sessionStorage.getItem('initialPage') || '/';  // 默认首页
-            window.location.href = initialPage;
         })
         .catch(error => {
             console.error('Appointment failed:', error);

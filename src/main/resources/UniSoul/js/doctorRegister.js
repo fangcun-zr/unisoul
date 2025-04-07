@@ -177,8 +177,9 @@ async function handleFormSubmit(e) {
         showLoading('正在提交...');
         const response = await DoctorAPI.register(JSON.stringify(doctorData));
         if (response.code === 0) {
-            showSuccess('注册成功');
+            alert("注册成功");
             resetForm();
+            showSuccess('注册成功');
         }
     } catch (error) {
         showError(error.message);
