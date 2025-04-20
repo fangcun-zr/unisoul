@@ -1,6 +1,5 @@
 package com.zr.uniSoul.service.impl;
 
-import com.zr.uniSoul.common.R;
 import com.zr.uniSoul.mapper.xtqhMapper;
 import com.zr.uniSoul.pojo.dto.UserDTO;
 import com.zr.uniSoul.pojo.entity.User;
@@ -16,15 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -296,6 +289,13 @@ public class XtqhServiceImpl implements XtqhService {
     @Override
     public int changePassWord(String username, String password) {
         return xtqhmapper.changePassWord(username,password);
+    }
+
+    @Override
+    public int feedback(int userId, String text) {
+        //发送邮件到管理员邮箱
+        MailUtils.sendMail("2952262748@qq.com","用户"+userId+"反馈的内容为："+text,"心绘坊用户反馈");
+        return 1;
     }
 
 }
