@@ -436,9 +436,10 @@
                                         opacity: 1; /* 确保不透明 */
                                         visibility: visible; /* 确保可见 */">
                                     <option value="">请选择医生</option>
-                                    <option value="张三">张三</option>
-                                    <option value="李三">李三</option>
-                                    <option value="李四">李四</option>
+                                    <option value="185485">李四</option>
+                                    <option value="158358">南枝</option>
+                                    <option value="145455">捡尽南枝</option>
+
                                 </select>
                             </div>
                         </div>
@@ -459,8 +460,8 @@
                             <div class="form-group">
                                 <label>咨询类型</label>
                                 <select class="form-select" id="consultationType" required>
-                                    <option value="online">在线咨询</option>
-                                    <option value="offline">面对面咨询</option>
+                                    <option value="在线咨询">在线咨询</option>
+                                    <option value="面对面咨询">面对面咨询</option>
                                 </select>
                             </div>
                         </div>
@@ -487,6 +488,49 @@
         <div></div>
     </div>
 </div>
+
+<script>
+    // ================== 科室-专业方向二级联动 ==================
+
+
+
+     doctorSelect = {
+    };
+
+    async function getAllLicenses() {
+        let allLicenses = [];
+        let page = 1;
+        while(true) {
+            const res = await this.getList(page, 100); // 每页100条
+            allLicenses = allLicenses.concat(res.data.doctors.map(d => d.license_number));
+            if(res.data.doctors.length < 100) break;
+            page++;
+        }
+        return [...new Set(allLicenses)];
+    }
+
+    getAllLicenses().then(allLicenses => {
+        doctorSelect = allLicenses;
+        alert("2"+allLicenses);
+    });
+
+
+    // 初始化科室选项
+    function initDepartments() {
+        const select = document.getElementById('doctorSelect');
+        Object.keys(doctorSelect).forEach(dept => {
+            select.appendChild(new Option(dept, dept));
+        });
+    }
+
+
+    // 事件绑定
+    window.addEventListener('DOMContentLoaded', initDepartments);
+    window.addEventListener('DOMContentLoaded', getAllLicenses);
+    document.getElementById('doctorSelect');
+</script>
+
+
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.7/bootstrap-notify.min.js"></script>

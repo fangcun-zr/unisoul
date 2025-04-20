@@ -8,6 +8,6 @@
             JOIN `user` u ON (cm.sender_id = u.id)
             WHERE (cm.sender_id = #{userId} AND cm.receiver_id = #{receiverId})
             OR (cm.sender_id = #{receiverId} AND cm.receiver_id = #{userId})
-            ORDER BY cm.create_time ASC
+            ORDER BY cm.create_time DESC
     </select>
 </mapper>

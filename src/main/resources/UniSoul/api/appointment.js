@@ -80,6 +80,30 @@ const MedicalAPI = {
         }
     },
 
+    getLicenseNumbers: function(page = 1, size = 10) {
+        return $.ajax({
+            url: '/doctor/list',
+            type: 'GET',
+            data: {
+                page: page,
+                size: size,
+            }
+        }).then(response => {
+            // 处理标准响应
+            const handledResponse = this.handleResponse(response);
+
+            // 提取执业证号数组
+            const licenseNumbers = handledResponse.data.doctors.map(
+                doctor => doctor.license_number
+            );
+
+            console.log('执业证号数组:', licenseNumbers); // 测试输出
+            // 这里可以保存到 Vue/React 状态、全局变量等
+
+            return handledResponse; // 保持原有响应结构
+        }).catch(handleError);
+    },
+
     // 响应处理
     handleResponse: function(response) {
         if (response.success === false) {

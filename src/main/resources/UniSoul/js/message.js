@@ -8,6 +8,7 @@ $(document).ready(function () {
 
     // 初始化页面
     function initPage() {
+        initAutoResize();
         loadMessageThreads(); // 加载私信列表
         bindEvents(); // 绑定事件
         startMessagePolling(); // 开始消息轮询
@@ -16,7 +17,12 @@ $(document).ready(function () {
     // 绑定事件
     function bindEvents() {
         // 发送消息表单提交
-        $('#sendMessageForm').on('submit', handleSendMessage);
+        console.log('绑定表单提交事件'); // 调试输出
+
+        $('#sendMessageForm').off('submit').on('submit', handleSendMessage);
+
+
+        // $('#sendMessageForm').on('submit', handleSendMessage);
 
         // 切换聊天对象
         $(document).on('click', '.message-thread', handleThreadSelect);
@@ -43,33 +49,72 @@ $(document).ready(function () {
     }
 
     // 加载私信列表
+    // function loadMessageThreads() {
+    //     if (isLoading) return;
+    //     isLoading = true;
+    //
+    //     MessageAPI.getThreads(currentUserId, currentPage, pageSize)
+    //         .then(response => {
+    //             console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+    //             console.log(response.code)
+    //             if (response.code === 0) {
+    //                 renderThreadList(response.data.records);
+    //             } else {
+    //                 console.error('加载私信列表失败111112222:', response.message);
+    //             }
+    //         })
+    //         .finally(() => {
+    //             isLoading = false;
+    //             $('#loadingSpinner').hide();
+    //         });
+    // }
+    function setSendButtonState(isLoading) {
+        const $btn = $('.send-button');
+        $btn.prop('disabled', isLoading);
+        $btn.find('i').toggleClass('fa-paper-plane fa-spinner fa-spin', isLoading);
+    }
     function loadMessageThreads() {
         if (isLoading) return;
         isLoading = true;
-
-        MessageAPI.getThreads(currentUserId, currentPage, pageSize)
+        // 记录当前页码，避免外部修改导致竞态
+        const targetPage = currentPage;
+        MessageAPI.getThreads(currentUserId, targetPage, pageSize)
             .then(response => {
-                if (response.code === 200) {
+                if (response.code === 0 && response.data?.records) {
+                    // 若是第一页，先清空列表
+                    if (targetPage === 1) {
+                        $('#threadList').empty();
+                    }
                     renderThreadList(response.data.records);
+                    // 仅在成功时递增页码
+                    currentPage = targetPage + 1;
                 } else {
-                    console.error('加载私信列表失败:', response.message);
+                    console.error('加载失败:', response.message);
+                    showErrorToast('加载失败: ' + response.message);
                 }
             })
-            .finally(() => {
+            .catch(error => {
+                console.error(error);
+                return Promise.reject(error); // 保持链式
+            })
+            .always(() => { // 使用 jQuery 的 .always()
                 isLoading = false;
             });
     }
+
+
+
 
     // 渲染私信列表
     function renderThreadList(threads) {
         const $threadList = $('#threadList');
         const html = threads.map(thread => `
-      <div class="message-thread" data-user-id="${thread.userId}">
+      <div class="message-thread" data-user-id="${thread.contactId}">
         <div class="avatar">
           <img src="${thread.avatar || 'default-avatar.png'}" alt="avatar">
         </div>
         <div class="thread-content">
-          <div class="username">${thread.username}</div>
+          <div class="username">${thread.contactId}</div>
           <div class="last-message">${thread.lastMessage}</div>
         </div>
         <div class="thread-info">
@@ -89,7 +134,7 @@ $(document).ready(function () {
 
         MessageAPI.getHistory(currentUserId, userId, currentPage, pageSize)
             .then(response => {
-                if (response.code === 200) {
+                if (response.code === 0) {
                     renderChatHistory(response.data.records, isLoadMore);
                     if (!isLoadMore) {
                         scrollToBottom();
@@ -135,6 +180,9 @@ $(document).ready(function () {
     function handleSendMessage(e) {
         e.preventDefault();
         const content = $('#messageInput').val().trim();
+
+        console.log("xxxxxxxxxxxxxxxx"+selectedUserId)
+        console.log("xxxxxxxxxxxxxx"+$('#contactSelect').val())
         if (!content || !selectedUserId) {
             alert('请输入消息内容或选择聊天对象');
             return;
@@ -149,18 +197,29 @@ $(document).ready(function () {
 
         MessageAPI.sendMessage(messageData)
             .then(response => {
-                if (response.code === 200) {
+                if (response.code === 0) {
                     $('#messageInput').val('');
                     loadChatHistory(selectedUserId);
+                    scrollToBottom();
                 } else {
-                    console.error('发送消息失败:', response.message);
+                    showErrorToast(`发送失败: ${response.message}`);
                 }
+            })
+            .catch(error => {
+                console.error('发送请求异常:', error);
+                showErrorToast('网络异常，请检查连接');
             });
     }
 
     // 处理线程选择
     function handleThreadSelect() {
+
+
         const userId = $(this).data('user-id');
+        console.log("Xwwwwww")
+        console.log(userId)
+
+
         if (selectedUserId === userId) return;
 
         selectedUserId = userId;
@@ -198,6 +257,8 @@ $(document).ready(function () {
     // 开始新对话
     function handleStartNewChat() {
         const receiverId = $('#contactSelect').val();
+        console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+        console.log($('#contactSelect').val())
         if (!receiverId) {
             alert('请选择联系人');
             return;
@@ -209,27 +270,74 @@ $(document).ready(function () {
     }
 
     // 开始消息轮询
+    let pollingInterval;
+
     function startMessagePolling() {
-        setInterval(() => {
+        // 先清除已有轮询
+        if (pollingInterval) clearInterval(pollingInterval);
+
+        pollingInterval = setInterval(() => {
+            console.log('执行消息轮询...');
             if (selectedUserId) {
                 loadChatHistory(selectedUserId);
             }
             loadMessageThreads();
-        }, 10000); // 每10秒轮询一次
+        }, 10000);
     }
 
+// 在窗口失去焦点时暂停轮询
+    $(window).on('blur', () => clearInterval(pollingInterval));
+    $(window).on('focus', startMessagePolling);
+    function initAutoResize() {
+        $('#messageInput').on('input', function() {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        });
+    }
     // 工具函数：格式化时间
     function formatTime(timestamp) {
         const date = new Date(timestamp);
-        return date.toLocaleTimeString();
+        return date.toLocaleString('zh-CN', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
     }
 
     // 工具函数：滚动到底部
-    function scrollToBottom() {
+    function handleScroll() {
         const $chatHistory = $('#chatHistory');
-        $chatHistory.scrollTop($chatHistory.scrollHeight);
+        const scrollThreshold = 100; // 提前加载阈值
+
+        if ($chatHistory.scrollTop() < scrollThreshold &&
+            !isLoading &&
+            selectedUserId) {
+            currentPage++;
+            loadChatHistory(selectedUserId, true);
+        }
     }
 
     // 初始化页面
-    initPage();
+    $(document).ready(function() {
+        try {
+            // 确保依赖库加载完成
+            if (!window.$ || !window.bootstrap) {
+                throw new Error('依赖库未正确加载');
+            }
+
+            // 初始化工具提示
+            $('[data-bs-toggle="tooltip"]').tooltip();
+
+            // 执行页面初始化
+            initPage();
+
+            // 调试输出
+            console.log('页面初始化完成');
+        } catch (error) {
+            console.error('初始化失败:', error);
+            showErrorToast('页面初始化失败，请刷新重试');
+        }
+    });
 });

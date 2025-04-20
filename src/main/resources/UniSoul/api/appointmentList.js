@@ -1,23 +1,13 @@
 const AppointmentAPI = {
     // 获取预约列表
+    // 修正后的正确接口定义
     getList: function(params) {
         return $.ajax({
             url: '/appointment/list',
-            method: 'GET', getList: function(params) {
-                return $.ajax({
-                    url: '/appointment/list',
-                    method: 'GET',
-                    data: {
-                        current: params.current,    // ✅ 确保参数名与后端一致
-                        pageSize: params.pageSize,  // 使用后端接受的参数名
-                        status: params.status,
-                        appointmentDate: params.appointmentDate
-                    }
-                });
-            },
+            method: 'GET',
             data: {
-                current: params.current,    // ✅ 确保参数名与后端一致
-                pageSize: params.pageSize,  // 使用后端接受的参数名
+                current: params.current,
+                pageSize: params.pageSize,
                 status: params.status,
                 appointmentDate: params.appointmentDate
             }

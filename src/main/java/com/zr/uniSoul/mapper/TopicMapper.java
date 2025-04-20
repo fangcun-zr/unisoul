@@ -80,7 +80,6 @@ public interface TopicMapper {
      * 获取回复
      * @param topicId
      */
-    @Select("SELECT * FROM replies WHERE topic_id = #{topicId} ORDER BY create_time DESC limit 10")
     List<Replies> getReplies(Long topicId);
 
     /**
@@ -136,7 +135,6 @@ public interface TopicMapper {
      * @param username
      * @return
      */
-    @Select("SELECT * FROM replies WHERE username = #{username}")
     List<Replies> getRepliesByUsername(String username);
 
     /**
@@ -144,7 +142,6 @@ public interface TopicMapper {
      * @param topicId
      * @return
      */
-    @Select("SELECT * FROM topics WHERE id = #{topicId}")
     TopicDTO getTopicInformation(Long topicId);
 
     /**
@@ -196,7 +193,6 @@ public interface TopicMapper {
      * 根据标签获取话题
      * @param tags
      */
-    @Select("SELECT * FROM topics WHERE id IN (SELECT topic_tags.topic_id FROM topic_tags WHERE tag_id IN (SELECT id FROM tags WHERE name IN (#{tags})))")
     List<Topic> getTopicsByTags(List<String> tags);
 
     /**
@@ -204,7 +200,6 @@ public interface TopicMapper {
      * @param keyWord
      * @return
      */
-    @Select("SELECT * FROM topics WHERE title LIKE CONCAT('%', #{keyWord}, '%')")
     List<Topic> searchKeyWord(String keyWord);
 
     /**
@@ -220,14 +215,6 @@ public interface TopicMapper {
      * @return
      */
     Page<TopicVO> pageQuery(PageQueryDTO pageQueryDTO);
-
-    /**
-     * 获取话题的回复数量
-     * @param id
-     * @return
-     */
-    @Select("SELECT COUNT(*) FROM replies WHERE topic_id = #{id}")
-    long getRepliesCount(long id);
 
     /**
      * 获取用户是否点赞
@@ -291,4 +278,11 @@ public interface TopicMapper {
      * @return
      */
     Page<Replies> pageQueryReplies(PageQueryDTO pageQueryDTO);
+
+    /**
+     * 根据用户名获取话题
+     * @param username
+     * @return
+     */
+    List<Topic> getTopicsByUsername(String username);
 }
