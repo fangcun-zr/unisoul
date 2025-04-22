@@ -28,7 +28,7 @@ public class PageQueryDTO {
     @JsonProperty("pageSize")
     private Integer pageSize;
 
-    //文章分类
+    //分类id
     @JsonProperty("category_id")
     private Integer category_id;
 

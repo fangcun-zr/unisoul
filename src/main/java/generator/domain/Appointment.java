@@ -43,12 +43,6 @@ public class Appointment {
     private String patientPhone;
 
     /**
-     * 医生姓名
-     */
-    @TableField("doctor_name")
-    private String doctorName;
-
-    /**
      * 预约日期
      */
     @TableField("appointment_date")
@@ -89,6 +83,12 @@ public class Appointment {
      * 预约状态（NEW/CONFIRMED/COMPLETED/CANCELLED）
      */
     private String status = "PENDING";
+
+    /**
+     * 医生执业证号
+     */
+    @TableField("license_number")
+    private String licenseNumber;
 
 
 }

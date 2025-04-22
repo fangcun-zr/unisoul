@@ -57,7 +57,7 @@ public class ColumnsServiceImpl implements ColumnsService {
         try {
             //原始文件名
             String originalFilename = cover.getOriginalFilename();
-            //截取原始文件后缀  xxx.png
+            //截取原始文件后缀  xxx.md.png
             String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
             //生成新的文件名
             String objectName = UUID.randomUUID().toString() + extension;
@@ -90,7 +90,7 @@ public class ColumnsServiceImpl implements ColumnsService {
         try {
             //原始文件名
             String originalFilename = cover.getOriginalFilename();
-            //截取原始文件后缀  xxx.png
+            //截取原始文件后缀  xxx.md.png
             String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
             //生成新的文件名
             String objectName = UUID.randomUUID().toString() + extension;

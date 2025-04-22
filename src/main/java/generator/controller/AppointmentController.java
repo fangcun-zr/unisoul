@@ -47,9 +47,24 @@ public class AppointmentController {
 
     @GetMapping("/list")
     public BaseResponse<Page<Appointment>> getAppointmentList(
-            @RequestParam(defaultValue = "1") int current,  // 保留分页参数
-            @RequestParam(defaultValue = "10") int pageSize) {
-        Page<Appointment> appointments = appointmentService.listAppointments(current, pageSize);
+            @RequestParam(defaultValue = "1") int current,
+            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false)
+            @DateTimeFormat(pattern = "yyyy-MM-dd") Date appointmentDate,
+            @RequestParam(required = false)
+            @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+            @RequestParam(required = false)
+            @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
+
+        Page<Appointment> appointments = appointmentService.listAppointments(
+                current,
+                pageSize,
+                status,
+                appointmentDate,
+                startDate,
+                endDate
+        );
         return ResultUtils.success(appointments);
     }
 

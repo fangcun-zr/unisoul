@@ -10,6 +10,12 @@
     --shadow-color: rgba(0, 0, 0, 0.1);
     --gradient-primary: linear-gradient(135deg, #ff6b6b 0%, #ffd93d 100%);
     --gradient-secondary: linear-gradient(135deg, #4ecdc4 0%, #556fff 100%);
+
+    /* 状态颜色 */
+    --status-pending: #ffc107;
+    --status-confirmed: #4ecdc4;
+    --status-completed: #6c5ce7;
+    --status-cancelled: #ff7675;
 }
 
 body {
@@ -268,6 +274,23 @@ body {
     margin-bottom: 20px;
 }
 
+.panel-header .header-left {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+}
+
+.section-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.appointment-count {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
 .btn-gradient {
     background: var(--gradient-primary);
     color: white;
@@ -287,6 +310,150 @@ body {
     display: grid;
     gap: 20px;
     margin-bottom: 30px;
+}
+
+/* 预约卡片样式定义 */
+.appointment-card {
+    background-color: var(--background-light);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.appointment-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.appointment-header {
+    padding: 15px 20px;
+    background-color: rgba(0, 0, 0, 0.02);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.appointment-header .header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.appointment-id {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: white;
+}
+
+.status-badge.pending {
+    background-color: var(--status-pending);
+}
+
+.status-badge.confirmed {
+    background-color: var(--status-confirmed);
+}
+
+.status-badge.completed {
+    background-color: var(--status-completed);
+}
+
+.status-badge.cancelled {
+    background-color: var(--status-cancelled);
+}
+
+.appointment-header .header-right {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.appointment-body {
+    padding: 20px;
+}
+
+.info-section {
+    margin-bottom: 15px;
+}
+
+.info-item {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.info-item label {
+    font-weight: 600;
+    color: var(--text-secondary);
+    min-width: 80px;
+    margin-right: 10px;
+}
+
+.info-item span {
+    color: var(--text-primary);
+}
+
+.appointment-time {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background-color: rgba(0, 0, 0, 0.02);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    margin-top: 10px;
+}
+
+.appointment-time i {
+    color: var(--primary-color);
+}
+
+.appointment-footer {
+    padding: 15px 20px;
+    background-color: rgba(0, 0, 0, 0.01);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.appointment-footer .btn {
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.appointment-footer .btn i {
+    font-size: 0.8rem;
+}
+
+.appointment-footer .btn-primary {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.appointment-footer .btn-success {
+    background-color: #4CAF50;
+    border-color: #4CAF50;
+}
+
+.appointment-footer .btn-danger {
+    background-color: var(--status-cancelled);
+    border-color: var(--status-cancelled);
 }
 
 /* 空状态样式 */
@@ -333,6 +500,128 @@ body {
 
 .spinner-ripple div:nth-child(2) {
     animation-delay: -0.5s;
+}
+
+/* 分页样式 */
+.pagination-wrapper {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.pagination .page-item .page-link {
+    color: var(--text-primary);
+    border-radius: 30px;
+    margin: 0 5px;
+    border: none;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.pagination .page-item.active .page-link {
+    background: var(--gradient-primary);
+    color: white;
+}
+
+.pagination .page-item .page-link:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.pagination .page-item.active .page-link:hover {
+    background: var(--gradient-primary);
+}
+
+/* 预约详情模态框样式 */
+.modal-content {
+    border-radius: 20px;
+    border: none;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.modal-header {
+    background: var(--gradient-primary);
+    color: white;
+    border-bottom: none;
+    padding: 20px 25px;
+}
+
+.modal-header .modal-title {
+    font-weight: 600;
+}
+
+.modal-header .btn-close {
+    color: white;
+    text-shadow: none;
+    opacity: 0.8;
+}
+
+.modal-body {
+    padding: 25px;
+}
+
+.modal-footer {
+    border-top: none;
+    padding: 20px 25px;
+}
+
+/* 详细信息卡片 */
+.detail-card {
+    padding: 15px;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.02);
+    margin-bottom: 15px;
+}
+
+.detail-card .detail-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.detail-card .detail-header i {
+    font-size: 1.2rem;
+    color: var(--primary-color);
+}
+
+.detail-card .detail-header h6 {
+    font-weight: 600;
+    margin: 0;
+}
+
+.detail-card .detail-body {
+    margin-left: 25px;
+}
+
+.detail-card .detail-item {
+    display: flex;
+    margin-bottom: 8px;
+}
+
+.detail-card .detail-item:last-child {
+    margin-bottom: 0;
+}
+
+.detail-card .detail-label {
+    font-weight: 500;
+    color: var(--text-secondary);
+    width: 100px;
+}
+
+.detail-card .detail-value {
+    color: var(--text-primary);
+    flex: 1;
+}
+
+.panel-footer {
+    padding-top: 20px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    margin-top: 20px;
 }
 
 /* 动画效果 */
@@ -401,6 +690,12 @@ body {
     .filter-panel {
         margin-bottom: 30px;
     }
+
+    .panel-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
 }
 
 @media (max-width: 768px) {
@@ -408,9 +703,27 @@ body {
         margin-bottom: 20px;
     }
 
-    .panel-header {
+    .appointment-header,
+    .appointment-footer {
         flex-direction: column;
         align-items: flex-start;
-        gap: 15px;
+        gap: 10px;
+    }
+
+    .appointment-footer {
+        align-items: stretch;
+    }
+
+    .appointment-footer .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .info-item {
+        flex-direction: column;
+    }
+
+    .info-item label {
+        margin-bottom: 5px;
     }
 }

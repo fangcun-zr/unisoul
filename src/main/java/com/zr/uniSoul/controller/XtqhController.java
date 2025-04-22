@@ -157,7 +157,7 @@ public class XtqhController {
         try {
             //原始文件名
             String originalFilename = file.getOriginalFilename();
-            //截取原始文件后缀  xxx.png
+            //截取原始文件后缀  xxx.md.png
             String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
             //生成新的文件名
             String objectName = UUID.randomUUID().toString() + extension;
@@ -465,5 +465,31 @@ Object userIdObj = session.getAttribute("userId");
                 log.error("异步记录用户行为失败: {}", e.getMessage());
             }
         }, asyncExecutor);
+    }
+
+    /**
+     * 意见反馈
+     */
+    @GetMapping("/feedback")
+    public R feedback(@RequestParam String text, HttpServletRequest request) {
+        log.info("意见反馈接口,{}", text);
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            return R.error("请先登录"); // 无会话则直接退出
+        }
+        int userId = 0;
+        Object userIdObj = session.getAttribute("userId");
+        if (userIdObj instanceof Integer) {
+            userId = (Integer) userIdObj;
+        } else if (userIdObj instanceof Long) {
+            userId = ((Long) userIdObj).intValue();
+        } else {
+            // 处理其他情况或抛出异常
+        }
+        int ret = xtqhService.feedback(userId, text);
+        if (ret == 1) {
+            return R.success("反馈成功");
+        }
+        return R.error("反馈失败");
     }
 }

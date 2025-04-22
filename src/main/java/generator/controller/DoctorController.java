@@ -68,11 +68,10 @@ public class DoctorController {
     @GetMapping("/list")
     public BaseResponse<Map<String, Object>> getDoctorList(
             @RequestParam(defaultValue = "1") int current,
-            @RequestParam(defaultValue = "10") int pageSize
-    ) {
+            @RequestParam(defaultValue = "10") int pageSize) {
         Page<Doctor> page = doctorService.listDoctors(current, pageSize);
         Map<String, Object> result = new HashMap<>();
-        result.put("doctors", page.getRecords()); // 明确返回 doctors 数组
+        result.put("doctors", page.getRecords());
         result.put("total", page.getTotal());
         return ResultUtils.success(result);
     }

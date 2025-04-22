@@ -44,14 +44,14 @@ public class AppointmentServiceImpl extends ServiceImpl<AppointmentMapper, Appoi
 
         // 校验医生是否存在
         Doctor doctor = doctorMapper.selectOne(new QueryWrapper<Doctor>()
-                .eq("full_name", appointment.getDoctorName()));
+                .eq("license_number", appointment.getLicenseNumber()));
         if (doctor == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "医生不存在");
         }
 
         // 校验时间冲突
         Long count = baseMapper.selectCount(new QueryWrapper<Appointment>()
-                .eq("doctor_name", appointment.getDoctorName())
+                .eq("license_number", appointment.getLicenseNumber())
                 .eq("appointment_date", appointment.getAppointmentDate())
                 .eq("appointment_time", appointment.getAppointmentTime()));
         if (count > 0) {
@@ -74,9 +74,35 @@ public class AppointmentServiceImpl extends ServiceImpl<AppointmentMapper, Appoi
 
     @Transactional
     @Override
-    public Page<Appointment> listAppointments(int current, int pageSize) {
-        // 空查询条件，获取全表分页数据
-        return this.page(new Page<>(current, pageSize), new QueryWrapper<>());
+    public Page<Appointment> listAppointments(int current,
+                                              int pageSize,
+                                              String status,
+                                              Date appointmentDate,
+                                              Date startDate,
+                                              Date endDate) {
+
+        QueryWrapper<Appointment> queryWrapper = new QueryWrapper<>();
+
+        // 状态筛选
+        if (StringUtils.hasText(status)) {
+            queryWrapper.eq("status", status.toUpperCase());
+        }
+
+        // 精确日期筛选
+        if (appointmentDate != null) {
+            queryWrapper.eq("appointment_date", appointmentDate);
+        }
+
+        // 日期范围筛选
+        if (startDate != null && endDate != null) {
+            queryWrapper.between("appointment_date", startDate, endDate);
+        }
+
+        // 添加默认排序
+        queryWrapper.orderByDesc("appointment_date")
+                .orderByAsc("appointment_time");
+
+        return this.page(new Page<>(current, pageSize), queryWrapper);
     }
 
     @Transactional
@@ -108,7 +134,7 @@ public class AppointmentServiceImpl extends ServiceImpl<AppointmentMapper, Appoi
 
         // 查询当天已有预约
         List<Appointment> appointments = baseMapper.selectList(new QueryWrapper<Appointment>()
-                .eq("doctor_name", doctor.getFullName())
+                .eq("license_number", doctor.getLicenseNumber())
                 .eq("appointment_date", date)
                 .select("appointment_time"));
 
@@ -187,7 +213,7 @@ public class AppointmentServiceImpl extends ServiceImpl<AppointmentMapper, Appoi
                 row.createCell(0).setCellValue(item.getId());
                 row.createCell(1).setCellValue(item.getPatientName());
                 row.createCell(2).setCellValue(item.getPatientPhone());
-                row.createCell(3).setCellValue(item.getDoctorName());
+                row.createCell(3).setCellValue(item.getLicenseNumber());
                 row.createCell(4).setCellValue(dateFormat.format(item.getAppointmentDate()));
                 row.createCell(5).setCellValue(timeFormat.format(item.getAppointmentTime()));
                 row.createCell(6).setCellValue(item.getConsultationType());

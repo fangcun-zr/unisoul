@@ -12,7 +12,7 @@ import java.util.List;
 public interface AppointmentService {
     boolean createAppointment(Appointment appointment) throws BusinessException;
     boolean cancelAppointment(Integer id);
-    Page<Appointment> listAppointments(int current, int pageSize);
+    Page<Appointment> listAppointments(int current, int pageSize, String status, Date appointmentDate, Date startDate, Date endDate);
     boolean updateStatus(Integer id, String status) throws BusinessException;
     void exportAppointments(HttpServletResponse response, String status, Date startDate, Date endDate, String consultationType) throws IOException;
     Page<Appointment> getPatientHistory(String patientName, String patientPhone, int current, int pageSize);
