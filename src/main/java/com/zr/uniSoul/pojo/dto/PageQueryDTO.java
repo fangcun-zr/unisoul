@@ -5,6 +5,12 @@ import lombok.Data;
 
 @Data
 public class PageQueryDTO {
+    //发送消息的用户名
+    @JsonProperty("senderName")
+    private String senderName;
+    //接收消息的用户名
+    @JsonProperty("receiverName")
+    private String receiverName;
     //发送消息的用户ID
     @JsonProperty("userId")
     private Integer userId;

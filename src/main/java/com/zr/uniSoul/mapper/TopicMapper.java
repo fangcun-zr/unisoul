@@ -1,14 +1,11 @@
 package com.zr.uniSoul.mapper;
 
 import com.github.pagehelper.Page;
-import com.zr.uniSoul.pojo.dto.CommentsPageDTO;
 import com.zr.uniSoul.pojo.dto.PageQueryDTO;
 import com.zr.uniSoul.pojo.dto.TopicDTO;
-import com.zr.uniSoul.pojo.entity.Comments;
 import com.zr.uniSoul.pojo.entity.Replies;
 import com.zr.uniSoul.pojo.entity.Tags;
 import com.zr.uniSoul.pojo.entity.Topic;
-import com.zr.uniSoul.pojo.vo.TopicLikesVO;
 import com.zr.uniSoul.pojo.vo.TopicVO;
 import org.apache.ibatis.annotations.*;
 
@@ -149,7 +146,6 @@ public interface TopicMapper {
      * @param username
      * @param id
      */
-    @Delete("DELETE FROM topics WHERE (id = #{id} AND (username = #{username} OR (SELECT 1 FROM user WHERE username = #{username} AND isAdmin = 1)))")
     boolean deleteTopic(String username, Long id);
 
     /**

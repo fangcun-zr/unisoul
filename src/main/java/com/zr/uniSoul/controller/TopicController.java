@@ -3,6 +3,7 @@ package com.zr.uniSoul.controller;
 import com.zr.uniSoul.common.PageResult;
 import com.zr.uniSoul.common.R;
 import com.zr.uniSoul.mapper.ColumnsMapper;
+import com.zr.uniSoul.pojo.dto.AnalysisImageDTO;
 import com.zr.uniSoul.pojo.dto.PageQueryDTO;
 import com.zr.uniSoul.pojo.dto.TopicDTO;
 import com.zr.uniSoul.pojo.entity.Replies;
@@ -366,5 +367,15 @@ public class TopicController {
         }else{
             return R.success(topicService.getTopicsByUsername(username));
         }
+    }
+
+    /**
+     * 根据文本内容生成词云分析结果
+     * @param analysisImageDTO
+     * @return
+     */
+    @PostMapping("/getWordCloudAnalysis")
+    public R<String> getWordCloudAnalysis(@RequestBody AnalysisImageDTO analysisImageDTO){
+        return R.success(topicService.getWordCloudAnalysis(analysisImageDTO));
     }
 }

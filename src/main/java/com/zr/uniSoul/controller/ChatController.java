@@ -33,15 +33,32 @@ public class ChatController {
     @Autowired
     private XtqhService xtqhService;
 
+    /**
+     * 获取用户头像
+     * @param request
+     * @return
+     */
     @GetMapping("/getAvatar")
     public R<String> getAvatar(HttpServletRequest request) {
         Long userId = (Long)request.getSession().getAttribute("userId");
         return R.success(chatService.getAvatar(userId));
     }
+    /**
+     * 根据用户id获取用户头像
+     * @param userId
+     * @return
+     */
     @GetMapping("/getAvatarById")
     public R<String> getAvatarById(@RequestParam Long userId) {
         return R.success(chatService.getAvatar(userId));
     }
+
+    /**
+     * 获取咨询师列表
+     * @param request
+     * @param category
+     * @return
+     */
     @GetMapping("/getCounselors")
     public R<List<User>> getCounselors(HttpServletRequest request ,@RequestParam Integer category) {
         try {
@@ -62,7 +79,12 @@ public class ChatController {
             return R.error("获取用户列表失败: " + e.getMessage());
         }
     }
-
+    /**
+     * 获取聊天记录
+     * @param request
+     * @param pageQueryDTO
+     * @return
+     */
     @PostMapping("/messages")
     public R<PageResult> getMessages(HttpServletRequest request, @RequestBody PageQueryDTO pageQueryDTO) {
         Long Id = (Long) request.getSession().getAttribute("userId");
@@ -83,7 +105,13 @@ public class ChatController {
             return R.error("获取聊天记录失败: " + e.getMessage());
         }
     }
-
+    /**
+     * 获取咨询消息
+     * @param request
+     * @param senderId
+     * @param receiverId
+     * @return
+     */
     @GetMapping("/consultMessage")
     public R<List<ChatMessage>> getConsultMessage(
             HttpServletRequest request,
@@ -113,22 +141,11 @@ public class ChatController {
         }
     }
 
-//    @PostMapping("/send")
-//    public R<String> sendMessage(HttpServletRequest request , @RequestBody ChatMessage message) {
-//        try {
-//            Long userId = (Long) request.getSession().getAttribute("userId");
-//            message.setSenderId(Long.toString(userId));
-//            LocalDateTime date = LocalDateTime.now();
-//            log.info("发送消息, senderId={}, receiverId={},createTime = {}", message.getSenderId(), message.getReceiverId(), date);
-//            message.setCreateTime(date);
-//            chatService.handleMessage(message);
-//            return R.success("发送成功");
-//        } catch (Exception e) {
-//            log.error("发送消息失败", e);
-//            return R.error("发送消息失败: " + e.getMessage());
-//        }
-//    }
-
+    /**
+     * 删除消息
+     * @param messageId
+     * @return
+     */
     @DeleteMapping("/message/{messageId}")
     public R<String> deleteMessage(@PathVariable String messageId) {
         try {

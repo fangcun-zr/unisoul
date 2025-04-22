@@ -2,8 +2,16 @@ package com.zr.uniSoul.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.messaging.simp.stomp.StompCommand;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.messaging.support.ChannelInterceptor;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
@@ -13,6 +21,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.handler.WebSocketHandlerDecorator;
 import org.springframework.web.socket.handler.WebSocketHandlerDecoratorFactory;
+import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
 /**
  * WebSocket配置类
@@ -21,7 +30,10 @@ import org.springframework.web.socket.handler.WebSocketHandlerDecoratorFactory;
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-
+    @Bean
+    public ServerEndpointExporter serverEndpointExporter(){
+        return new ServerEndpointExporter();
+    }
     private static final Logger log = LoggerFactory.getLogger(WebSocketConfig.class);
 
     @Override
@@ -80,4 +92,46 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
             log.error("WebSocket传输配置失败", e);
         }
     }
+    @Component
+    public static class WebSocketMessageListener implements ChannelInterceptor {
+        @Override
+        public Message<?> preSend(Message<?> message, MessageChannel channel) {
+            StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
+
+            // 监听连接事件
+            if (accessor.getCommand() == StompCommand.CONNECT) {
+                log.info("客户端连接: SessionID={}, Token={}",
+                        accessor.getSessionId(),
+                        accessor.getFirstNativeHeader("Authorization"));
+            }
+
+            // 监听订阅事件
+            if (accessor.getCommand() == StompCommand.SUBSCRIBE) {
+                log.info("订阅频道: SessionID={}, Destination={}",
+                        accessor.getSessionId(),
+                        accessor.getDestination());
+            }
+
+            // 监听消息发送事件
+            if (accessor.getCommand() == StompCommand.SEND) {
+                log.info("发送消息到: Destination={}, Payload={}",
+                        accessor.getDestination(),
+                        message.getPayload());
+            }
+
+            return message;
+        }
+    }
+
+    // 新增：注册监听器到入站/出站通道
+    @Override
+    public void configureClientInboundChannel(ChannelRegistration registration) {
+        registration.interceptors(new WebSocketMessageListener()); // 监听接收消息
+    }
+
+    @Override
+    public void configureClientOutboundChannel(ChannelRegistration registration) {
+        registration.interceptors(new WebSocketMessageListener()); // 监听发送消息
+    }
+
 }

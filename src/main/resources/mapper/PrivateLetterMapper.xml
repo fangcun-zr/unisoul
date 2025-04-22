@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zr.uniSoul.mapper.PrivateLetterMapper">
+    <update id="storeMessage">
+        -- 利用DEFAULT自动填充字段
+        INSERT INTO private_letter (
+            sender_name,
+            receiver_name,
+            content,
+            created_at,
+            is_read        -- 其他字段依赖默认值
+        ) VALUES (
+                     #{username},
+                     #{toName},
+                     #{data},
+                     NOW(),         -- 自动生成精确时间
+                     DEFAULT(is_read) -- 显式调用默认值
+                 );    </update>
+    <select id="getFollowList" resultType="com.zr.uniSoul.pojo.vo.UserVO">
+        /* 方案1: 使用JOIN代替IN子查询 */
+        SELECT u.*
+        FROM user u
+                 JOIN follow f ON u.id = f.following_id
+        WHERE f.follower_id = #{userId}
+          AND u.id != #{userId}
+        ORDER BY f.created_at DESC
+        </select>
+    <select id="getChatHistory" resultType="com.zr.uniSoul.pojo.vo.MessageVO">
+        SELECT private_letter.* FROM private_letter
+        WHERE (sender_name = #{senderName} AND receiver_name = #{receiverName})
+           OR (sender_name = #{receiverName} AND receiver_name = #{senderName})
+        ORDER BY created_at DESC
+    </select>
+</mapper>
