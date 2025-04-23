@@ -1,6 +1,7 @@
 package com.zr.uniSoul.service;
 
 import com.zr.uniSoul.common.PageResult;
+import com.zr.uniSoul.pojo.dto.AnalysisImageDTO;
 import com.zr.uniSoul.pojo.dto.PageQueryDTO;
 import com.zr.uniSoul.pojo.dto.TopicDTO;
 import com.zr.uniSoul.pojo.entity.Replies;
@@ -164,4 +165,6 @@ public interface TopicService {
      * @return
      */
     List<Topic> getTopicsByUsername(String username);
+
+    String getWordCloudAnalysis(AnalysisImageDTO analysisImageDTO);
 }

@@ -2,6 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.zr.uniSoul.mapper.TopicMapper">
+    <delete id="deleteTopic">
+        DELETE t , tt FROM topics t
+        JOIN topic_tags tt on t.id = tt.topic_id
+        JOIN tags tg on tt.tag_id = tg.id
+        WHERE (t.id = #{id} AND (username = #{username} OR (SELECT 1 FROM user WHERE username = #{username} AND isAdmin = 1)))
+    </delete>
     <select id="getTopicsByTags" resultType="com.zr.uniSoul.pojo.entity.Topic">
         SELECT
         t.*,
@@ -20,7 +26,8 @@
         AND tg.is_deleted = 0
     </select>
     <select id="pageQuery" resultType="com.zr.uniSoul.pojo.vo.TopicVO">
-        select * from topics order by create_time desc
+        select * , (SELECT COUNT(*) FROM replies WHERE topic_id = topics.id) AS repliesCount
+        from topics order by create_time desc
     </select>
     <select id="pageQueryStatus" resultType="com.zr.uniSoul.pojo.vo.TopicVO">
         select *,u.name AS nickName,(SELECT COUNT(*) FROM replies WHERE topic_id = topics.id) AS repliesCount from topics
@@ -33,7 +40,7 @@
         where topic_id = #{topicId} and replies.status = 1 order by create_time desc
     </select>
     <select id="getTopicInformation" resultType="com.zr.uniSoul.pojo.dto.TopicDTO">
-        SELECT *,(SELECT COUNT(*) FROM replies WHERE topic_id = #{topicId}) AS repliesCount, u.name AS nickName FROM topics
+        SELECT *,(SELECT COUNT(*) FROM replies WHERE topic_id = #{topicId}) AS repliesNum, u.name AS nickName FROM topics
         JOIN user u ON topics.username = u.username COLLATE utf8mb4_0900_ai_ci
         WHERE topics.id = #{topicId}
     </select>

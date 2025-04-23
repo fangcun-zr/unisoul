@@ -2,9 +2,12 @@ package com.zr.uniSoul.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.zr.uniSoul.common.PageResult;
 import com.zr.uniSoul.mapper.AdminMapper;
 import com.zr.uniSoul.mapper.TopicMapper;
+import com.zr.uniSoul.pojo.dto.AnalysisImageDTO;
 import com.zr.uniSoul.pojo.dto.PageQueryDTO;
 import com.zr.uniSoul.pojo.dto.TopicDTO;
 import com.zr.uniSoul.pojo.entity.*;
@@ -17,6 +20,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -445,5 +453,55 @@ public class TopicServiceImpl implements TopicService {
             topic.setTags(tags);
         });
         return topicsByUsername;
+    }
+
+    /**
+     * 根据文本内容生成词云分析结果
+     * @param analysisImageDTO
+     * @return
+     */
+    @Override
+    public String getWordCloudAnalysis(AnalysisImageDTO analysisImageDTO) {
+        String url = "http://localhost:8081/process"; // 假设 Flask 应用监听在本地的 5000 端口上
+
+        // 构造请求参数
+        JsonObject data = new JsonObject();
+        data.addProperty("text", analysisImageDTO.getText());
+        data.addProperty("width", analysisImageDTO.getWidth());
+        data.addProperty("height", analysisImageDTO.getHeight());
+        data.addProperty("maxWords", analysisImageDTO.getMaxWords());
+
+        try {
+            // 发送 POST 请求
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("Content-Type", "application/json");
+
+            // 将参数写入请求体
+            con.setDoOutput(true);
+            OutputStream os = con.getOutputStream();
+            os.write(new Gson().toJson(data).getBytes("utf-8"));
+            os.flush();
+            os.close();
+            log.info("请求："+con);
+            // 处理响应结果
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+
+            // 解析 JSON 数据
+            JsonObject processedData = new Gson().fromJson(response.toString(), JsonObject.class);
+            // 解析JSON
+            System.out.println(processedData);
+            return response.toString();
+        } catch (Exception e) {
+            System.out.println("请求失败：" + e.getMessage());
+            return "请求失败";
+        }
     }
 }
