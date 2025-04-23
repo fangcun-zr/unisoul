@@ -11,6 +11,7 @@ import com.zr.uniSoul.pojo.entity.CommentLike;
 import com.zr.uniSoul.pojo.entity.Comments;
 import com.zr.uniSoul.pojo.entity.User;
 import com.zr.uniSoul.pojo.vo.CommentsVO;
+import com.zr.uniSoul.pojo.vo.CountVO;
 import com.zr.uniSoul.pojo.vo.MyDataVO;
 import com.zr.uniSoul.service.ZhxtService;
 import com.zr.uniSoul.utils.RecommendedUtil;
@@ -223,6 +224,7 @@ public class ZhxtServiceImpl implements ZhxtService {
                 .createTime(LocalDateTime.now())
                 .updateTime(LocalDateTime.now())
                 .build();
+        zhxtMapper.addCommentCount(addcommentsDTO.getArticle_id());
         return zhxtMapper.addComments(comments);
     }
 
@@ -338,5 +340,24 @@ public class ZhxtServiceImpl implements ZhxtService {
 //        log.info("推荐到文章：{}",result);
 
         return result;
+    }
+
+    /**
+     * 获取统计数据
+     *
+     * @return 返回包含统计数据的CountVO对象
+     */
+    /**
+     *
+     * @return
+     */
+    @Override
+    public CountVO getStatistics() {
+        CountVO countVO = new CountVO();
+        countVO.setArticleCount(zhxtMapper.getAllArticleCount());
+        countVO.setCommentCount(zhxtMapper.getAllCommentCounts());
+        countVO.setLikeCount(zhxtMapper.getAllLikeCounts());
+        countVO.setViewCount(zhxtMapper.getAllViewCount());
+        return countVO;
     }
 }

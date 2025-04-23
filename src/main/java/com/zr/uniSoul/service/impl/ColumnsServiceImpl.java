@@ -74,7 +74,6 @@ public class ColumnsServiceImpl implements ColumnsService {
         columns.setCategoryId(categoryId);
         columns.setCoverUrl(filePath);
         return columsMapper.insertSelective(columns);
-
     }
 
     /**

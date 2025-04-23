@@ -33,7 +33,7 @@ public class FilterConfig {
         public SensitiveFilter(SensitiveWordFilter filter) {
             this.filter = filter;
             // 直接在构造函数中定义需要排除的路径
-            this.excludePaths = new String[]{"/columns/create", "/static","/zhxt/publish","/columns/updateColumn"};
+            this.excludePaths = new String[]{"/columns/create", "/static","/zhxt/publish","/columns/updateColumn","/xtqh/changeAvatar"};
         }
 
         @Override

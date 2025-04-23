@@ -14,6 +14,9 @@
     <insert id="addviewCount">
         update article set view_count = view_count + 1 where id = #{articleId}
     </insert>
+    <insert id="addCommentCount">
+        update article set comment_count = comment_count + 1 where id = #{articleId}
+    </insert>
     <update id="checkArticle">
         update article set status = #{status} where id = #{article_id}
     </update>
@@ -106,5 +109,17 @@
             REPLACE(REPLACE(REPLACE(tags, '[', ''), ']', ''), '"', '')
             ) > 0
         </foreach>
+    </select>
+    <select id="getAllArticleCount" resultType="java.lang.Integer">
+        select count(*) from article
+    </select>
+    <select id="getAllCommentCounts" resultType="java.lang.Integer">
+        select count(*) from article_comment
+    </select>
+    <select id="getAllLikeCounts" resultType="java.lang.Integer">
+        select sum(like_count) from article
+    </select>
+    <select id="getAllViewCount" resultType="java.lang.Integer">
+        select sum(view_count) from article
     </select>
 </mapper>

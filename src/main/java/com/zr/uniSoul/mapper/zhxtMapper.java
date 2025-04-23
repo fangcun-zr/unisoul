@@ -71,4 +71,15 @@ public interface zhxtMapper {
     void addviewCount(int articleId);
 
     List<Article> getRecommendArticle(List<String> tagsList);
+
+    void addCommentCount(int articleId);
+
+
+    Integer getAllArticleCount();
+
+    Integer getAllCommentCounts();
+
+    Integer getAllLikeCounts();
+
+    Integer getAllViewCount();
 }

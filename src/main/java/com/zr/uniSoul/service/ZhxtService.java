@@ -7,6 +7,7 @@ import com.zr.uniSoul.pojo.dto.AddCommentsDTO;
 import com.zr.uniSoul.pojo.dto.ReviewDTO;
 import com.zr.uniSoul.pojo.entity.Article;
 import com.zr.uniSoul.pojo.entity.User;
+import com.zr.uniSoul.pojo.vo.CountVO;
 import com.zr.uniSoul.pojo.vo.MyDataVO;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,4 +48,6 @@ public interface ZhxtService {
     void recordUserAction(String id, int userId,int score);
 
     List<Article> getRecommendArticle(String articleId);
+
+    CountVO getStatistics();
 }

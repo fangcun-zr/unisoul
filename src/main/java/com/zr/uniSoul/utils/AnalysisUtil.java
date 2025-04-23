@@ -49,8 +49,10 @@ public class AnalysisUtil {
         Map<String, Double> averageMap = new HashMap<>();
         if (count > 0) {
             for (Map.Entry<String, Double> entry : sumMap.entrySet()) {
-                double average = entry.getValue() / count;
+                double average = Math.round(entry.getValue() / count * 100.0) / 100.0;
                 averageMap.put(entry.getKey(), average);
+//                double average = entry.getValue() / count;
+//                averageMap.put(entry.getKey(), average);
             }
         }
 

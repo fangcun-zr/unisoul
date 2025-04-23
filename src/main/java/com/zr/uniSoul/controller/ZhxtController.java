@@ -5,6 +5,7 @@ import com.zr.uniSoul.common.R;
 import com.zr.uniSoul.pojo.dto.*;
 import com.zr.uniSoul.pojo.entity.Article;
 import com.zr.uniSoul.pojo.entity.User;
+import com.zr.uniSoul.pojo.vo.CountVO;
 import com.zr.uniSoul.pojo.vo.MyDataVO;
 import com.zr.uniSoul.utils.AliOssUtil;
 import io.swagger.annotations.Api;
@@ -385,6 +386,19 @@ public class ZhxtController {
         return R.error("文章不存在");
     }
 
+    /**
+     * 获取总浏览量，总点赞数，总文章数
+     */
+    @GetMapping("getCounts")
+    @ApiOperation("获取总浏览量，总点赞数，总文章数")
+    public R<Object> getStatistics() {
+        log.info("获取总浏览量，总点赞数，总文章数");
+        CountVO countVO = zhxtService.getStatistics();
+        if (countVO != null) {
+            return R.success(countVO);
+        }
+        return R.error("获取失败");
+    }
 
 
 }

@@ -7,6 +7,7 @@ import com.zr.uniSoul.pojo.entity.Topic;
 import com.zr.uniSoul.pojo.vo.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.sql.Timestamp;
 import java.util.List;

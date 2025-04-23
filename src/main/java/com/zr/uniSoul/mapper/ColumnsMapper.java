@@ -40,4 +40,5 @@ public interface ColumnsMapper {
     void deleteArticleFromColumn(Integer columnId);
 
     Integer updateByPrimaryKeySelective(Columns columns);
+
 }
