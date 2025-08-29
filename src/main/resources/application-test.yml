@@ -42,8 +42,6 @@ mybatis:
 unisoul:
   alioss:
     endpoint: oss-cn-chengdu.aliyuncs.com
-    accessKeyId: LTAI5tDZHAq7wyyUY6vfSda9
-    accessKeySecret: ot8o6jjntLvCEDNoHG9QqvQ9wgSuns
     bucketName: uni-soul
 
 logging:
