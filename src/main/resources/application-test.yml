@@ -51,5 +51,4 @@ logging:
 ai:
   config:
     deepseek:
-      apiKey: sk-ccf7d94300ab4880bb06e3cc3008f168
       baseUrl: https://api.deepseek.com/chat/completions
